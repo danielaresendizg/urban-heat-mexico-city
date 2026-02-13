@@ -85,6 +85,10 @@ urban-heat-mexico-city/
 │   │   └── landsat_thermal_climatology.js
 │   │
 │   ├── python/
+│   │   ├── preprocessing/           # Data preprocessing (1 script)
+│   │   │   ├── README.md
+│   │   │   └── 01_process_redmet_stations.py
+│   │   │
 │   │   ├── macro/                   # City-wide analysis (16 scripts)
 │   │   │   ├── 01_map_social_vulnerability.py
 │   │   │   ├── 02_evaluate_gwr_variables.py

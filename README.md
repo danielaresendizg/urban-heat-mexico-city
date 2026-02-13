@@ -51,6 +51,12 @@ Geographically Weighted Regression coefficients identifying where thermal-social
 
 The analysis is structured across three scales:
 
+<p align="center">
+  <img src="docs/diagrams/methodology_flow_diagram.pdf" width="90%">
+</p>
+
+*Three-scale methodology linking macro screening (thermal-social hotspots), meso characterization (form + network), and micro simulation (pedestrian thermal stress). Full diagram available in [docs/diagrams/](docs/diagrams/).*
+
 | Scale | Methods | Key Outputs |
 |-------|---------|-------------|
 | **Macro** | Landsat 8/9 LST-to-Ta calibration (GEE), GWR by municipality | UHI air maps, thermal-social hotspots |
@@ -74,6 +80,10 @@ urban-heat-mexico-city/
 ├── .gitignore
 │
 ├── code/
+│   ├── gee/                         # Google Earth Engine (JavaScript)
+│   │   ├── README.md
+│   │   └── landsat_thermal_climatology.js
+│   │
 │   ├── python/
 │   │   ├── macro/                   # City-wide analysis (16 scripts)
 │   │   │   ├── 01_map_social_vulnerability.py
@@ -109,6 +119,18 @@ urban-heat-mexico-city/
 │
 ├── data/
 │   └── sample/                      # Sample data files (CSV)
+│
+├── docs/
+│   └── diagrams/                    # Methodology flow diagrams
+│       ├── methodology_flow_diagram.pdf
+│       ├── methodology_flow_diagram.tex
+│       ├── fig.3.png
+│       ├── fig.4_meso_scale.png
+│       └── fig.5_a.png
+│
+├── papers/                          # Conference papers & publications
+│   ├── README.md
+│   └── SS_Malaysia_2026_Resendiz.pdf
 │
 ├── latex/
 │   ├── main/                        # Main dissertation (9 files + references.bib)
@@ -148,6 +170,10 @@ Resendiz Garcia, D. (2025). Coupling Remote Sensing, Morphology, and Microclimat
 to Analyse Urban Heat in Mexico City, Mexico. MSc Dissertation, UCL The Bartlett School of
 Architecture.
 ```
+
+## Related Publications
+
+- **Resendiz Garcia, D.** (2026). Coupling Remote Sensing, Morphology, and Microclimate Simulation to Analyse Urban Heat in Mexico City. In *Proceedings of the 15th International Space Syntax Symposium*. Kuala Lumpur, Malaysia. [[PDF](papers/SS_Malaysia_2026_Resendiz.pdf)]
 
 ## License
 

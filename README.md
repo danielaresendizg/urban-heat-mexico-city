@@ -145,6 +145,27 @@ urban-heat-mexico-city/
 └── qgis/                            # QGIS style files (LST, NDVI, UHI)
 ```
 
+## Workflow Overview
+
+The analysis follows a **three-phase pipeline**:
+
+### Phase 1: Data Preprocessing
+- **RedMet station processing** (`code/python/preprocessing/`)
+  - Process historical weather data (2014-2024)
+  - Generate LST→Ta calibration coefficients
+  - **Data access:** [Google Drive - RedMet Historical Files](YOUR_GOOGLE_DRIVE_LINK_HERE)
+
+### Phase 2: Macro/Meso Analysis
+- **Google Earth Engine** (`code/gee/`) - Landsat thermal mapping
+- **Python scripts** (`code/python/macro/`, `code/python/meso/`)
+  - Thermal-social hotspot detection
+  - Space Syntax + Space Matrix integration
+- **R scripts** (`code/r/`) - Spatial regression (GWR, Moran's I)
+
+### Phase 3: Micro-scale Simulation
+- **UMEP/SOLWEIG** (QGIS plugin) - Pedestrian thermal stress
+- Results visualized in dissertation figures
+
 ## Software and Tools
 
 - **Google Earth Engine** - Satellite imagery processing and thermal mapping

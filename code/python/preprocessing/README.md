@@ -71,13 +71,46 @@ import numpy as np
 from pathlib import Path
 ```
 
+### Data Access
+
+**RedMet Historical Files (2014-2024):**
+
+The script requires historical XLS files from the RedMet network. These files are hosted on Google Drive:
+
+📦 **[Download RedMet Data (Google Drive)](YOUR_GOOGLE_DRIVE_LINK_HERE)**
+
+**Folder structure required:**
+```
+redmet/
+├── Estaciones_historico_14-24/
+│   ├── 14REDMET/
+│   │   ├── 2014TMP.xls
+│   │   └── 2014RH.xls
+│   ├── 15REDMET/
+│   ├── ... (through 24REDMET)
+│   └── 24REDMET/
+│       ├── 2024TMP.xls
+│       └── 2024RH.xls
+├── estaciones_operacion_CDMX.csv
+└── estaciones_operacion_CDMX.gpkg
+```
+
+**Setup steps:**
+1. Download the `redmet` folder from Google Drive (link above)
+2. Extract to a local directory
+3. Update the `BASE` path in the script to point to your download location:
+
+```python
+BASE = Path("/path/to/your/downloaded/redmet")
+```
+
 ### Usage
 
 ```bash
 python 01_process_redmet_stations.py
 ```
 
-**Note:** Requires access to RedMet historical XLS files (not included in repository due to size). Contact SEDEMA-CDMX or author for access.
+**Alternative data source:** Contact SEDEMA-CDMX directly at https://www.aire.cdmx.gob.mx/ for official access to RedMet historical data.
 
 ### Integration with GEE Workflow
 

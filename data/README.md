@@ -15,7 +15,7 @@ Due to GitHub file size limitations, full datasets are hosted on Google Drive:
 
 ### Complete Dissertation Data (2.8 GB)
 **Location:** `My Drive/03_Consulting/dissertation_data/`
-**Access:** [Download from Google Drive](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Download from Google Drive](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - `Estaciones_historico_14-24/` - Historical XLS files by year
   - `14REDMET/` through `24REDMET/`

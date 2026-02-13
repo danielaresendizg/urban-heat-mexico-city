@@ -77,7 +77,7 @@ from pathlib import Path
 
 The script requires historical XLS files from the RedMet network. These files are hosted on Google Drive:
 
-📦 **[Download RedMet Data (Google Drive)](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)**
+📦 **[Download RedMet Data (Google Drive)](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)**
 
 **Folder structure required:**
 ```

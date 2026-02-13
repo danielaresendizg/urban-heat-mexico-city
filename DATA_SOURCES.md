@@ -20,7 +20,7 @@ Large processed datasets (2.3 GB total):
 
 #### **A. RedMet Historical Data** (89 MB)
 **Source:** SEDEMA-CDMX (Sistema de Monitoreo Atmosférico)
-**Access:** [Google Drive - RedMet](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - RedMet](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - Historical XLS files (2014-2024): Temperature and Humidity
 - Processed summer timeseries
@@ -30,7 +30,7 @@ Large processed datasets (2.3 GB total):
 
 #### **B. Space Matrix Dataset** (1.6 GB)
 **Source:** Derived from INEGI census blocks + Google Open Buildings
-**Access:** [Google Drive - Space Matrix](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - Space Matrix](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - FSI, GSI, L, OSR morphological indicators
 - Building footprint geometries
@@ -42,7 +42,7 @@ Large processed datasets (2.3 GB total):
 
 #### **C. Street Network** (216 MB)
 **Source:** OpenStreetMap + Space Syntax analysis
-**Access:** [Google Drive - Street Network](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - Street Network](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - Cleaned street network geometries
 - NAIN/NACH centralities at multiple radii (500m, 1000m, 1500m, 5000m)
@@ -54,7 +54,7 @@ Large processed datasets (2.3 GB total):
 
 #### **D. Census Blocks (Manzanas)** (357 MB)
 **Source:** INEGI 2020
-**Access:** [Google Drive - Manzanas](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - Manzanas](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - Census block geometries (poligono_manzanas_cdmx)
 - Socioeconomic indicators
@@ -66,7 +66,7 @@ Large processed datasets (2.3 GB total):
 
 #### **E. UMEP Microclimate Outputs** (48 MB)
 **Source:** SOLWEIG simulations via QGIS UMEP plugin
-**Access:** [Google Drive - UMEP](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - UMEP](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - Mean Radiant Temperature (Tmrt) rasters
 - UTCI (Universal Thermal Climate Index) outputs
@@ -80,7 +80,7 @@ Large processed datasets (2.3 GB total):
 
 #### **F. Thermal Data (Calor)** (15 MB)
 **Source:** Landsat 8/9 via Google Earth Engine
-**Access:** [Google Drive - Calor](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - Calor](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - LST (Land Surface Temperature) climatology (2014-2024)
 - Calibrated air temperature (Ta) estimates
@@ -94,7 +94,7 @@ Large processed datasets (2.3 GB total):
 
 #### **G. Administrative Boundaries** (172 KB)
 **Source:** INEGI 2020
-**Access:** [Google Drive - Boundaries](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
+**Access:** [Google Drive - Boundaries](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)
 **Contents:**
 - CDMX.gpkg - Mexico City boundary
 - manzana_level.gpkg - Census block boundaries

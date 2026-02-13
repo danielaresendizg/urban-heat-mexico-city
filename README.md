@@ -20,7 +20,7 @@ This dissertation proposes a city-to-street analytical pipeline to assess urban 
 The analysis is structured across three scales:
 
 <p align="center">
-  <img src="docs/diagrams/methodology_flow_diagram.png" width="90%" alt="Three-scale methodology flow diagram">
+  <img src="docs/diagrams/methodology_flow_diagram_diagram.png" width="90%" alt="Three-scale methodology flow diagram">
 </p>
 
 *Three-scale methodology linking macro screening (thermal-social hotspots), meso characterization (form + network), and micro simulation (pedestrian thermal stress). Vector version available in [`docs/diagrams/methodology_flow_diagram.pdf`](docs/diagrams/methodology_flow_diagram.pdf).*
@@ -37,6 +37,10 @@ The analysis is structured across three scales:
 - **Social:** 2020 Mexican Population and Housing Census (INEGI) at block level
 - **Morphology:** Google Open Buildings, cadastral data (IPDP-CDMX)
 - **Network:** Segmented street graph with angular centralities at 500, 1000, 1500, 5000 m
+
+<p align="center">
+  <img src="docs/diagrams/methodology_flow_diagram_table.png" width="95%" alt="Table: Data sources by methodological step">
+</p>
 
 ## Data (overview)
 
@@ -146,7 +150,8 @@ urban-heat-mexico-city/
 ├── docs/
 │   └── diagrams/                    # Methodology flow diagrams
 │       ├── methodology_flow_diagram.pdf
-│       ├── methodology_flow_diagram.png
+│       ├── methodology_flow_diagram_table.png
+│       ├── methodology_flow_diagram_diagram.png
 │       ├── methodology_flow_diagram.tex
 │       ├── fig.3.png
 │       ├── fig.4_meso_scale.png

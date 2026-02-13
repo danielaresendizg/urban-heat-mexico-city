@@ -13,9 +13,9 @@ This folder contains sample data files for the analysis. Full datasets are store
 
 Due to GitHub file size limitations, full datasets are hosted on Google Drive:
 
-### RedMet Historical Data (2014-2024)
-**Location:** `dissertation_data/redmet/`
-**Access:** [Google Drive Link - To be added]
+### Complete Dissertation Data (2.8 GB)
+**Location:** `My Drive/03_Consulting/dissertation_data/`
+**Access:** [Download from Google Drive](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)
 **Contents:**
 - `Estaciones_historico_14-24/` - Historical XLS files by year
   - `14REDMET/` through `24REDMET/`

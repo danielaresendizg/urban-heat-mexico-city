@@ -122,7 +122,8 @@ urban-heat-mexico-city/
 │       └── 02_gwr_heat_hotspot_analysis.R
 │
 ├── data/
-│   └── sample/                      # Sample data files (CSV)
+│   ├── sample/                      # Sample data files (CSV)
+│   └── README.md                    # Data access documentation
 │
 ├── docs/
 │   └── diagrams/                    # Methodology flow diagrams
@@ -142,7 +143,9 @@ urban-heat-mexico-city/
 │
 ├── figures/                         # Key result figures
 │
-└── qgis/                            # QGIS style files (LST, NDVI, UHI)
+├── qgis/                            # QGIS style files (LST, NDVI, UHI)
+│
+└── DATA_SOURCES.md                  # Complete data access guide
 ```
 
 ## Workflow Overview
@@ -153,7 +156,7 @@ The analysis follows a **three-phase pipeline**:
 - **RedMet station processing** (`code/python/preprocessing/`)
   - Process historical weather data (2014-2024)
   - Generate LST→Ta calibration coefficients
-  - **Data access:** [Google Drive - RedMet Historical Files](YOUR_GOOGLE_DRIVE_LINK_HERE)
+  - **Data access:** See complete dataset below
 
 ### Phase 2: Macro/Meso Analysis
 - **Google Earth Engine** (`code/gee/`) - Landsat thermal mapping
@@ -165,6 +168,36 @@ The analysis follows a **three-phase pipeline**:
 ### Phase 3: Micro-scale Simulation
 - **UMEP/SOLWEIG** (QGIS plugin) - Pedestrian thermal stress
 - Results visualized in dissertation figures
+
+---
+
+## 📦 Data Access
+
+**For complete data sources and download instructions, see [DATA_SOURCES.md](DATA_SOURCES.md)**
+
+All large datasets (2.8 GB) are hosted on Google Drive due to GitHub size limitations.
+
+### 📥 Download Complete Dataset
+
+**🔗 Google Drive:** Navigate to `My Drive/03_Consulting/dissertation_data/`
+
+Or use this shared folder link (after sharing):
+- **[Download Dissertation Data (2.8 GB)](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing)**
+
+### What's Included:
+
+| Folder | Size | Contents |
+|--------|------|----------|
+| `manzanas/` | 428 MB | Census blocks with thermal + social + morphology |
+| `street_network/` | 425 MB | Street segments with Space Syntax metrics |
+| `gwr/` | 183 MB | Geographically Weighted Regression outputs |
+| `thermal_rasters/` | 117 MB | Landsat thermal climatology (2014-2024) |
+| `redmet/` | 89 MB | Weather station historical data (SEDEMA-CDMX) |
+| `buildings/` | 1.6 GB | Filtered building footprints |
+| `boundaries/` | 452 KB | Administrative boundaries |
+| `environment/` | 2.6 MB | Context layers (rivers) |
+
+Small sample files are also included in `data/sample/` for quick reference.
 
 ## Software and Tools
 

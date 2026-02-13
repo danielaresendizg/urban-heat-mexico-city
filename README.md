@@ -15,6 +15,47 @@ This dissertation proposes a city-to-street analytical pipeline to assess urban 
 - **Q2 (Meso):** Which combinations of urban form/density and network configuration characterise thermal-social hotspots?
 - **Q3 (Micro):** How can micro-scale thermal stress be assessed to define passive design targets for heat reduction?
 
+## Methodology (overview)
+
+The analysis is structured across three scales:
+
+<p align="center">
+  <img src="docs/diagrams/methodology_flow_diagram.png" width="90%" alt="Three-scale methodology flow diagram">
+</p>
+
+*Three-scale methodology linking macro screening (thermal-social hotspots), meso characterization (form + network), and micro simulation (pedestrian thermal stress). Vector version available in [`docs/diagrams/methodology_flow_diagram.pdf`](docs/diagrams/methodology_flow_diagram.pdf).*
+
+| Scale | Methods | Key Outputs |
+|-------|---------|-------------|
+| **Macro** | Landsat 8/9 LST-to-Ta calibration (GEE), GWR by municipality | UHI air maps, thermal-social hotspots |
+| **Meso** | Space Syntax (NAIN/NACH), Space Matrix (FSI/GSI/L/OSR) | Contiguous clusters of heat severity + accessibility |
+| **Micro** | UMEP/SOLWEIG simulation (Tmrt, UTCI, PET) | Passive design targets for pedestrian corridors |
+
+### Key Data Sources
+
+- **Thermal:** Landsat 8/9 (2014-2024 summers), RedMet weather stations (SEDEMA-CDMX)
+- **Social:** 2020 Mexican Population and Housing Census (INEGI) at block level
+- **Morphology:** Google Open Buildings, cadastral data (IPDP-CDMX)
+- **Network:** Segmented street graph with angular centralities at 500, 1000, 1500, 5000 m
+
+## Data (overview)
+
+**For complete data sources and download instructions, see [DATA_SOURCES.md](DATA_SOURCES.md).**
+
+All large datasets (2.8 GB) are hosted on Google Drive due to GitHub size limitations:
+- **[Download Dissertation Data (2.8 GB)](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)**
+
+| Folder | Size | Contents |
+|--------|------|----------|
+| `manzanas/` | 428 MB | Census blocks with thermal + social + morphology |
+| `street_network/` | 425 MB | Street segments with Space Syntax metrics |
+| `gwr/` | 183 MB | Geographically Weighted Regression outputs |
+| `thermal_rasters/` | 117 MB | Landsat thermal climatology (2014-2024) |
+| `redmet/` | 89 MB | Weather station historical data (SEDEMA-CDMX) |
+| `buildings/` | 1.6 GB | Filtered building footprints |
+| `boundaries/` | 452 KB | Administrative boundaries |
+| `environment/` | 2.6 MB | Context layers (rivers) |
+
 ## Results
 
 ### Macro scale: thermal-social hotspots
@@ -46,29 +87,6 @@ Bivariate Local Moran's I showing spatial clusters of co-located thermal exposur
 </p>
 
 Geographically Weighted Regression coefficients identifying where thermal-social associations are strongest.
-
-## Methodology
-
-The analysis is structured across three scales:
-
-<p align="center">
-  <img src="docs/diagrams/methodology_flow_diagram.pdf" width="90%">
-</p>
-
-*Three-scale methodology linking macro screening (thermal-social hotspots), meso characterization (form + network), and micro simulation (pedestrian thermal stress). Full diagram available in [docs/diagrams/](docs/diagrams/).*
-
-| Scale | Methods | Key Outputs |
-|-------|---------|-------------|
-| **Macro** | Landsat 8/9 LST-to-Ta calibration (GEE), GWR by municipality | UHI air maps, thermal-social hotspots |
-| **Meso** | Space Syntax (NAIN/NACH), Space Matrix (FSI/GSI/L/OSR) | Contiguous clusters of heat severity + accessibility |
-| **Micro** | UMEP/SOLWEIG simulation (Tmrt, UTCI, PET) | Passive design targets for pedestrian corridors |
-
-### Key Data Sources
-
-- **Thermal:** Landsat 8/9 (2014-2024 summers), RedMet weather stations (SEDEMA-CDMX)
-- **Social:** 2020 Mexican Population and Housing Census (INEGI) at block level
-- **Morphology:** Google Open Buildings, cadastral data (IPDP-CDMX)
-- **Network:** Segmented street graph with angular centralities at 500, 1000, 1500, 5000 m
 
 ## Repository Structure
 
@@ -128,6 +146,7 @@ urban-heat-mexico-city/
 ├── docs/
 │   └── diagrams/                    # Methodology flow diagrams
 │       ├── methodology_flow_diagram.pdf
+│       ├── methodology_flow_diagram.png
 │       ├── methodology_flow_diagram.tex
 │       ├── fig.3.png
 │       ├── fig.4_meso_scale.png
@@ -184,19 +203,6 @@ All large datasets (2.8 GB) are hosted on Google Drive due to GitHub size limita
 Or use this shared folder link (after sharing):
 - **[Download Dissertation Data (2.8 GB)](https://drive.google.com/drive/folders/1T4irjWUR94Gs-R9X51J4TvW7qDcZF3gD?usp=sharing)**
 
-### What's Included:
-
-| Folder | Size | Contents |
-|--------|------|----------|
-| `manzanas/` | 428 MB | Census blocks with thermal + social + morphology |
-| `street_network/` | 425 MB | Street segments with Space Syntax metrics |
-| `gwr/` | 183 MB | Geographically Weighted Regression outputs |
-| `thermal_rasters/` | 117 MB | Landsat thermal climatology (2014-2024) |
-| `redmet/` | 89 MB | Weather station historical data (SEDEMA-CDMX) |
-| `buildings/` | 1.6 GB | Filtered building footprints |
-| `boundaries/` | 452 KB | Administrative boundaries |
-| `environment/` | 2.6 MB | Context layers (rivers) |
-
 Small sample files are also included in `data/sample/` for quick reference.
 
 ## Software and Tools
@@ -231,7 +237,7 @@ Architecture.
 
 ## Related Publications
 
-- **Resendiz Garcia, D.** (2026). Coupling Remote Sensing, Morphology, and Microclimate Simulation to Analyse Urban Heat in Mexico City. In *Proceedings of the 15th International Space Syntax Symposium*. Kuala Lumpur, Malaysia. [[PDF](papers/SS_Malaysia_2026_Resendiz.pdf)]
+- **Resendiz Garcia, D.** (2026). Coupling Remote Sensing, Morphology, and Microclimate Simulation to Analyse Urban Heat in Mexico City. In *Proceedings of the 15th International Space Syntax Symposium*. Kuala Lumpur, Malaysia. [[PDF](papers/SS_Malaysia_2026_Resendiz.pdf)] [[README](papers/README.md)]
 
 ## License
 

@@ -15,6 +15,38 @@ This dissertation proposes a city-to-street analytical pipeline to assess urban 
 - **Q2 (Meso):** Which combinations of urban form/density and network configuration characterise thermal-social hotspots?
 - **Q3 (Micro):** How can micro-scale thermal stress be assessed to define passive design targets for heat reduction?
 
+## Results
+
+### Macro scale: thermal-social hotspots
+
+<p align="center">
+  <img src="figures/hotspots_en/hotspots_thermal_en.png" width="80%">
+</p>
+
+Daytime summer air temperature hotspots (26/28 °C thresholds) overlaid with social vulnerability indicators at block level, revealing strong spatial heterogeneity across municipalities.
+
+### Macro scale: bivariate spatial analysis (LISA)
+
+<p align="center">
+  <img src="figures/lisa_en/lisa_montage_1_en.png" width="80%">
+</p>
+
+Bivariate Local Moran's I showing spatial clusters of co-located thermal exposure and social vulnerability.
+
+### Macro scale: social vulnerability distribution
+
+<p align="center">
+  <img src="figures/social/social_maps_2x2.png" width="80%">
+</p>
+
+### GWR hotspot detection
+
+<p align="center">
+  <img src="figures/hotspots_en/gwr_hotspots_montage_en.png" width="80%">
+</p>
+
+Geographically Weighted Regression coefficients identifying where thermal-social associations are strongest.
+
 ## Methodology
 
 The analysis is structured across three scales:
@@ -38,31 +70,53 @@ The analysis is structured across three scales:
 urban-heat-mexico-city/
 ├── README.md
 ├── LICENSE
+├── requirements.txt
 ├── .gitignore
 │
 ├── code/
-│   ├── python/                  # Python analysis scripts
-│   │   ├── hotspots_heat+social.py
-│   │   ├── hotspots_space_syntax.py
-│   │   ├── compare_OLS_GWR_moran.py
-│   │   ├── segment_thermal.py
-│   │   ├── generate_figures.py
-│   │   └── ...
-│   ├── r/                       # R spatial regression scripts
-│   │   └── regresion_spatial_lit.R
-│   └── gee/                     # Google Earth Engine scripts
-│       └── (GEE code description)
+│   ├── python/
+│   │   ├── macro/                   # City-wide analysis (16 scripts)
+│   │   │   ├── 01_map_social_vulnerability.py
+│   │   │   ├── 02_evaluate_gwr_variables.py
+│   │   │   ├── 03_lisa_bivariate_social_thermal.py
+│   │   │   ├── 04_map_thermal_social_hotspots.py
+│   │   │   ├── 05_ols_moran_by_alcaldia.py
+│   │   │   ├── 06_gwr_variable_diagnostics.py
+│   │   │   ├── 07_significance_quintiles_heatmap.py
+│   │   │   ├── 08_uhi_group_significance.py
+│   │   │   ├── 09_granular_decile_significance.py
+│   │   │   ├── 10_quintile_group_significance.py
+│   │   │   ├── 11_compare_ols_gwr_performance.py
+│   │   │   ├── 12_generate_social_indicators.py
+│   │   │   ├── 13_temperature_distribution_plots.py
+│   │   │   ├── 14_create_hotspots_gwr_thresholds.py
+│   │   │   ├── 15_thermal_variable_maps.py
+│   │   │   └── 16_merge_gwr_coefficients_citywide.py
+│   │   │
+│   │   └── meso/                    # Segment/block-level analysis (8 scripts)
+│   │       ├── 01_aggregate_syntax_to_hotspots.py
+│   │       ├── 02_merge_thermal_gwr_spacematrix.py
+│   │       ├── 03_extract_thermal_to_segments.py
+│   │       ├── 04_classify_spacematrix_typology.py
+│   │       ├── 05_calculate_spacematrix_robust.py
+│   │       ├── 06_calculate_spacematrix_patch.py
+│   │       ├── 07_stitch_citywide_catastro.py
+│   │       └── 08_prioritize_umep_study_zones.py
+│   │
+│   └── r/                           # R spatial regression (2 scripts)
+│       ├── 01_spatial_regression_analysis.R
+│       └── 02_gwr_heat_hotspot_analysis.R
 │
 ├── data/
-│   └── sample/                  # Sample/reference data files
+│   └── sample/                      # Sample data files (CSV)
 │
 ├── latex/
-│   ├── main/                    # Main dissertation LaTeX source
-│   └── appendix/                # Appendices LaTeX source
+│   ├── main/                        # Main dissertation (9 files + references.bib)
+│   └── appendix/                    # Appendices A-F (7 files)
 │
-├── figures/                     # Key result figures
+├── figures/                         # Key result figures
 │
-└── qgis/                        # QGIS style files (.qml)
+└── qgis/                            # QGIS style files (LST, NDVI, UHI)
 ```
 
 ## Software and Tools

@@ -1,0 +1,67 @@
+\section{Appendix C. Social Indicators}
+\label{app:c}
+
+Socio-demographic indicators were obtained from the 2020 Mexican Population and Housing Census (INEGI, 2021) at the urban-block (manzana) level. The following table presents the complete list of indicators used in this study, organized by thematic group.
+
+\begin{footnotesize}
+\begin{longtable}{@{}llll@{}}
+\caption{Social indicators based on INEGI's manual.} \label{tab:social_indicators} \\
+\toprule
+\textbf{Group} & \textbf{Indicator} & \textbf{Variable} & \textbf{Description} \\
+\midrule
+\endfirsthead
+
+\multicolumn{4}{c}%
+{{\tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Group} & \textbf{Indicator} & \textbf{Variable} & \textbf{Description} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+Age & pct\_0a5 & P\_0A2 + P\_3A5 & People aged 0--5 \\
+Age & pct\_6a14 & P\_6A11 + P\_8A14 & People aged 6--14 \\
+Age & pct\_15a59 & POB15\_64 & Population 15--64 \\
+Age & pct\_65plus & POB65\_MAS & Population 65+ \\
+\midrule
+Ethnicity & pct\_ethnic\_afro & POB\_AFRO & Afro-descendant (3+) \\
+Ethnicity & pct\_ethnic\_ind & P3YM\_HLI & Indigenous speakers (3+) \\
+Ethnicity & pct\_ethnic\_other & Derived & Other ethnicity \\
+\midrule
+Disability & pct\_with\_disc & PCON\_DISC & With disability \\
+Disability & pct\_without\_disc & Derived & Without disability \\
+\midrule
+Education & pct\_no\_school & P15YM\_SE & No schooling (15+) \\
+Education & pct\_elementary\_edu & P15PRI\_CO & Elementary (15+) \\
+Education & pct\_elementary2\_edu & P15SEC\_CO & Secondary (15+) \\
+Education & pct\_more\_edu & P18YM\_PB & Higher education (18+) \\
+\midrule
+Economy & pct\_ocup & POCUPADA & Employed (12+) \\
+Economy & pct\_desocup & PDESOCUP & Unemployed (12+) \\
+Economy & pct\_inac & PE\_INAC & Inactive (12+) \\
+\midrule
+Health & pct\_serv\_med & PDER\_SS & With health service \\
+Health & pct\_no\_serv\_med & PSINDER & Without health service \\
+\midrule
+Mobility & pct\_pop\_car & Derived & With car access \\
+Mobility & pct\_pop\_without\_car & Derived & Without car access \\
+\midrule
+Care & rel\_dep\_0\_14 & Derived & Dependency ratio (0--14) \\
+\midrule
+Gender & rel\_h\_m & POBMAS/POBFEM & Male-to-female ratio \\
+
+\end{longtable}
+\end{footnotesize}
+
+These indicators were selected based on their relevance to thermal vulnerability:
+\begin{itemize}
+    \item \textbf{Physiological sensitivity}: Age groups (children, elderly) and disability status.
+    \item \textbf{Adaptive capacity}: Access to health services, education level, economic activity.
+    \item \textbf{Exposure factors}: Mobility indicators (car access).
+\end{itemize}

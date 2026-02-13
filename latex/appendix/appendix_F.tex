@@ -1,0 +1,254 @@
+\section{Appendix F. Micro-scale Heat-Stress Statistics (UMEP/SOL\-WEIG)}
+\label{app:f}
+
+This appendix presents the micro-scale thermal comfort statistics derived from UMEP/SOLWEIG simulations for three study zones in Mexico City. The simulations were forced with zone-specific air temperature ($T_a$) and relative humidity (RH) values from the nearest RedMet station.
+
+\subsection*{Thermal Comfort Indices}
+
+The following indices were computed at pedestrian height ($\sim$1.5 m):
+
+\textbf{Mean Radiant Temperature ($T_{mrt}$):}
+\begin{equation}
+T_{mrt} = \left[ \frac{1}{\sigma} \sum_{i=1}^{n} F_i \cdot (K_i + L_i) \right]^{0.25} - 273.15
+\label{eq:tmrt}
+\end{equation}
+
+where $F_i$ is the angular factor, $K_i$ is shortwave radiation flux, $L_i$ is longwave radiation flux, and $\sigma$ is the Stefan-Boltzmann constant.
+
+\textbf{Universal Thermal Climate Index (UTCI):}
+\begin{equation}
+\text{UTCI} = f(T_a, T_{mrt}, v_{10}, RH)
+\label{eq:utci}
+\end{equation}
+
+UTCI is a polynomial approximation of human thermal stress based on air temperature, mean radiant temperature, wind speed at 10 m, and relative humidity.
+
+\textbf{Physiological Equivalent Temperature (PET):}
+\begin{equation}
+\text{PET} = f(T_a, T_{mrt}, v, RH, M, I_{cl})
+\label{eq:pet}
+\end{equation}
+
+PET is derived from the Munich Energy Balance Model for Individuals (MEMI), incorporating metabolic rate ($M$) and clothing insulation ($I_{cl}$).
+
+\subsection*{Zone Statistics}
+
+\begin{table}[H]
+\centering
+\caption{Median and p90 of $T_{mrt}$ and UTCI at pedestrian height from UMEP/SOLWEIG. ``\% UTCI $\geq$32/$\geq$38'' and ``\% PET $>$41'' are the share of points exceeding thresholds.}
+\label{tab:zone_stats}
+\footnotesize
+\begin{tabular}{@{}ccrrrrrrrr@{}}
+\toprule
+\textbf{Zone} & \textbf{Hour} & \textbf{n} & \multicolumn{2}{c}{\textbf{$T_{mrt}$}} & \multicolumn{2}{c}{\textbf{UTCI}} & \textbf{\%$\geq$32} & \textbf{\%$\geq$38} & \textbf{\%$>$41} \\
+\cmidrule(lr){4-5} \cmidrule(lr){6-7}
+ & & & Med & p90 & Med & p90 & & & \\
+\midrule
+1 & 10:00 & 7 & 34.4 & 63.7 & 27.4 & 35.1 & 29 & 0 & 0 \\
+1 & 12:00 & 7 & 55.9 & 59.5 & 33.1 & 34.0 & 57 & 0 & 0 \\
+1 & 14:00 & 7 & 61.4 & 65.3 & 34.5 & 35.5 & 71 & 0 & 14 \\
+\midrule
+2 & 10:00 & 5 & 62.8 & 65.0 & 35.0 & 35.6 & 100 & 0 & 40 \\
+2 & 12:00 & 5 & 58.4 & 60.7 & 33.9 & 34.5 & 100 & 0 & 0 \\
+2 & 14:00 & 5 & 57.1 & 59.0 & 33.5 & 33.8 & 100 & 0 & 0 \\
+\midrule
+3 & 10:00 & 6 & 54.8 & 58.7 & 33.2 & 34.5 & 100 & 0 & 33 \\
+3 & 12:00 & 6 & 54.0 & 67.3 & 33.0 & 37.5 & 100 & 17 & 33 \\
+3 & 14:00 & 6 & 60.7 & 64.4 & 34.5 & 37.1 & 100 & 0 & 17 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Hotspot Analysis}
+
+\begin{table}[H]
+\centering
+\caption{Highest PET points at 14:00 for each zone; useful to prioritise shade/material interventions. Values from the same micro-scale simulations.}
+\label{tab:hotspots}
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Zone} & \textbf{POI} & \textbf{$T_{mrt}$ ($^{\circ}$C)} & \textbf{UTCI ($^{\circ}$C)} & \textbf{PET ($^{\circ}$C)} \\
+\midrule
+1 & 7 & 68.6 & 36.3 & 43.4 \\
+1 & 2 & 63.1 & 34.9 & 40.6 \\
+1 & 4 & 62.0 & 34.6 & 40.1 \\
+1 & 5 & 61.4 & 34.5 & 39.8 \\
+1 & 6 & 60.1 & 34.2 & 39.2 \\
+\midrule
+2 & 3 & 59.0 & 33.8 & 39.6 \\
+2 & 5 & 58.2 & 33.8 & 39.1 \\
+2 & 1 & 57.7 & 33.6 & 38.9 \\
+2 & 2 & 57.1 & 33.5 & 38.5 \\
+2 & 4 & 56.0 & 33.2 & 38.0 \\
+\midrule
+3 & 2 & 64.4 & 37.1 & 44.3 \\
+3 & 4 & 60.7 & 34.7 & 41.8 \\
+3 & 6 & 58.3 & 33.9 & 40.2 \\
+3 & 5 & 57.4 & 33.6 & 39.8 \\
+3 & 1 & 57.2 & 33.6 & 39.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Thermal Stress Thresholds}
+
+The following thresholds were applied:
+\begin{itemize}
+    \item \textbf{UTCI $\geq$ 32$^{\circ}$C}: Strong heat stress
+    \item \textbf{UTCI $\geq$ 38$^{\circ}$C}: Very strong heat stress
+    \item \textbf{PET $>$ 41$^{\circ}$C}: Extreme heat stress (hot conditions)
+\end{itemize}
+
+These thresholds are based on established thermal comfort classifications (Bröde et al., 2012; Matzarakis et al., 1999) and represent conditions where outdoor activity becomes hazardous for vulnerable populations.
+
+\subsection*{Data Dictionary}
+
+The following table provides definitions for all fields in the block-level (manzana) integrated dataset used in this study.
+
+\begin{footnotesize}
+\begin{longtable}{@{}lllll@{}}
+\caption{Data dictionary for the block-level integrated matrix.} \label{tab:data_dictionary} \\
+\toprule
+\textbf{Field} & \textbf{Definition} & \textbf{Domain} & \textbf{Unit} & \textbf{Source} \\
+\midrule
+\endfirsthead
+
+\multicolumn{5}{c}%
+{{\tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Field} & \textbf{Definition} & \textbf{Domain} & \textbf{Unit} & \textbf{Source} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{5}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+% Identifiers
+fid & Internal row identifier & Identifier & integer & This study \\
+manzana\_id & Unique block identifier & Identifier & string & This study \\
+CVEGEO & Official geo-statistical code & Identifier & string & INEGI 2020 \\
+ENTIDAD & State code (federal entity) & Identifier & string & INEGI 2020 \\
+MUN & Municipality/borough code & Identifier & string & INEGI 2020 \\
+NOM\_MUN & Municipality/borough name & Identifier & string & INEGI 2020 \\
+\midrule
+% Demography
+pct\_0a5 & Population 0--5 (\%) & Demography & \% & INEGI 2020 \\
+pct\_6a14 & Population 6--14 (\%) & Demography & \% & INEGI 2020 \\
+pct\_15a64 & Population 15--64 (\%) & Demography & \% & INEGI 2020 \\
+pct\_65plus & Population 65+ (\%) & Demography & \% & INEGI 2020 \\
+pct\_ethnic\_afro & Afro-descendant (\%) & Ethnicity & \% & INEGI 2020 \\
+pct\_ethnic\_ind & Indigenous (\%) & Ethnicity & \% & INEGI 2020 \\
+pct\_ethnic\_other & Other ethnicity (\%) & Ethnicity & \% & INEGI 2020 \\
+rel\_dep\_0\_14 & Dependency ratio (0--14/15--64) & Demography & ratio & INEGI 2020 \\
+rel\_h\_m & Sex ratio (M/F) & Demography & ratio & INEGI 2020 \\
+\midrule
+% Health/Education/Labour
+pct\_with\_disc & With disability (\%) & Health & \% & INEGI 2020 \\
+pct\_without\_disc & Without disability (\%) & Health & \% & INEGI 2020 \\
+pct\_no\_school & No schooling (\%) & Education & \% & INEGI 2020 \\
+pct\_elementary\_edu & Primary completed (\%) & Education & \% & INEGI 2020 \\
+pct\_elementary2\_edu & Secondary completed (\%) & Education & \% & INEGI 2020 \\
+pct\_more\_edu & Higher education (\%) & Education & \% & INEGI 2020 \\
+pct\_ocup & Employed (\%) & Labour & \% & INEGI 2020 \\
+pct\_desocup & Unemployed (\%) & Labour & \% & INEGI 2020 \\
+pct\_inac & Inactive (\%) & Labour & \% & INEGI 2020 \\
+pct\_serv\_med & With health service (\%) & Health & \% & INEGI 2020 \\
+pct\_no\_serv\_med & Without health service (\%) & Health & \% & INEGI 2020 \\
+pct\_pop\_sin\_auto & Households without car (\%) & Mobility & \% & INEGI 2020 \\
+pct\_pop\_auto & Households with car (\%) & Mobility & \% & INEGI 2020 \\
+\midrule
+% Thermal climate
+Ta\_mean & Mean summer daytime air temp. & Thermal & $^{\circ}$C & Landsat--RedMet \\
+Ta\_max & Max summer daytime air temp. & Thermal & $^{\circ}$C & Landsat--RedMet \\
+UHI\_mean & Mean UHI intensity & Thermal & $^{\circ}$C & This study \\
+UHI\_max & Max UHI intensity & Thermal & $^{\circ}$C & This study \\
+LST\_mean & Mean land surface temp. & Remote sensing & $^{\circ}$C & Landsat 8/9 \\
+NDVI\_mean & Mean NDVI & Remote sensing & index & Landsat 8/9 \\
+NDBI\_mean & Mean NDBI & Remote sensing & index & Landsat 8/9 \\
+Albedo\_mean & Mean broadband albedo & Remote sensing & 0--1 & Landsat 8/9 \\
+\midrule
+% Urban form (SpaceMatrix)
+A\_m2 & Gross built floor area & SpaceMatrix & m$^2$ & Cadastre \\
+B\_m2 & Gross block land area & SpaceMatrix & m$^2$ & Cadastre \\
+sup\_const\_tot\_m2 & Total constructed floor area & SpaceMatrix & m$^2$ & Cadastre \\
+sup\_terreno\_tot\_m2 & Total land plot area & SpaceMatrix & m$^2$ & Cadastre \\
+n\_props & Number of property records & Parcels & count & Cadastre \\
+n\_predios & Number of parcels & Parcels & count & Cadastre \\
+FSI & Floor Space Index & SpaceMatrix & ratio & This study \\
+GSI & Ground Space Index & SpaceMatrix & ratio & This study \\
+L\_equiv & Equivalent number of floors & SpaceMatrix & ratio & This study \\
+OSR & Open Space Ratio & SpaceMatrix & ratio & This study \\
+\midrule
+% GWR results
+coef\_Intercept & GWR intercept coefficient & GWR & coef. & This study \\
+coef\_pct\_pop\_sin\_auto & Coef. \% without car & GWR & coef. & This study \\
+coef\_pct\_no\_serv\_med & Coef. \% without health & GWR & coef. & This study \\
+coef\_pct\_inac & Coef. \% inactive & GWR & coef. & This study \\
+coef\_pct\_65plus & Coef. \% 65+ & GWR & coef. & This study \\
+coef\_pct\_6a14 & Coef. \% 6--14 & GWR & coef. & This study \\
+coef\_pct\_with\_disc & Coef. \% disability & GWR & coef. & This study \\
+coef\_pct\_elementary\_edu & Coef. \% primary edu & GWR & coef. & This study \\
+tval\_Intercept & t-stat intercept & GWR & t-stat & This study \\
+tval\_pct\_pop\_sin\_auto & t-stat \% without car & GWR & t-stat & This study \\
+tval\_pct\_no\_serv\_med & t-stat \% without health & GWR & t-stat & This study \\
+tval\_pct\_inac & t-stat \% inactive & GWR & t-stat & This study \\
+tval\_pct\_65plus & t-stat \% 65+ & GWR & t-stat & This study \\
+tval\_pct\_6a14 & t-stat \% 6--14 & GWR & t-stat & This study \\
+tval\_pct\_with\_disc & t-stat \% disability & GWR & t-stat & This study \\
+tval\_pct\_elementary\_edu & t-stat \% primary edu & GWR & t-stat & This study \\
+\midrule
+% Heat flags
+is\_hot\_26 & Block $T_a \geq 26^{\circ}$C & Heat flags & bool & This study \\
+is\_hot\_28 & Block $T_a \geq 28^{\circ}$C & Heat flags & bool & This study \\
+hot26\_pct\_65plus & 65+ sig. at 26$^{\circ}$C & Heat flags & bool & This study \\
+hot28\_pct\_65plus & 65+ sig. at 28$^{\circ}$C & Heat flags & bool & This study \\
+hot26\_pct\_6a14 & 6--14 sig. at 26$^{\circ}$C & Heat flags & bool & This study \\
+hot28\_pct\_6a14 & 6--14 sig. at 28$^{\circ}$C & Heat flags & bool & This study \\
+hot26\_any\_social & Any social sig. at 26$^{\circ}$C & Heat flags & bool & This study \\
+hot28\_any\_social & Any social sig. at 28$^{\circ}$C & Heat flags & bool & This study \\
+hot26\_count\_social & Count sig. social at 26$^{\circ}$C & Heat flags & count & This study \\
+hot28\_count\_social & Count sig. social at 28$^{\circ}$C & Heat flags & count & This study \\
+peligro\_cat & Heat hazard class & Heat flags & cat & This study \\
+\midrule
+% Typology
+typology\_code\_base & Base SpaceMatrix code & Typology & code & This study \\
+typology\_name\_base & Base typology label & Typology & string & This study \\
+typology\_code\_final & Final typology code & Typology & code & This study \\
+typology\_sm\_final & Final SpaceMatrix label & Typology & string & This study \\
+flag\_mixto\_dq & Mixed/low-quality flag & Typology & boolean & This study \\
+flag\_mixto\_limite & Near class boundary flag & Typology & boolean & This study \\
+diag\_reason & Diagnostic for class change & Typology & string & This study \\
+\midrule
+% Space Syntax
+street\_len\_in\_manz\_m & Street length bordering block & Network & m & This study \\
+NACHr500m\_lenw\_mean & Betweenness 500m & Sp. Syntax & index & This study \\
+NACHr1000m\_lenw\_mean & Betweenness 1000m & Sp. Syntax & index & This study \\
+NACHr1500m\_lenw\_mean & Betweenness 1500m & Sp. Syntax & index & This study \\
+NACHr5000m\_lenw\_mean & Betweenness 5000m & Sp. Syntax & index & This study \\
+NAINr500m\_lenw\_mean & Integration 500m & Sp. Syntax & index & This study \\
+NAINr1000m\_lenw\_mean & Integration 1000m & Sp. Syntax & index & This study \\
+NAINr1500m\_lenw\_mean & Integration 1500m & Sp. Syntax & index & This study \\
+NAINr5000m\_lenw\_mean & Integration 5000m & Sp. Syntax & index & This study \\
+\midrule
+% Proximity metrics
+NACHr500m\_near & Betweenness nearest hot seg. & Proximity & index & This study \\
+NAINr500m\_near & Integration nearest hot seg. & Proximity & index & This study \\
+peligro\_cat\_near & Heat class nearest seg. & Proximity & cat & This study \\
+\_dist & Distance to nearest hot seg. & Proximity & m & This study \\
+hot\_cat\_manz & Block heat category & Heat flags & cat & This study \\
+is\_hotspot & Block is hotspot & Heat flags & bool & This study \\
+
+\end{longtable}
+\end{footnotesize}
+
+\subsection*{References}
+
+\begin{itemize}
+    \item Bröde, P., Fiala, D., Blazejczyk, K., Holmér, I., Jendritzky, G., Kampmann, B., Tinz, B. and Havenith, G., 2012. Deriving the operational procedure for the Universal Thermal Climate Index (UTCI). \textit{International Journal of Biometeorology}, 56(3), pp.481--494.
+    \item Matzarakis, A., Mayer, H. and Iziomon, M.G., 1999. Applications of a universal thermal index: physiological equivalent temperature. \textit{International Journal of Biometeorology}, 43(2), pp.76--84.
+    \item Rogerson, P.A., 2019. \textit{Statistical Methods for Geography: A Student's Guide}. 5th ed. London: SAGE Publications Ltd.
+\end{itemize}

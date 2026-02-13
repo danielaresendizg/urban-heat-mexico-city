@@ -1,0 +1,49 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+venv/
+.env
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# LaTeX build files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.xdv
+*.synctex.gz
+*.synctex(busy)
+
+# QGIS
+*.qgz~
+*.qgs~
+
+# Large data files (keep samples only)
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.tif
+*.tiff
+*.zip
+
+# IDE
+.vscode/
+.idea/

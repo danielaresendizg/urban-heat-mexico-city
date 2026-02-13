@@ -1,0 +1,75 @@
+\section{Appendix A. Climatic Data Processing in Google Earth Engine}
+\label{app:a}
+
+This study implemented a custom script in Google Earth Engine (GEE) to process Landsat 8/9 Level-2 surface reflectance imagery and produce a decadal (2014--2024) climatology of surface and air temperatures for Mexico City. The workflow proceeded as follows:
+
+\subsection*{Area of Interest and Parameters}
+Defined as a bounding polygon for Mexico City; spatial resolution set to 30 m. RedMet-derived regression coefficients were applied for temperature calibration.
+
+\subsection*{Preprocessing}
+Optical bands scaled to reflectance; thermal bands to brightness temperature. Cloud, shadow, and cirrus pixels masked using QA\_PIXEL bits.
+
+\subsection*{Summer Composites}
+Median images computed for June--August of each year. A multi-annual average generated the decadal climatology.
+
+\subsection*{Spectral Indices}
+
+The Normalised Difference Vegetation Index (NDVI) was calculated as:
+\begin{equation}
+\text{NDVI} = \frac{\rho_{NIR} - \rho_{Red}}{\rho_{NIR} + \rho_{Red}}
+\label{eq:ndvi}
+\end{equation}
+
+The Normalised Difference Built-up Index (NDBI) was calculated as:
+\begin{equation}
+\text{NDBI} = \frac{\rho_{SWIR} - \rho_{NIR}}{\rho_{SWIR} + \rho_{NIR}}
+\label{eq:ndbi}
+\end{equation}
+
+Broadband albedo ($\alpha$) was estimated via mean reflectance across shortwave bands:
+\begin{equation}
+\alpha = \frac{1}{n} \sum_{i=1}^{n} \rho_i
+\label{eq:albedo}
+\end{equation}
+
+\subsection*{Emissivity and LST}
+
+Surface emissivity ($\varepsilon$) was estimated from NDVI-based vegetation fraction ($P_v$):
+\begin{equation}
+P_v = \left( \frac{\text{NDVI} - \text{NDVI}_{min}}{\text{NDVI}_{max} - \text{NDVI}_{min}} \right)^2
+\label{eq:pv}
+\end{equation}
+
+\begin{equation}
+\varepsilon = 0.004 \cdot P_v + 0.986
+\label{eq:emissivity}
+\end{equation}
+
+Land Surface Temperature (LST) was calculated using the single-channel radiative transfer model:
+\begin{equation}
+\text{LST} = \frac{T_B}{1 + \left( \frac{\lambda \cdot T_B}{\rho} \right) \ln(\varepsilon)}
+\label{eq:lst}
+\end{equation}
+
+where $T_B$ is brightness temperature, $\lambda$ is the wavelength of emitted radiance, and $\rho = h \cdot c / \sigma$ (with $h$ = Planck's constant, $c$ = speed of light, $\sigma$ = Boltzmann constant).
+
+\subsection*{Air Temperature Calibration}
+
+Air temperature ($T_a$) was derived from LST using empirical calibration with RedMet observations:
+\begin{equation}
+T_a = 0.5540 \times \text{LST} + 5.7606
+\label{eq:ta_calibration}
+\end{equation}
+
+\subsection*{Derived Thermal Metrics}
+
+Urban Heat Island intensity (UHI\_air) was computed as the z-score of calibrated air temperature:
+\begin{equation}
+\text{UHI}_{air} = \frac{T_a - \bar{T}_a}{\sigma_{T_a}}
+\label{eq:uhi}
+\end{equation}
+
+The Urban Thermal Field Variance Index (UTFVI\_air) was also derived following Waleed et al. (2023).
+
+\subsection*{Export}
+Final rasters---including NDVI, NDBI, albedo, LST, $T_a$, UHI\_air, and UTFVI\_air---were exported to Google Drive at 30 m resolution.

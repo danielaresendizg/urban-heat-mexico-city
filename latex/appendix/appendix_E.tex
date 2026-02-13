@@ -1,0 +1,190 @@
+\section{Appendix E. Prediagnostic of Geographically Weighted Regression}
+\label{app:e}
+
+\subsection*{Exploratory Spatial Analysis}
+
+Figures 1--4 present the exploratory analyses conducted prior to the GWR modelling:
+\begin{itemize}
+    \item \textit{Figure 1}: Heatmaps of significant quintile differences.
+    \item \textit{Figure 2}: Heatmaps by age, ethnicity, disability, economy, education, mobility.
+    \item \textit{Figure 3}: Significance tests against 26$^{\circ}$C and 26.7$^{\circ}$C thresholds.
+    \item \textit{Figure 4}: Correlation heatmap among social indicators.
+\end{itemize}
+
+\subsection*{Spatial Autocorrelation Diagnostics}
+
+\begin{table}[H]
+\centering
+\caption{Local Moran's I summary for socio-demographic variables.}
+\label{tab:moran_summary}
+\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Variable} & \textbf{Global I} & \textbf{\% sig.} & \textbf{N} \\
+\midrule
+pct\_0a5 & -0.081 & 36.6 & 66,449 \\
+pct\_6a14 & -0.102 & 38.4 & 66,449 \\
+pct\_15a64 & 0.020 & 37.9 & 66,449 \\
+pct\_65plus & 0.097 & 36.4 & 66,449 \\
+pct\_ethnic\_afro & 0.005 & 40.2 & 66,449 \\
+pct\_ethnic\_ind & -0.097 & 39.7 & 66,449 \\
+pct\_ethnic\_other & -0.005 & 36.2 & 66,449 \\
+pct\_without\_disc & 0.018 & 36.1 & 66,449 \\
+pct\_with\_disc & 0.065 & 36.1 & 66,449 \\
+pct\_no\_school & -0.108 & 38.6 & 66,449 \\
+pct\_elementary\_edu & -0.062 & 38.5 & 66,449 \\
+pct\_elementary2\_edu & -0.094 & 37.9 & 66,449 \\
+pct\_more\_edu & 0.072 & 36.7 & 66,449 \\
+pct\_ocup & -0.036 & 39.1 & 66,449 \\
+pct\_desocup & 0.020 & 37.3 & 66,449 \\
+pct\_inac & 0.008 & 37.7 & 66,449 \\
+pct\_serv\_med & -0.017 & 38.5 & 66,449 \\
+pct\_no\_serv\_med & 0.000 & 38.2 & 66,449 \\
+pct\_pop\_auto & 0.006 & 40.9 & 66,449 \\
+pct\_pop\_sin\_auto & 0.059 & 34.0 & 66,449 \\
+rel\_dep\_0\_14 & -0.049 & 37.3 & 66,449 \\
+rel\_h\_m & -0.029 & 36.1 & 66,449 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Variable Screening}
+
+\begin{table}[H]
+\centering
+\begin{minipage}{0.45\textwidth}
+\centering
+\caption{Variables with $>$50\% zeros.}
+\label{tab:zeros}
+\footnotesize
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Variable} & \textbf{\% Zeros} \\
+\midrule
+pct\_ethnic\_ind & 80.2\% \\
+pct\_desocup & 77.3\% \\
+pct\_ethnic\_afro & 76.0\% \\
+pct\_no\_school & 73.5\% \\
+pct\_0a5 & 57.6\% \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\caption{Excluded (VIF $>$ 15).}
+\label{tab:vif}
+\footnotesize
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Variable} & \textbf{VIF} \\
+\midrule
+pct\_serv\_med & 43.8 \\
+pct\_ocup & 31.2 \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Variables selected for GWR model.}
+\label{tab:gwr_variables}
+\footnotesize
+\begin{tabular}{@{}lp{9cm}@{}}
+\toprule
+\textbf{Indicator} & \textbf{Description} \\
+\midrule
+pct\_pop\_without\_car & Population in households without private vehicle \\
+pct\_no\_serv\_med & Without public medical services affiliation \\
+pct\_inac & Economically inactive (12+) \\
+pct\_65plus & Population aged 65+ \\
+pct\_6a14 & Population aged 6--14 \\
+pct\_with\_disc & With any disability \\
+pct\_elementary\_edu & Primary education only (15+) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Note}: Variable selection combined theory-led relevance---capturing thermal sensitivity and adaptive capacity/exposure---with statistical screening (VIF $>$ 15 exclusion/residualisation and cautious retention of zero-inflated covariates only when substantively essential and robust in borough-level sensitivity checks), yielding a transparent and reproducible specification.
+
+\subsection*{GWR Bandwidth by District}
+
+\begin{table}[H]
+\centering
+\caption{Bandwidth per district for GWR.}
+\label{tab:bandwidth}
+\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{District} & \textbf{n} & \textbf{BW} & \textbf{Ratio} \\
+\midrule
+Miguel Hidalgo & 2,703 & 56 & 0.021 \\
+Milpa Alta & 1,021 & 59 & 0.058 \\
+Venustiano Carranza & 3,591 & 60 & 0.017 \\
+Tláhuac & 3,241 & 62 & 0.019 \\
+Cuajimalpa de Morelos & 1,080 & 65 & 0.060 \\
+Álvaro Obregón & 5,373 & 66 & 0.012 \\
+Gustavo A. Madero & 8,690 & 66 & 0.008 \\
+Cuauhtémoc & 2,853 & 69 & 0.024 \\
+Tlalpan & 5,067 & 70 & 0.014 \\
+Coyoacán & 4,815 & 71 & 0.015 \\
+Iztacalco & 2,923 & 71 & 0.024 \\
+La Magdalena Contreras & 1,449 & 72 & 0.050 \\
+Azcapotzalco & 3,269 & 76 & 0.023 \\
+Xochimilco & 2,921 & 77 & 0.026 \\
+Benito Juárez & 2,341 & 95 & 0.041 \\
+Iztapalapa & 15,112 & 303 & 0.020 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Note}: Adaptive bi-square kernel with AICc bandwidth selection. GWR improved fit but residual autocorrelation remained significant.
+
+\subsection*{Model Comparison}
+
+\begin{table}[H]
+\centering
+\caption{OLS vs GWR comparison.}
+\label{tab:ols_gwr}
+\footnotesize
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Municipalities evaluated & 16 \\
+R$^2$ improved with GWR & 16/16 \\
+Moran's p improved & 11/16 \\
+GWR residual Moran's $p < 0.05$ & 16/16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{GWR diagnostics by borough.}
+\label{tab:gwr_diagnostics}
+\footnotesize
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{District} & \textbf{n} & \textbf{R$^2$} & \textbf{Moran I} & \textbf{z} \\
+\midrule
+Azcapotzalco & 3,269 & 0.78 & 0.26 & 31.2 \\
+Benito Juárez & 2,341 & 0.65 & 0.26 & 26.2 \\
+Coyoacán & 4,815 & 0.81 & 0.29 & 42.6 \\
+Cuajimalpa & 1,080 & 0.86 & 0.28 & 19.8 \\
+Cuauhtémoc & 2,853 & 0.86 & 0.30 & 32.9 \\
+Gustavo A. Madero & 8,690 & 0.93 & 0.23 & 44.9 \\
+Iztacalco & 2,923 & 0.76 & 0.32 & 36.0 \\
+Iztapalapa & 15,112 & 0.76 & 0.56 & 144.2 \\
+La Magdalena C. & 1,449 & 0.86 & 0.28 & 22.2 \\
+Miguel Hidalgo & 2,703 & 0.38 & 0.63 & 69.1 \\
+Milpa Alta & 1,021 & 0.90 & 0.25 & 17.4 \\
+Tlalpan & 5,067 & 0.91 & 0.27 & 40.8 \\
+Tláhuac & 3,241 & 0.86 & 0.24 & 29.2 \\
+Venustiano C. & 3,591 & 0.88 & 0.24 & 29.7 \\
+Xochimilco & 2,921 & 0.85 & 0.26 & 30.1 \\
+Álvaro Obregón & 5,373 & 0.86 & 0.24 & 37.1 \\
+\bottomrule
+\end{tabular}
+\end{table}

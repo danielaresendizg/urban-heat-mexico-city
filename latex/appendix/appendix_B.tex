@@ -1,0 +1,187 @@
+\section{Appendix B. Processing of RedMet Station Data (2014–2024)}
+\label{app:b}
+
+This appendix documents the processing steps used to extract, clean, and summarize thermal observations from the Red de Monitoreo Atmosférico (RedMet) across 18 meteorological stations in Mexico City. The workflow produced daily statistics of ambient air temperature ($T_a$) and apparent temperature (Humidex) during the summer seasons (June--August) over the period 2014--2024.
+
+\subsection*{Data Sources and Structure}
+
+Two main data sources were used:
+\begin{enumerate}
+    \item A CSV file containing metadata for all RedMet stations: station codes, names, coordinates, and elevation.
+    \item A folder structure containing hourly Excel files for each year (2014--2024), divided by temperature and humidity.
+\end{enumerate}
+
+Each file stored temperature ($T_a$) and relative humidity (RH) values in wide format, with rows for each timestamp and columns for each station.
+
+All files were converted to long format using \texttt{pandas.melt()}, resulting in one row per timestamp and station. Records were filtered to include only known station codes. A datetime column was constructed from the original FECHA and HORA fields.
+
+To ensure data quality, error codes (--99, --999) were replaced with NaN, and only valid observations were retained. The dataset was filtered to summer months (June--August).
+
+\subsection*{Humidex Calculation}
+
+The Humidex index, an apparent temperature metric, was computed from hourly values. Following Steadman's formulation, the equations applied were:
+
+Saturation vapor pressure:
+\begin{equation}
+e_s = 6.112 \times 10^{\frac{7.5 \cdot T_a}{237.7 + T_a}}
+\label{eq:es}
+\end{equation}
+
+Actual vapor pressure:
+\begin{equation}
+e = e_s \times \frac{RH}{100}
+\label{eq:e}
+\end{equation}
+
+Humidex:
+\begin{equation}
+\text{Humidex} = T_a + 0.5555 \times (e - 10)
+\label{eq:humidex}
+\end{equation}
+
+These formulas estimate the thermal stress perceived by the human body under hot and humid conditions, using temperature in $^{\circ}$C and humidity in percentage.
+
+\subsection*{Aggregation: Daytime and Nighttime Metrics}
+
+To align with the satellite overpass time and typical human heat exposure windows, the data was divided into:
+\begin{itemize}
+    \item Daytime (10:00--16:00 local time)
+    \item Nighttime (00:00--05:00 local time)
+\end{itemize}
+
+For each station, the following metrics were calculated from hourly records during those time windows:
+
+\begin{table}[H]
+\centering
+\caption{Daytime and nighttime thermal metrics calculated per station.}
+\label{tab:metrics}
+\begin{tabular}{llp{7cm}}
+\toprule
+\textbf{Period} & \textbf{Metric} & \textbf{Description} \\
+\midrule
+Daytime & Ta\_mean\_day & Mean air temperature ($^{\circ}$C) \\
+Daytime & Ta\_p90\_day & 90th percentile of air temperature \\
+Daytime & Humidex\_mean\_day & Mean apparent temperature \\
+\midrule
+Nighttime & Ta\_min\_night & Minimum air temperature ($^{\circ}$C) \\
+Nighttime & Humidex\_mean\_night & Mean apparent temperature \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Output Summary}
+
+The two output tables---daytime and nighttime---were joined with station metadata for spatial visualization and thermal calibration. These were used to:
+\begin{itemize}
+    \item Calibrate satellite-based LST $\rightarrow$ $T_a$ regression (Appendix A)
+    \item Diagnose spatiotemporal heat exposure across Mexico City
+    \item Stratify urban heat hazard into daytime and nighttime intensities
+\end{itemize}
+
+Each CSV contains results for 17 stations and was used for both validation and boundary conditions in simulation.
+
+\begin{table}[H]
+\centering
+\caption{All RedMet stations in México City.}
+\label{tab:stations_all}
+\footnotesize
+\begin{tabular}{@{}clcrrr@{}}
+\toprule
+\textbf{ID} & \textbf{Station Name} & \textbf{Code} & \textbf{Lon} & \textbf{Lat} & \textbf{Alt (m)} \\
+\midrule
+1 & Camarones & CAM & -99.170 & 19.468 & 2233 \\
+2 & Lab. de Análisis Ambiental & LAA & -99.147 & 19.484 & 2255 \\
+3 & Unidad Móvil & UNM & -99.147 & 19.482 & -- \\
+4 & Centro de Ciencias de la Atmósfera & CCA & -99.176 & 19.326 & 2294 \\
+5 & Coyoacán & COY & -99.157 & 19.350 & 2260 \\
+6 & Diconsa & DIC & -99.186 & 19.299 & 2305 \\
+7 & Pedregal & PED & -99.204 & 19.325 & 2326 \\
+8 & Santa Úrsula & SUR & -99.150 & 19.314 & 2279 \\
+9 & UAM Xochimilco & UAX & -99.104 & 19.304 & 2246 \\
+10 & Cuajimalpa & CUA & -99.292 & 19.365 & 2704 \\
+11 & Exconv. Desierto Leones & EDL & -99.311 & 19.313 & 2980 \\
+12 & Santa Fe & SFE & -99.263 & 19.357 & 2599 \\
+13 & San Nicolás Totolapan & SNT & -99.256 & 19.250 & 2946 \\
+14 & Gustavo A. Madero & GAM & -99.095 & 19.483 & 2227 \\
+15 & San Juan Aragón & SJA & -99.086 & 19.453 & 2258 \\
+16 & Cerro del Tepeyac & TEC & -99.114 & 19.487 & 2265 \\
+17 & Iztacalco & IZT & -99.118 & 19.384 & 2238 \\
+18 & UAM Iztapalapa & UIZ & -99.074 & 19.361 & 2221 \\
+19 & Santiago Acahualtepec & SAC & -99.009 & 19.346 & 2293 \\
+20 & Ajusco Medio & AJM & -99.208 & 19.272 & 2548 \\
+21 & Ajusco & AJU & -99.163 & 19.154 & 2942 \\
+22 & Milpa Alta & MPA & -98.990 & 19.177 & 2594 \\
+23 & Ecoguardas Ajusco & EAJ & -99.204 & 19.271 & 2584 \\
+24 & Lomas & LOM & -99.242 & 19.403 & 2434 \\
+25 & Tlalpan & TPN & -99.184 & 19.257 & 2522 \\
+26 & CORENA & COR & -99.026 & 19.265 & 2242 \\
+27 & Tláhuac & TAH & -99.011 & 19.246 & 2297 \\
+28 & Hospital General de México & HGM & -99.152 & 19.412 & 2234 \\
+29 & Museo de la Cd. de México & MCM & -99.132 & 19.429 & 2237 \\
+30 & Legaria & IBM & -99.215 & 19.443 & 2314 \\
+31 & Miguel Hidalgo & MGH & -99.203 & 19.404 & 2327 \\
+32 & Secretaría de Hacienda & SHA & -99.208 & 19.446 & 2272 \\
+33 & Merced & MER & -99.120 & 19.425 & 2245 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Stations with consistent information used in the analysis.}
+\label{tab:stations_consistent}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Station} & \textbf{Ta\_mean} & \textbf{Ta\_p90} & \textbf{Humidex} & \textbf{Ta\_min} & \textbf{Humidex} \\
+ & \textbf{day ($^{\circ}$C)} & \textbf{day ($^{\circ}$C)} & \textbf{mean\_day} & \textbf{night ($^{\circ}$C)} & \textbf{mean\_night} \\
+\midrule
+AJM & 19.18 & 22.6 & 19.56 & 6.2 & 14.72 \\
+AJU & 15.52 & 18.8 & 16.47 & 2.9 & 10.23 \\
+CUA & 18.02 & 21.7 & 18.59 & 9.2 & 13.64 \\
+GAM & 22.33 & 25.7 & 24.15 & 12.9 & 19.15 \\
+HGM & 21.56 & 24.9 & 21.92 & 12.8 & 17.36 \\
+LAA & 21.92 & 26.1 & 23.02 & 8.5 & 17.78 \\
+MER & 22.10 & 25.7 & 23.16 & 12.2 & 18.61 \\
+MGH & 21.78 & 25.3 & 22.20 & 12.1 & 17.75 \\
+MPA & 18.44 & 22.4 & 19.29 & 7.4 & 13.22 \\
+PED & 21.01 & 24.7 & 21.73 & 9.2 & 16.44 \\
+SAC & 22.08 & 27.5 & 21.91 & 8.1 & 13.74 \\
+SFE & 18.74 & 21.8 & 19.81 & 9.4 & 14.47 \\
+SUR & 21.29 & 25.1 & 22.66 & 12.4 & 17.88 \\
+TAH & 21.47 & 25.2 & 22.49 & 10.5 & 16.56 \\
+TPN & 20.24 & 24.8 & 21.32 & 8.3 & 13.71 \\
+UAX & 21.22 & 24.8 & 22.08 & 11.0 & 17.19 \\
+UIZ & 22.12 & 25.9 & 23.38 & 12.2 & 18.93 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Information used for UMEP simulations.}
+\label{tab:umep_input}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Station} & \textbf{Ta\_mean\_day ($^{\circ}$C)} & \textbf{Humidex\_mean\_day} & \textbf{RH\_mean\_day (\%)} \\
+\midrule
+AJM & 19.18 & 19.56 & 48.1 \\
+AJU & 15.52 & 16.47 & 66.3 \\
+CUA & 18.02 & 18.59 & 53.4 \\
+GAM & 22.33 & 24.15 & 49.2 \\
+HGM & 21.56 & 21.92 & 41.4 \\
+LAA & 21.92 & 23.02 & 45.5 \\
+MER & 22.10 & 23.16 & 44.8 \\
+MGH & 21.78 & 22.20 & 41.2 \\
+MPA & 18.44 & 19.29 & 54.4 \\
+PED & 21.01 & 21.73 & 45.3 \\
+SAC & 22.08 & 21.91 & 36.5 \\
+SFE & 18.74 & 19.81 & 55.1 \\
+SUR & 21.29 & 22.66 & 49.3 \\
+TAH & 21.47 & 22.49 & 46.2 \\
+TPN & 20.24 & 21.32 & 50.3 \\
+UAX & 21.22 & 22.08 & 45.8 \\
+UIZ & 22.12 & 23.38 & 46.0 \\
+\bottomrule
+\end{tabular}
+\end{table}

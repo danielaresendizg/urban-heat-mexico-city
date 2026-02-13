@@ -1,0 +1,50 @@
+\documentclass[12pt,a4paper]{article}
+
+% Packages for XeLaTeX
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Line spacing
+\onehalfspacing
+
+% Title information
+\title{\textbf{Coupling Remote Sensing, Morphology, and Microclimate Simulation to Analyse Urban Heat in México City, México}}
+\author{Daniela Reséndiz García\\[0.5cm]
+\small BARC0022: MSc Space Syntax: Architecture and Cities Dissertation 24/25\\
+\small The Bartlett School of Architecture, University College London\\[0.3cm]
+\small Supervisor: Dr. Kimon Krenz}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+% Include sections
+\input{introduction}
+\input{literature}
+\input{methodology}
+\input{results_macro}
+\input{results_meso}
+\input{results_micro}
+\input{conclusions}
+
+% References
+\newpage
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

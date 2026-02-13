@@ -1,0 +1,70 @@
+\section{Appendix D. Space Matrix: Indicators, Thresholds, and Protocol}
+\label{app:d}
+
+\subsection*{Data and Preprocessing}
+
+\begin{itemize}
+    \item $A$ (block land area): INEGI, 2020 census blocks (manzanas).
+    \item $B$ (building footprint area): Google Open Buildings v3 polygons.
+    \item $F$ (gross floor area): Mexico City cadastre (parcel level).
+    \item CRS: EPSG:32614.
+    \item Spatial join: $B$ and $F$ aggregated to each block $A$.
+    \item Data quality: removal of slivers ($< 10$ m$^2$), repair of invalid geometries; flags for missing or inconsistent values.
+\end{itemize}
+
+\subsection*{Indicators and Formulas}
+
+The Spacematrix framework (Berghauser Pont and Haupt, 2020) defines the following density indicators:
+
+\textbf{Floor Space Index (FSI)} -- built intensity:
+\begin{equation}
+\text{FSI} = \frac{F}{A}
+\label{eq:fsi}
+\end{equation}
+
+\textbf{Ground Space Index (GSI)} -- plan coverage:
+\begin{equation}
+\text{GSI} = \frac{B}{A}
+\label{eq:gsi}
+\end{equation}
+
+\textbf{Layers (L)} -- equivalent number of storeys:
+\begin{equation}
+L = \frac{\text{FSI}}{\text{GSI}} = \frac{F}{B}
+\label{eq:layers}
+\end{equation}
+
+\textbf{Open Space Ratio (OSR)} -- open ground per unit of floor area:
+\begin{equation}
+\text{OSR} = \frac{1 - \text{GSI}}{\text{FSI}}
+\label{eq:osr}
+\end{equation}
+
+Conditional computations: compute $L$ only if $\text{GSI} > 0$; compute OSR only if $\text{FSI} > 0$.
+
+\subsection*{Typologies with Operational Criteria}
+
+The following ranges serve to label urban form for interpretive purposes. They are not universal cut-offs; they reflect the continuous nature of FSI--GSI and were tuned to the distribution observed in Mexico City. OSR assists as a tiebreaker when FSI and GSI overlap.
+
+\begin{table}[H]
+\centering
+\caption{Criteria of urban morphological typologies.}
+\label{tab:typologies}
+\small
+\begin{tabular}{clp{4cm}p{5.5cm}}
+\toprule
+\textbf{Code} & \textbf{Typology} & \textbf{Description} & \textbf{Indicative Criteria} \\
+\midrule
+01 & Open Pavilion & Detached, low-rise; open ground dominates & GSI 0.10--0.30; FSI 0.2--1.0; L 1--3; OSR high \\
+02 & Row / Attached Low-Rise & Terraced/attached 1--3 storeys; medium coverage & GSI 0.30--0.50; FSI 0.5--1.5; L 1--3 \\
+03 & Low Perimeter Block & Low perimeter block with courtyard & GSI 0.50--0.70; FSI 0.8--2.0; L 1--3 \\
+04 & Medium Perimeter Block & Perimeter 3--6 storeys; compact & GSI 0.50--0.70; FSI 1.5--4.0; L 3--6 \\
+05 & Dense Perimeter Block & Very high coverage; minimal courtyards & GSI 0.70--0.90; FSI 2.0--5.0; L 3--7 \\
+06 & Linear Bars & Mid/high-rise bars with interstitial open space & GSI 0.30--0.55; FSI 1.5--3.5; L 4--8; OSR medium--high \\
+07 & Tower in Park & Towers in open/green ground & GSI 0.15--0.35; FSI 2.5--6.0; L 6--12; OSR high \\
+08 & Super-Compact High-Rise & Podium + towers; extreme compaction & GSI 0.60--0.90; FSI 4.0--8.0; L $\geq$ 6; OSR low \\
+09 & Compact Low-Rise & 1--2 storeys; near-full lot coverage & GSI 0.70--0.90; FSI 0.8--1.5; L 1--2 \\
+10 & Mixed / Indeterminate & Transitional/mixed; or doubtful data & No dominant criteria; GSI $\leq$ 0 or FSI $\leq$ 0 $\rightarrow$ flag/exclude \\
+\bottomrule
+\end{tabular}
+\end{table}

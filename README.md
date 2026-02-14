@@ -26,7 +26,7 @@ This dissertation proposes a city-to-street analytical pipeline to assess urban 
 | **Micro** | UMEP/SOLWEIG simulation (Tmrt, UTCI, PET) | Passive design targets for pedestrian corridors |
 
 <p align="center">
-  <img src="docs/diagrams/methodology_flow_diagram_table.png" width="95%" alt="Data sources by methodological step">
+  <img src="figures/readme/methodology_data_sources_cropped.png" width="95%" alt="Data sources by methodological step">
 </p>
 
 ## Key Results
@@ -45,14 +45,14 @@ Older adults, disabled residents, and households without a car are disproportion
 
 **Bivariate spatial analysis (LISA)**
 <p align="center">
-  <img src="figures/lisa_en/lisa_montage_1_en.png" width="85%" alt="Bivariate Local Moran's I: thermal exposure vs social vulnerability">
+  <img src="figures/readme/lisa_key_groups_en.png" width="95%" alt="Bivariate Local Moran's I (examples): thermal exposure vs social vulnerability">
 </p>
 
 Bivariate Local Moran's I reveals spatial clusters where thermal exposure and social vulnerability co-locate (red = high-high), identifying priority areas for intervention.
 
 **GWR hotspot detection by vulnerability group**
 <p align="center">
-  <img src="figures/hotspots_en/gwr_hotspots_montage_en.png" width="85%" alt="GWR coefficients by social vulnerability indicator">
+  <img src="figures/readme/gwr_hotspots_key_groups_en.png" width="95%" alt="Thermal-social hotspots (examples) by vulnerability group">
 </p>
 
 ## Key Findings

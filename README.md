@@ -43,16 +43,26 @@ This dissertation proposes a city-to-street analytical pipeline to assess urban 
 
 Older adults, disabled residents, and households without a car are disproportionately located in hotter blocks, commonly experiencing daytime conditions 2-3 C above the citywide mean.
 
-**Bivariate spatial analysis (LISA)**
-<p align="center">
-  <img src="figures/readme/lisa_key_groups_en.png" width="95%" alt="Bivariate Local Moran's I (examples): thermal exposure vs social vulnerability">
-</p>
-
-Bivariate Local Moran's I reveals spatial clusters where thermal exposure and social vulnerability co-locate (red = high-high), identifying priority areas for intervention.
-
 **GWR hotspot detection by vulnerability group**
 <p align="center">
-  <img src="figures/readme/gwr_hotspots_key_groups_en.png" width="95%" alt="Thermal-social hotspots (examples) by vulnerability group">
+  <img src="figures/readme/gwr_hotspots_all_groups_en.png" width="95%" alt="Thermal-social hotspots by vulnerability group (GWR, fixed thresholds)">
+</p>
+
+**Micro-scale case studies (zone selection + 14:00 results)**
+<p align="center">
+  <img src="figures/readme/microscale_zones.png" width="80%" alt="Location of the three micro-scale case study zones">
+</p>
+
+<p align="center">
+  <img src="figures/readme/zone_01_14.png" width="95%" alt="Zone 1 microclimate results at 14:00">
+</p>
+
+<p align="center">
+  <img src="figures/readme/zone_02_14.png" width="95%" alt="Zone 2 microclimate results at 14:00">
+</p>
+
+<p align="center">
+  <img src="figures/readme/zone_03_14.png" width="95%" alt="Zone 3 microclimate results at 14:00">
 </p>
 
 ## Key Findings

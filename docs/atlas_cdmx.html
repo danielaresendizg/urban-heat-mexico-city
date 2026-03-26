@@ -437,7 +437,15 @@ async function activate(gi,li){
   const field = layer.field || layer.id;
   const type = group.type;
 
-  await loadSource(source);
+  // Load background network (static, all minor segments)
+  if(source==='network'){
+    await Promise.all([loadSource(source), loadSource('network_bg')]);
+    if(!map.getLayer('network-bg-layer')){
+      map.addLayer({id:'network-bg-layer',type:'line',source:'network_bg',paint:{'line-color':'#555','line-width':['interpolate',['linear'],['zoom'],10,0.3,15,1],'line-opacity':0.4}});
+    }
+  } else {
+    await loadSource(source);
+  }
 
   if(layer.categorical){
     const cats = layer.cats;
@@ -474,6 +482,7 @@ function deactivate(){
     map.off('click',LAYER_ID,onPopup);
     map.removeLayer(LAYER_ID);
   }
+  if(map.getLayer('network-bg-layer')) map.removeLayer('network-bg-layer');
   activeLayer=null;
   document.getElementById('legend').innerHTML='';
   document.querySelectorAll('.layer-btn').forEach(b=>b.classList.remove('active'));

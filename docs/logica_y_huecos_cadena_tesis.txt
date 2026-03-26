@@ -1,0 +1,677 @@
+LOGICA DEL FLUJO EN LA CADENA (tesis)
+Fecha de elaboracion: 2026-02-26
+Ultima actualizacion: 2026-02-27
+
+=====================================================================
+VERSION BILINGUE (ES/EN) - NOMBRES ACTUALES DEL REPO
+=====================================================================
+
+PASO/STEP 0 - Calibracion Ta / Ta calibration
+- code/pipeline/step_0_calibration/gee_calibrate_ta_coefficients.js
+
+PASO/STEP 1 - Climatologia termica / Thermal climatology
+- code/pipeline/step_1_thermal_rasters/gee_landsat_thermal_climatology.js
+
+PASO/STEP 2 - Zonal stats + IVS / Zonal stats + SVI
+- code/pipeline/step_2_zonal_stats/extract_raster_stats.py
+- code/pipeline/step_2_zonal_stats/generate_ivs.py
+- code/pipeline/step_2_zonal_stats/add_alcaldia.py
+
+PASO/STEP 3 - Merge GWR / GWR merge
+- code/pipeline/step_3_gwr/merge_gwr_coefficients.py
+
+PASO/STEP 4 - Space Matrix / Space Matrix
+- code/pipeline/step_4_space_matrix/stitch_citywide_catastro.py
+- code/pipeline/step_4_space_matrix/batch_space_matrix.py
+- code/pipeline/step_4_space_matrix/calculate_space_matrix.py
+
+PASO/STEP 5 - Hotspots + merge / Hotspots + merge
+- code/pipeline/step_5_hotspots/create_hotspots_gwr.py
+- code/pipeline/step_5_hotspots/merge_thermal_gwr_sm.py
+
+PASO/STEP 6 - Tipologias / Typologies
+- code/pipeline/step_6_typologies/classify_spacematrix_typology.py
+Nota/Note: no existe carpeta Drive `step_6_typologies/`; las tipologias
+se guardan como layers dentro de `step_5_hotspots/`.
+
+PASO/STEP 7 - Space Syntax / Space Syntax
+- code/pipeline/step_7_space_syntax/aggregate_syntax_to_hotspots.py
+
+PASO/STEP 8 - Priorizacion / Prioritization
+- code/pipeline/step_8_prioritization/prioritize_study_zones.py
+
+=====================================================================
+DIAGRAMA GENERAL DEL PIPELINE
+=====================================================================
+
+  FUENTES EXTERNAS                     PROCESAMIENTO                      PRODUCTOS FINALES
+  ================                     ==============                     =================
+
+  Landsat 8/9 C02 L2
+  (2014-2024, Jun-Ago)
+        |
+        v
+  +---------------------------+
+  | PASO 0: Calibracion Ta    |
+  | (GEE linearFit)           |
+  | Script: gee_calibrate_    |    RedMet SEDEMA
+  |   ta_coefficients.js      |<-- (17 estaciones)
+  | Asset: estaciones_        |    01_data/RedMet/estaciones_
+  |   operacion_CDMX_final    |      operacion_CDMX_final.csv
+  +---------------------------+
+        | a=0.554038, b=5.760580
+        v
+  +---------------------------+
+  | PASO 1: GEE Climatologia  |
+  | Script (GEE Code Editor): |
+  |   "CDMX - Climatology     |
+  |   and Heat Time Series"   |
+  | Copia local:              |
+  |   gee_landsat_thermal_    |
+  |   climatology.js          |
+  +---------------------------+
+        |
+        v
+  01_data/Heat/
+  - NDVI_clim.tif
+  - NDBI_clim.tif
+  - Albedo_clim.tif
+  - LST_day_clim.tif
+  - Ta_clim.tif
+  - UHI_air_clim.tif
+  - UTFVI_air_clim.tif
+  - LST_day_YYYY.tif (x11)
+  - Ta_clim_YYYY.tif (x11)
+  - UHI_air_YYYY.tif (x11)
+  - UTFVI_air_YYYY.tif (x11)
+        |
+        v
+  +---------------------------+    INEGI Censo 2020
+  | PASO 1b: IVS social       |<-- (ageb_mza_urbana_09_cpv2020)
+  | Script:                    |
+  |   generate_ivs.py         |
+  +---------------------------+
+        |
+        v
+  01_data/01_Manzana/
+  manzanas_IVS_Ta.gpkg
+  (22 vars sociales +
+   8 vars termicas)
+        |
+        v
+  +---------------------------+
+  | PASO 2: Zonal stats       |
+  | Script:                    |
+  |   extract_raster_stats.py |
+  +---------------------------+
+        |
+        v
+  manzanas_ivs_thermal.gpkg
+        |
+        |    +---------------------------+
+        +--->| PASO 2b: MGWR por alcaldia|    07_myriad/
+             | Scripts:                   |<-- run_mgwr_final.py
+             |   run_mgwr_*.py (Myriad)  |    (en cluster UCL)
+             +---------------------------+
+                      |
+                      v
+             01_data/GWR/
+             MGWR_coeficientes_*.csv/gpkg
+             (16 alcaldias)
+                      |
+                      v
+             +---------------------------+
+             | PASO 2c: Merge GWR        |
+             | Script:                    |
+             |   merge_gwr_coefficients.py|
+             +---------------------------+
+                      |
+                      v
+             01_data/GWR/GWR_merge/
+             manzanas_master_con_GWR.gpkg
+                      |
+                      v
+  +---------------------------+    01_data/Data_catastro/
+  | PASO 3: Space Matrix      |<-- cdmx_citywide.gpkg
+  | Scripts modulares:        |    01_data/space_matrix/
+  | stitch+batch+calculate    |    85d_buildings_filtered.gpkg
+  +---------------------------+
+        |
+        v
+  manzanas_master_con_GWR_spacematrix_v3lite_fixBF.gpkg
+  (+ FSI, GSI, L_equiv, OSR, A_m2, B_m2, n_props)
+        |
+        v
+  +---------------------------+
+  | PASO 4: Hotspots          |
+  | Script:                    |
+  |   create_hotspots_gwr.py |
+  | Umbrales: 26C, 28C        |
+  | t-critico: 1.96, 2.58     |
+  +---------------------------+
+        |
+        v
+  manzanas_con_hotspots.csv
+  (is_hot_26/28, peligro_cat)
+        |
+        v
+  +---------------------------+
+  | PASO 5: Merge SM+HS       |
+  | Script:                    |
+  |   merge_thermal_gwr_sm.py |
+  +---------------------------+
+        |
+        v
+  manzanas_thermal_GWR_spacematrix_hotspots_final.gpkg/csv
+        |
+        v
+  +---------------------------+
+  | PASO 6: Tipologias SM v2  |
+  | Script:                    |
+  |   classify_spacematrix_typology.py|
+  +---------------------------+
+        |
+        v
+  layer "manzanas_typology_SM_v2"
+        |
+        v
+  +---------------------------+    01_data/street_network/
+  | PASO 7: Space Syntax      |<-- segmentos_con_termico.gpkg
+  | Script:                    |
+  |   aggregate_syntax_to_hotspots.py|
+  +---------------------------+
+        |
+        v
+  layer "manzanas_with_syntax_focus_HS"
+  (NAIN/NACH 500/1000/1500/5000)
+        |
+        v
+  analisis_final_tipologias.gpkg (copia/rename manual)
+        |
+        v
+  +---------------------------+
+  | PASO 8: Priorizacion      |
+  | Script:                    |
+  |   prioritize_study_zones.py   |
+  | (PURE_SYNTAX_ONLY=True)   |
+  +---------------------------+
+        |
+        v
+  PRODUCTO FINAL:
+  analisis_final_tipologias_syntaxONLY_20250816_0042.gpkg
+  - 418 manzanas priorizadas
+  - 30 zonas de intervencion
+  - 144 columnas (social + termica + GWR + SM + SS + priorizacion)
+
+
+=====================================================================
+1) CADENA LOGICA PRINCIPAL (script -> salida)
+=====================================================================
+
+PASO 0: Calibracion Ta = a*LST + b (RedMet + GEE)
+------------------------------------------------------
+Proposito:
+- Derivar coeficientes empiricos para convertir LST satelital a
+  temperatura del aire (Ta) usando estaciones meteorologicas in situ.
+
+Metodo:
+- Regresion lineal ordinaria (OLS) via ee.Reducer.linearFit() en GEE.
+- Variable independiente (x): LST climatologica (Landsat 8 C02 L2,
+  mediana por verano Jun-Ago 2014-2024, promedio multi-anual).
+- Variable dependiente (y): Ta_p90 diurna (percentil 90 de temperatura
+  del aire registrada en estaciones REDMET de SEDEMA).
+- Se uso Ta_p90 (no Ta_mean) porque: (i) Landsat captura la superficie
+  cercana a su pico termico (~10:30 hora local), correlacionando mejor
+  con temperaturas extremas que con promedios diurnos; (ii) el estudio
+  se enfoca en ondas de calor donde los extremos son mas relevantes.
+
+Insumos:
+- Landsat 8/9 Collection 2 Level 2 (bandas ST_B10, SR_B4, SR_B5)
+- Asset GEE: projects/dissertationheatwaves/assets/estaciones_operacion_CDMX_final
+  (17 estaciones REDMET con Ta agregada por estacion)
+- Archivo local homologo: 01_data/RedMet/estaciones_operacion_CDMX_final.csv
+- Datos RedMet fuente: 01_data/RedMet/procesados/redmet_diurno.csv,
+  redmet_nocturno.csv, verano_14-24_long.parquet
+
+Scripts de evidencia:
+- code/pipeline/step_0_calibration/gee_calibrate_ta_coefficients.js
+  (auto-contenido, calcula linearFit para 3 variables Ta)
+- code/pipeline/step_1_thermal_rasters/gee_landsat_thermal_climatology.js
+  (script principal con calibracion in-script, lineas 77-103)
+- Scripts auxiliares legacy fuera del repo actual:
+  gee_cierre_gap_calibracion_ta.js,
+  gee_export_lst_scene_station_samples.js,
+  calibrar_ta_desde_redmet_sincronico.py,
+  justificar_coeficientes_ta.py
+
+Coeficientes usados en tesis:
+  a = 0.554038 (slope)
+  b = 5.760580 (intercept)
+
+Reproduccion con datos actuales (GEE linearFit, 2026-02-26):
+  Variable             slope_a     intercept_b   n
+  Ta_mean_day          0.5069      2.1165        17
+  Ta_p90_day           0.5187      5.4541        17   <-- mas cercano
+  Ta_min_night         0.6357     -13.3678       17
+
+Diferencia reproduccion vs tesis (Ta_p90_day):
+  |delta_a| = 0.035   |delta_b| = 0.306
+  Causa: el script GEE original usaba .merge('string') en vez de
+  .merge(ee.ImageCollection('string')), por lo que el composite
+  de la corrida productiva solo incluyo Landsat 8 (sin LC09).
+  Ademas, el catalogo Landsat C02 pudo haber sido actualizado.
+  La diferencia esta dentro del RMSE del modelo (~1.5 C).
+
+Estado de trazabilidad: DOCUMENTADO.
+  [x] Metodo documentado: OLS via ee.Reducer.linearFit()
+  [x] Variable objetivo identificada: redmet_diurno_Ta_p90_day
+  [x] Insumos rastreables: 17 estaciones REDMET + Landsat 8/9 C02
+  [x] CSV de evidencia exportado de GEE: GEE_coef_summary_3vars.csv
+  [x] Consistencia interna del raster verificada (MAE ≈ 0)
+  [x] Causa de no-reproduccion exacta identificada (bug .merge + LC09)
+  [x] Justificacion metodologica de Ta_p90 sobre Ta_mean documentada
+
+Salidas de evidencia:
+- 01_data/RedMet/calibracion_ta/GEE_LST_scene_station_samples_2014_2024.csv
+- 00_docs/calibracion_ta_sincronica_resultados.csv
+- 00_docs/calibracion_ta_sincronica_resumen.md
+- 00_docs/justificacion_coeficientes_ta.md
+- GEE Drive: GEE_coef_summary_3vars.csv (CDMX_Thermal_Methodology)
+- GEE Drive: GEE_LST_Ta_samples_for_fit.csv (CDMX_Thermal_Methodology)
+
+PASO 1: Google Earth Engine (climatologia y series termicas 2014-2024)
+----------------------------------------------------------------------
+Script (GEE Code Editor):
+- "CDMX - Climatology and Heat Time Series (Veranos 2014-2024)"
+- Copia local: code/pipeline/step_1_thermal_rasters/gee_landsat_thermal_climatology.js
+  (version corregida con .merge(ee.ImageCollection(...)))
+
+Import relevante en GEE:
+- var table: projects/dissertationheatwaves/assets/estaciones_operacion_CDMX_final
+
+Nota de trazabilidad (declaracion de autora):
+- Operativamente solo se corrio este script de GEE para producir los TIFFs.
+- Los coeficientes coef_a=0.554038 y coef_b=5.760580 provienen del PASO 0
+  (calibracion RedMet via linearFit) y se pegaron como constantes en el script.
+- La corrida productiva usaba .merge('string'), lo que significa que los
+  rasters finales se calcularon solo con Landsat 8 (sin LC09). Esto no
+  invalida los resultados: LC09 solo opera desde 2022 y la mediana es robusta.
+
+Logica:
+- AOI CDMX, Landsat 8 C02 L2, veranos (jun-ago) 2014-2024
+- Preproceso: scale factors opticos/termicos + mascara QA (nubes bit5,
+  sombra bit3, cirros bit4)
+- Composite estival por anio (mediana) y climatologia multianual (media)
+- Indices espectrales: NDVI, NDBI, Albedo
+- LST diurna: emissividad basada en NDVI (Planck invertida, lambda=11.5um)
+- Ta predicha: Ta = 0.554038 * LST + 5.760580
+- UHI_air: z-score espacial de Ta_clim
+- UTFVI_air: (Ta - Ta_mean) / Ta
+- Exporta capas climaticas y anuales a Google Drive
+
+Salidas:
+- 01_data/Heat/NDVI_clim.tif
+- 01_data/Heat/NDBI_clim.tif
+- 01_data/Heat/Albedo_clim.tif
+- 01_data/Heat/LST_day_clim.tif
+- 01_data/Heat/Ta_clim.tif
+- 01_data/Heat/UHI_air_clim.tif
+- 01_data/Heat/UTFVI_air_clim.tif
+- Serie anual: LST_day_YYYY, Ta_clim_YYYY, UHI_air_YYYY, UTFVI_air_YYYY
+  (2014-2024, 44 TIFFs adicionales)
+
+PASO 1b: Indicadores de Vulnerabilidad Social (IVS)
+-----------------------------------------------------
+Script:
+- code/pipeline/step_2_zonal_stats/generate_ivs.py
+
+Entradas:
+- INEGI Censo de Poblacion y Vivienda 2020:
+  01_data/01_Manzana/ageb_mza_urbana_09_cpv2020/
+  conjunto_de_datos_ageb_urbana_09_cpv2020.csv
+- Poligonos de manzana: poligono_manzanas_cdmx.shp
+
+Salida:
+- 01_data/01_Manzana/manzanas_IVS_YYYYMMDD.gpkg
+  (22 variables sociales + 8 termicas)
+
+Variables sociales generadas (22):
+- Edad: pct_0a5, pct_6a14, pct_15a64, pct_65plus
+- Etnicidad: pct_ethnic_afro, pct_ethnic_ind, pct_ethnic_other
+- Discapacidad: pct_with_disc, pct_without_disc
+- Educacion: pct_no_school, pct_elementary_edu, pct_elementary2_edu, pct_more_edu
+- Economia: pct_ocup, pct_desocup, pct_inac
+- Salud: pct_serv_med, pct_no_serv_med
+- Movilidad: pct_pop_auto, pct_pop_sin_auto
+- Dependencia: rel_dependencia_0_14, rel_h_m
+
+PASO 2: Vinculo raster -> manzana (estadistica zonal)
+------------------------------------------------------
+Script:
+- code/pipeline/step_2_zonal_stats/extract_raster_stats.py
+
+Entradas:
+- 01_data/Heat/*.tif (capas climaticas exportadas de GEE, PASO 1)
+- 01_data/01_Manzana/manzanas_IVS_Ta.gpkg (layer manzanas_ivs_ta)
+
+Salida:
+- 01_data/01_Manzana/manzanas_ivs_thermal.gpkg
+
+Contenido clave agregado:
+- LST_mean, NDVI_mean, NDBI_mean, Albedo_mean, UHI_mean
+
+PASO 2b: MGWR por alcaldia (cluster Myriad, UCL)
+--------------------------------------------------
+Scripts:
+- 07_myriad/run_mgwr_final.py (y variantes: run_mgwr_CDMX_*.py)
+- Ejecutados en cluster HPC Myriad de UCL
+
+Entrada:
+- 01_data/01_Manzana/manzanas_IVS_20250724.gpkg
+  (separado por alcaldia para cada corrida)
+
+Salidas:
+- 01_data/GWR/MGWR_coeficientes_<Alcaldia>.csv (16 archivos)
+- 01_data/GWR/MGWR_coeficientes_<Alcaldia>.gpkg (16 archivos)
+- 01_data/GWR/GWR_residuos_<Alcaldia>.gpkg (16 archivos)
+- Variable dependiente: Ta_mean
+
+Evaluacion:
+- code/analysis/compare_ols_gwr.py
+  -> 01_data/GWR/GWR_Moran_summary_by_alcaldia.csv
+  -> 01_data/GWR/Compare_OLS_vs_GWR_moran.csv
+- code/analysis/evaluate_gwr_variables.py
+  -> vif_variables_sociales.csv, correlacion_social_vars.csv
+
+PASO 2c: Merge GWR a nivel ciudad
+-----------------------------------
+Script:
+- code/pipeline/step_3_gwr/merge_gwr_coefficients.py
+
+Entradas:
+- 01_data/01_Manzana/manzanas_IVS_20250724_con_alcaldia.gpkg (master)
+- 01_data/GWR/MGWR_coeficientes_*.csv (16 archivos)
+
+Salida:
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR.gpkg
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR.csv
+  (LEFT JOIN por CVEGEO, agrega coef_* y tval_*)
+
+PASO 3: Space Matrix base (FSI/GSI/etc.)
+------------------------------------------
+Scripts:
+- code/pipeline/step_4_space_matrix/stitch_citywide_catastro.py
+- code/pipeline/step_4_space_matrix/batch_space_matrix.py
+- code/pipeline/step_4_space_matrix/calculate_space_matrix.py
+
+Entradas:
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR.gpkg (geometria manzanas)
+- 01_data/Data_catastro/citywide_build/cdmx_citywide.gpkg
+  (catastro_puntos con superficie_construccion)
+- 01_data/space_matrix/85d_buildings_filtered.gpkg (huellas de edificios)
+
+Salidas:
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR_spacematrix_v3lite_fixBF.gpkg
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR_spacematrix_v3lite_fixBF.csv
+- qc_por_mun_v3lite.csv
+
+Contenido clave agregado:
+- A_m2 (area manzana), B_m2 (huella edificios), sup_const_tot_m2,
+  FSI, GSI, L_equiv (altura equivalente), OSR, dq_flag, n_props
+
+Parametros:
+- MIN_B_AREA_M2=10, MAX_JOIN_DIST=120m, RESCUE_JOIN_DIST=200m
+- CRS: EPSG:32614 (UTM Zona 14N)
+
+PASO 4: Hotspots termico-sociales (GWR + umbrales 26/28)
+---------------------------------------------------------
+Script:
+- code/pipeline/step_5_hotspots/create_hotspots_gwr.py
+
+Entrada:
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR_spacematrix_v3lite.gpkg
+  (layer "manzanas")
+
+Salidas:
+- Layer "manzanas_con_hotspots" en ese GPKG
+- manzanas_con_hotspots.csv
+- hotspots_GWR_umbral_26_28_combined.png (400 dpi)
+
+Logica de clasificacion:
+- Peligro:         Ta >= 26C AND coef>0 AND t>1.96 (95% confianza)
+- Peligro extremo: Ta >= 28C AND coef>0 AND t>2.58 (99% confianza)
+
+Contenido clave agregado:
+- is_hot_26, is_hot_28, hot26_<var>, hot28_<var>,
+  hot26_any_social, hot28_any_social,
+  hot26_count_social, hot28_count_social, peligro_cat
+
+PASO 5: Merge Space Matrix + Hotspots por CVEGEO
+--------------------------------------------------
+Script:
+- code/pipeline/step_5_hotspots/merge_thermal_gwr_sm.py
+
+Entradas:
+- 01_data/GWR/GWR_merge/manzanas_master_con_GWR_spacematrix_v3lite_fixBF.gpkg
+- 01_data/01_Manzana/manzanas_con_hotspots.csv
+
+Salidas:
+- 01_data/01_Manzana/manzanas_thermal_GWR_spacematrix_hotspots_final.gpkg
+- 01_data/01_Manzana/manzanas_thermal_GWR_spacematrix_hotspots_final.csv
+
+Contenido:
+- Base Space Matrix + columnas hotspot seleccionadas + limpieza de
+  columnas auxiliares. Union por CVEGEO.
+
+PASO 6: Tipologias Spacematrix v2 (QA)
+----------------------------------------
+Script:
+- code/pipeline/step_6_typologies/classify_spacematrix_typology.py
+
+Entrada:
+- 01_data/01_Manzana/manzanas_thermal_GWR_spacematrix_hotspots_final.gpkg
+  (layer "manzanas_thermal_GWR_spacematrix_hotspots_final")
+
+Salida (en el mismo GPKG):
+- layer "manzanas_typology_SM_v2"
+
+Salidas auxiliares:
+- manzanas_thermal_GWR_spacematrix_hotspots_final_SMv2_resumen.csv
+- manzanas_thermal_GWR_spacematrix_hotspots_final_Spacematrix_Tipologias_v2.md
+
+Contenido clave agregado:
+- typology_code_final, typology_sm_final, flag_mixto_dq,
+  flag_mixto_limite, diag_reason
+
+PASO 7: Agregacion Space Syntax sobre hotspots
+------------------------------------------------
+Script:
+- code/pipeline/step_7_space_syntax/aggregate_syntax_to_hotspots.py
+
+Entradas:
+- 01_data/01_Manzana/manzanas_thermal_GWR_spacematrix_hotspots_final.gpkg
+  (layer preferido "manzanas_typology_SM_v2")
+- 01_data/street_network/segmentos_con_termico.gpkg (layer "segments")
+
+Salida (en el mismo GPKG):
+- layer "manzanas_with_syntax_focus_HS" (PROCESS_ONLY_HOTSPOTS=True)
+
+Salida CSV espejo:
+- 01_data/01_Manzana/manzanas_thermal_GWR_spacematrix_hotspots_final_with_syntax_focus_HS.csv
+
+Contenido clave agregado:
+- NACH/NAIN ponderados por longitud (500/1000/1500/5000), p90,
+  len_share_p1/p2, *_p1_lenw_mean, *_p2_lenw_mean,
+  hot_cat_manz, is_hotspot
+
+INTERMEDIO (entre PASO 7 y PASO 8): Dataset para priorizacion
+--------------------------------------------------------------
+Archivo:
+- 01_data/01_Manzana/analisis_final_tipologias.gpkg
+
+Origen:
+- Copia/rename manual de manzanas_with_syntax_focus_HS
+  (no se encontro script que lo genere automaticamente)
+
+Verificacion:
+- 5050 filas (igual que manzanas_with_syntax_focus_HS)
+- Promedios de columnas clave coinciden
+
+Uso:
+- Insumo de prioritize_study_zones.py
+
+PASO 8: Priorizacion final (corrida thesis syntax-only)
+--------------------------------------------------------
+Script:
+- code/pipeline/step_8_prioritization/prioritize_study_zones.py (con PURE_SYNTAX_ONLY=True)
+
+Entrada:
+- 01_data/01_Manzana/analisis_final_tipologias.gpkg
+
+Salida final (corrida 2025-08-16 00:42):
+- 01_data/01_Manzana/analisis_final_tipologias_syntaxONLY_20250816_0042.gpkg
+  layers:
+  - syntax_only_TOP_20250816_0042 (418 filas)
+  - syntax_only_ZONES_20250816_0042 (30 filas)
+- 01_data/01_Manzana/analisis_final_tipologias_syntaxONLY_20250816_0042_manzanas.csv
+- 01_data/01_Manzana/analisis_final_tipologias_syntaxONLY_20250816_0042_zones.csv
+
+=====================================================================
+2) QUE CONTIENE EL ARCHIVO FINAL (syntaxONLY_20250816_0042)
+=====================================================================
+
+Archivo principal:
+- analisis_final_tipologias_syntaxONLY_20250816_0042_manzanas.csv
+
+Resumen:
+- 418 manzanas seleccionadas (419 lineas contando encabezado)
+- 144 columnas
+- Variables incluidas:
+  1) Socio-demograficas (pct_*)
+  2) Termicas/ambientales (Ta_mean, LST, NDVI, NDBI, UHI, etc.)
+  3) Coeficientes y t-values GWR (coef_*, tval_*)
+  4) Space Matrix (FSI, GSI, L_equiv, OSR, A_m2, B_m2, n_props)
+  5) Hotspots (is_hot_26/28, hot26_*, hot28_*, peligro_cat, hot_cat_manz)
+  6) Tipologias (typology_code_final, typology_sm_final)
+  7) Space Syntax agregado (NAIN/NACH lenw_mean, p90, shares por peligro)
+  8) Priorizacion syntax-only (mob_500, mob_1500, syntax_score,
+     syntax_rank_pct, zone_id)
+
+Archivo de zonas:
+- analisis_final_tipologias_syntaxONLY_20250816_0042_zones.csv
+- 30 zonas
+- Columnas: zone_id, n_manz, syntax_score_mean, syntax_score_p90
+
+=====================================================================
+3) SCRIPTS AUXILIARES (analisis, visualizacion, QC)
+=====================================================================
+
+Analisis estadistico:
+- code/analysis/compare_ols_gwr.py
+- code/analysis/ols_moran_by_alcaldia.py
+- code/analysis/evaluate_gwr_variables.py
+- code/analysis/quintile_group_significance.py
+- code/analysis/granular_decile_significance.py
+- code/analysis/uhi_group_significance.py
+- code/analysis/lisa_bivariate.py
+
+Visualizacion:
+- code/analysis/map_hotspots.py
+- code/analysis/map_social_vulnerability.py
+- code/analysis/thermal_variable_maps.py
+- code/analysis/significance_quintiles_heatmap.py
+- code/analysis/temperature_distribution_plots.py
+
+QC y utilidades:
+- code/analysis/process_redmet_stations.py
+- code/analysis/extract_thermal_to_segments.py
+
+Procesamiento catastral:
+- code/pipeline/step_4_space_matrix/batch_space_matrix.py
+- code/pipeline/step_4_space_matrix/stitch_citywide_catastro.py
+- code/pipeline/step_4_space_matrix/calculate_space_matrix.py
+
+=====================================================================
+4) PARAMETROS CLAVE DEL PIPELINE
+=====================================================================
+
+Parametro                          Valor          Nota
+---------------------------------  -------------  ---------------------------
+Calibracion Ta slope (a)           0.554038       De GEE linearFit vs Ta_p90
+Calibracion Ta intercept (b)       5.760580       De GEE linearFit vs Ta_p90
+Resolucion espacial                30 m           Landsat
+CRS rasters                        EPSG:4326      WGS84
+CRS analisis espacial              EPSG:32614     UTM Zona 14N
+Umbral peligro (Ta)                26.0 C         Hotspots
+Umbral peligro extremo (Ta)        28.0 C         Hotspots
+t-critico peligro                  1.96           95% confianza (GWR)
+t-critico extremo                  2.58           99% confianza (GWR)
+Huella edificio minima             10 m2          Space Matrix
+Distancia join catastro            120 m          Space Matrix (max)
+Distancia rescue catastro          200 m          Space Matrix (secundaria)
+Pesos espaciales                   Queen/KNN k=8  Moran's I
+Periodo temporal                   2014-2024      Veranos Jun-Ago
+Filtro nubes                       <20% CLOUD     Landsat scenes
+
+=====================================================================
+5) BIBLIOGRAFIA POR PASOS (EXTRAIDA DEL LATEX)
+=====================================================================
+
+Fuente revisada:
+- latex/main/methodology.tex (base)
+- latex/main/results_micro.tex + latex/main/introduction.tex (complemento micro)
+- latex/main/references.bib (fichas bibliograficas)
+
+PASO 0 (Calibracion Ta):
+- [Gorelick2017] Gorelick et al. (2017). Google Earth Engine:
+  Planetary-scale geospatial analysis for everyone. RSE.
+- [Chakraborty2022] Chakraborty et al. (2022). Lower urban humidity
+  moderates outdoor heat stress. AGU Advances.
+
+PASO 1 (Climatologia termica y variables espectrales):
+- [Tucker1979] Tucker (1979). Red and photographic infrared linear
+  combinations for monitoring vegetation. RSE. (NDVI)
+- [Zha2003] Zha et al. (2003). Use of normalized difference built-up
+  index in automatically mapping urban areas from TM imagery. IJRS. (NDBI)
+- [Liang2001] Liang (2001). Narrowband to broadband conversions of land
+  surface albedo I: Algorithms. RSE. (Albedo)
+- [Waleed2023] Waleed et al. (2023). Leveraging remote sensing,
+  machine learning, and geo-information modelling to predict thermal
+  field variance. Sustainability. (UTFVI)
+
+PASO 2 (Zonal stats + IVS):
+- [INEGI2021] INEGI (2021). Censo de Poblacion y Vivienda 2020:
+  Resultados por AGEB y manzana urbana.
+
+PASO 3 (Merge GWR):
+- Sin cita metodologica explicita en methodology.tex
+  (paso operativo de integracion de coeficientes MGWR).
+
+PASO 4 (Space Matrix):
+- [BerghauserPont2020] Berghauser Pont and Haupt (2020).
+  Spacematrix: Space, Density and Urban Form (2nd ed.).
+- [GoogleResearch2023] Google Research (2023). Open Buildings v3
+  (Latin America extension). Dataset de huellas de edificios.
+
+PASO 5 (Hotspots termico-sociales):
+- [MaganaVargas2020] Magana and Vargas (2020). Warm Spells and Climate
+  Risk to Human Health in the Mexico City Metropolitan Area. WCAS.
+
+PASO 6 (Tipologias Spacematrix):
+- [BerghauserPont2020] Berghauser Pont and Haupt (2020).
+  Marco conceptual y umbrales tipologicos derivados de Space Matrix.
+
+PASO 7 (Space Syntax):
+- [Hillier2012a] Hillier, Yang and Turner (2012). Normalising
+  least-angle choice and depth by mean depth. Journal of Space Syntax.
+
+PASO 8 (Priorizacion final):
+- Sin cita metodologica explicita en methodology.tex
+  (paso de decision multicriterio sobre capas previas).
+
+NOTA (fase micro, fuera del pipeline 0-8):
+- [Lindberg2018] UMEP en QGIS.
+- [Lindberg2008] SOLWEIG y Tmrt.
+- [INEGI2020] DEM/DSM 1.5 m.
+- [Brode2012], [Jendritzky2012], [Matzarakis1999], [Matzarakis2007]
+  para UTCI/PET.

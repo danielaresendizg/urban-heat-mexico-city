@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Desigualdades térmicas en la Ciudad de México: Percepción remota, morfología urbana y simulación microclimática para analizar la exposición al calor urbano</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#000;
+  --fg:#ccc;
+  --muted:#999;
+  --accent:#F5A623;
+  --accent-2:#D4915E;
+  --line:#343434;
+  --card:#111;
+  --section-pad:clamp(30px,4.5vh,64px);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--fg);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent-2);text-decoration:underline}
+
+/* Slide-like sections */
+section{
+  min-height:100vh;
+  padding:var(--section-pad) clamp(24px,6vw,120px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  position:relative;
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 600ms ease,transform 600ms ease;
+}
+section.visible{opacity:1;transform:translateY(0)}
+
+/* Vertical navigation */
+.nav{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:100;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.nav-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:1.5px solid var(--accent);
+  background:transparent;
+  cursor:pointer;
+  transition:all 180ms ease;
+  position:relative;
+}
+.nav-dot.active{
+  background:var(--accent);
+  transform:scale(1.25);
+}
+.nav-dot::after{
+  content:attr(data-label);
+  position:absolute;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:0.66rem;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:.03em;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 150ms ease;
+}
+.nav-dot:hover::after{opacity:1}
+
+/* Hero */
+.hero{
+  min-height:100vh;
+  padding:0 clamp(28px,8vw,160px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  text-align:left;
+  border-bottom:1px solid #111;
+  overflow:hidden;
+  opacity:1;
+  transform:none;
+  background:var(--accent);
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:6px;
+  height:100%;
+  background:#111;
+}
+.hero h1{font-size:clamp(26px,4.9vw,52px);font-weight:900;color:#111;max-width:980px;line-height:1.1;margin-bottom:14px}
+.hero .subtitle{font-size:12px;color:#222;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.hero .author{font-size:12px;color:#111;margin-bottom:28px;letter-spacing:.04em;font-weight:600}
+.hero .lancet,.presentacion .lancet{max-width:740px;font-size:12px;color:#bbb;font-style:italic;border-left:3px solid var(--accent);padding-left:14px;text-align:left;margin-bottom:30px;line-height:1.7}
+.hero .lancet cite,.presentacion .lancet cite{color:var(--accent-2);font-style:normal;font-size:11px}
+.hero .abstract,.presentacion .abstract{max-width:780px;font-size:13px;color:#ccc;text-align:left;margin-bottom:32px;line-height:1.8}
+.hero-scroll{
+  position:absolute;
+  bottom:26px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.7rem;
+  font-weight:700;
+  color:#222;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+/* RQ cards */
+.rq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;width:100%}
+.rq{background:#101010;border:1px solid #343434;border-radius:8px;padding:18px 16px;text-align:left}
+.rq .scale{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:6px;font-weight:700}
+.rq .question{font-size:12px;color:#ccc;line-height:1.6}
+
+/* Sections */
+.section{max-width:1120px;width:100%;margin:0 auto;border-top:1px solid #1f1f1f}
+.section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--accent);margin-bottom:12px;line-height:1.15}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:32px}
+.alcance-lead{max-width:1080px;font-size:16px;color:#d5d5d5;line-height:1.8;margin-bottom:26px}
+.section-title.with-symbol{display:flex;align-items:center;gap:10px}
+.section-title.with-symbol .sym{
+  display:inline-grid;
+  place-items:center;
+  width:26px;
+  height:26px;
+  border:1px solid #4a4a4a;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+}
+.bio-lead{
+  max-width:860px;
+  font-size:13px;
+  line-height:1.75;
+  color:#cfcfcf;
+  margin-bottom:22px;
+}
+.cred-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  max-width:980px;
+}
+.cred-item{
+  background:#101010;
+  border:1px solid #343434;
+  border-left:3px solid var(--accent);
+  border-radius:10px;
+  padding:14px;
+}
+.cred-item h4{
+  font-size:13px;
+  color:var(--accent);
+  margin-bottom:6px;
+  line-height:1.4;
+}
+.cred-item p{
+  font-size:12px;
+  color:#c3c3c3;
+  line-height:1.6;
+}
+.profile-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:16px;
+}
+.profile-link{
+  display:inline-block;
+  border:1px solid #3b3b3b;
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:12px;
+  color:var(--accent-2);
+  text-decoration:none;
+}
+.profile-link:hover{border-color:var(--accent)}
+
+/* Content-heavy sections: allow height to grow beyond viewport */
+#metodologia,#datos{min-height:auto;justify-content:flex-start;padding-top:clamp(40px,6vh,80px);padding-bottom:clamp(40px,6vh,80px)}
+
+/* Left-oriented layout */
+.section,.deck-section,.micro-section,.closing,.cta-section{
+  margin-left:0;
+  margin-right:0;
+}
+.micro-eval,.micro-thresholds,.micro-zones,.micro-why,.micro-compare-wrap,.micro-caption-guide,.micro-actions{
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+/* Diagram */
+.diagram-wrap{overflow-x:auto;padding:20px 0;width:100%}
+.diagram-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:20px}
+.data-table th{background:#101010;color:#FFFFFF;text-align:left;padding:10px 14px;border-bottom:1px solid #343434;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.data-table td{padding:9px 14px;border-bottom:1px solid #1a1a1a;color:#ccc;vertical-align:top}
+.data-table tr:hover td{background:#101010}
+.data-table .phase-row td{background:#101010;color:var(--accent);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #343434}
+.data-table .step-col{color:var(--accent);font-weight:600;white-space:nowrap;width:60px}
+.data-table .abbrev{font-size:10px;color:#666;font-style:italic}
+
+/* CTA */
+.cta-section{text-align:left;max-width:1120px;width:100%;margin:0 auto;border-top:1px solid #343434}
+.cta-btn{display:inline-block;padding:14px 36px;background:var(--accent);color:#000;font-size:14px;font-weight:700;border-radius:6px;text-decoration:none;letter-spacing:.3px;transition:.2s}
+.cta-btn:hover{background:#f7b84a;color:#000}
+.cta-hint{font-size:11px;color:#999;margin-top:10px}
+
+/* Viewer */
+.viewer-section{width:100%;height:100vh;border-top:1px solid #222;padding:0;opacity:1;transform:none}
+.viewer-section iframe{width:100%;height:100%;border:none}
+
+/* Micro */
+.micro-section{max-width:1240px;width:100%;margin:0 auto;border-top:1px solid #1f1f1f}
+.micro-eval{max-width:1000px;margin:0 auto 22px;color:#c8c8c8;font-size:13px;line-height:1.85}
+.micro-eval strong{color:var(--accent)}
+.micro-thresholds{max-width:1000px;margin:0 auto 28px;padding:12px 14px;border:1px solid #343434;border-radius:8px;background:#131313;font-size:12px;color:#bcbcbc}
+.micro-thresholds span{color:var(--accent);font-weight:700}
+.micro-threshold-note{max-width:1000px;margin:0 auto 10px;padding:10px 12px;border:1px solid #2f2f2f;border-radius:8px;background:#101010;font-size:11px;color:#c9c9c9;line-height:1.65}
+.micro-threshold-note strong{color:#fff}
+.micro-threshold-refs{max-width:1000px;margin:0 auto 24px;padding:10px 12px;border:1px solid #282828;border-radius:8px;background:#0f0f0f}
+.micro-threshold-refs p{font-size:10px;color:#a9a9a9;line-height:1.55;margin:0 0 6px}
+.micro-threshold-refs p:last-child{margin-bottom:0}
+.micro-threshold-refs a{color:#cfcfcf;text-decoration:underline}
+.micro-glossary{max-width:1000px;margin:0 auto 26px;padding:12px 14px;border:1px solid #2f2f2f;border-radius:8px;background:#101010}
+.micro-glossary h3{font-size:12px;color:#fff;margin-bottom:8px}
+.micro-glossary ul{padding-left:18px;color:#c8c8c8;font-size:12px;line-height:1.7}
+.micro-glossary li strong{color:#fff}
+.micro-zones{max-width:1000px;margin:0 auto 16px}
+.micro-zones img{width:100%;height:auto;border:1px solid #343434;border-radius:8px;background:#111}
+.micro-why{max-width:1000px;margin:0 auto 34px;padding-left:18px;color:#bcbcbc;font-size:12px;line-height:1.75}
+.micro-compare-wrap{max-width:1000px;margin:0 auto 34px;overflow-x:auto}
+.micro-compare{width:100%;border-collapse:collapse;font-size:12px;min-width:920px}
+.micro-compare th{background:#101010;color:#FFFFFF;text-align:left;padding:10px 12px;border-bottom:1px solid #343434;font-weight:700}
+.micro-compare td{padding:10px 12px;border-bottom:1px solid #232323;color:#c8c8c8;vertical-align:top}
+.micro-compare tr:hover td{background:#101010}
+.micro-hours{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:28px}
+.micro-caption-guide{max-width:1000px;margin:0 auto 14px;padding:10px 12px;border:1px solid #303030;border-radius:8px;background:#101010;font-size:11px;color:#c9c9c9;line-height:1.6}
+.micro-caption-guide strong{color:#FFFFFF}
+.hour-card{border:1px solid #343434;border-radius:10px;background:#111;overflow:hidden}
+.hour-title{padding:10px 12px;border-bottom:1px solid #343434;color:#FFFFFF;font-size:13px;font-weight:700}
+.hour-fig{border-top:1px solid #272727}
+.hour-fig img{display:block;width:100%;height:auto;background:#080808}
+.hour-caption{padding:8px 10px;border-top:1px solid #272727;font-size:10px;color:#9f9f9f;line-height:1.45}
+.micro-actions{max-width:1000px;margin:0 auto;padding:14px;border:1px solid #343434;border-radius:8px;background:#111}
+.micro-actions h3{font-size:13px;color:#FFFFFF;margin-bottom:8px}
+.micro-actions ul{padding-left:18px;color:#c6c6c6;font-size:12px;line-height:1.7}
+
+/* Presentation blocks */
+.deck-section{max-width:1120px;width:100%;margin:0 auto;border-top:1px solid #1f1f1f}
+.agenda-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.agenda-item{background:#111;border:1px solid #343434;border-radius:12px;padding:14px;transition:border-color 180ms ease,transform 180ms ease}
+.agenda-item:hover{border-color:#4a4a4a;transform:translateY(-1px)}
+.agenda-item .time{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px}
+.agenda-item .topic{font-size:12px;color:#c9c9c9;line-height:1.5}
+
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.metric-card{background:#111;border:1px solid #343434;border-radius:12px;padding:14px}
+.metric-card .value{font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.metric-card .label{font-size:11px;color:#bdbdbd;margin-top:7px}
+.ta-threshold-note{max-width:1120px;margin:0 0 10px;padding:10px 12px;border:1px solid #2f2f2f;border-radius:10px;background:#101010;font-size:11px;color:#c9c9c9;line-height:1.65}
+.ta-threshold-note strong{color:#fff}
+.ta-threshold-refs{max-width:1120px;margin:0 0 18px;padding:10px 12px;border:1px solid #282828;border-radius:10px;background:#0f0f0f}
+.ta-threshold-refs p{font-size:10px;color:#a9a9a9;line-height:1.55;margin:0 0 6px}
+.ta-threshold-refs p:last-child{margin-bottom:0}
+.ta-threshold-refs a{color:#cfcfcf;text-decoration:underline}
+.deck-note{font-size:12px;line-height:1.75;color:#bfbfbf;background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+
+.split-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.split-card{background:#111;border:1px solid #343434;border-radius:12px;padding:14px}
+.split-card h3{font-size:13px;color:#FFFFFF;margin-bottom:6px}
+.split-card p{font-size:12px;line-height:1.7;color:#c6c6c6}
+
+.validation-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.validation-card{background:#111;border:1px solid #343434;border-radius:12px;padding:14px}
+.validation-card h3{font-size:12px;color:#FFFFFF;margin-bottom:4px}
+.validation-card p{font-size:12px;color:#c7c7c7;line-height:1.65}
+.limits-list{padding-left:18px;font-size:12px;line-height:1.7;color:#bdbdbd}
+
+.summary-table-wrap{overflow-x:auto}
+.summary-table{width:100%;border-collapse:collapse;font-size:12px;min-width:860px}
+.summary-table th{background:#101010;color:#FFFFFF;text-align:left;padding:10px;border-bottom:1px solid #343434}
+.summary-table td{padding:10px;border-bottom:1px solid #232323;color:#cbcbcb;vertical-align:top}
+.summary-table tr:hover td{background:#101010}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kpi-card{background:#111;border:1px solid #343434;border-radius:12px;padding:14px}
+.kpi-target{font-size:20px;font-weight:700;color:var(--accent)}
+.kpi-title{font-size:12px;color:#d7d7d7;margin-top:5px}
+.kpi-detail{font-size:11px;color:#9f9f9f;margin-top:5px;line-height:1.6}
+
+.measure-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.measure-card{background:#111;border:1px solid #343434;border-radius:12px;padding:14px}
+.measure-priority{font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:var(--accent);font-weight:700;margin-bottom:6px}
+.measure-card h3{font-size:13px;color:#e2e2e2;line-height:1.45;margin-bottom:6px}
+.measure-card p{font-size:12px;color:#c7c7c7;line-height:1.65;margin-bottom:8px}
+.measure-meta{padding-left:16px;font-size:11px;color:#b4b4b4;line-height:1.6}
+
+.formula-box{margin-bottom:14px;padding:14px;border:1px solid #343434;border-radius:12px;background:#111}
+.formula-box p{font-size:12px;color:#c7c7c7;line-height:1.75}
+.formula-box code{color:#FFFFFF}
+
+.corridor-table-wrap{overflow-x:auto}
+.corridor-table{width:100%;border-collapse:collapse;font-size:12px;min-width:980px}
+.corridor-table th{background:#101010;color:#FFFFFF;text-align:left;padding:9px;border-bottom:1px solid #343434}
+.corridor-table td{padding:9px;border-bottom:1px solid #232323;color:#cbcbcb;vertical-align:top}
+.corridor-table tr:hover td{background:#101010}
+
+.trend-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.trend-card{background:#111;border:1px solid #343434;border-radius:12px;padding:12px}
+.trend-card h3{font-size:13px;color:#fff;margin-bottom:4px}
+.trend-card p{font-size:11px;color:#bcbcbc;line-height:1.55;margin-bottom:8px}
+.trend-wrap{margin:8px 0 10px;padding:10px;border:1px solid #2a2a2a;border-radius:10px;background:#0f0f0f}
+#thermalTrendCanvas,#bioTrendCanvas{display:block;width:100%;height:320px}
+.trend-legend{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11px;color:#c6c6c6}
+.trend-item{display:inline-flex;align-items:flex-start;gap:7px;max-width:260px}
+.trend-item i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-top:7px}
+.trend-item strong{display:block;color:#f3f3f3;font-size:11px;line-height:1.2}
+.trend-item em{display:block;color:#a8a8a8;font-size:10px;line-height:1.3;font-style:normal}
+
+.closing{max-width:1100px;width:100%;margin:0 auto;border-top:1px solid #1f1f1f}
+.closing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.closing-card{background:#111;border:1px solid #343434;border-radius:12px;padding:16px}
+.closing-card h3{font-size:13px;color:#FFFFFF;margin-bottom:6px}
+.closing-card p{font-size:12px;color:#c8c8c8;line-height:1.7}
+.closing-question{margin-top:16px;font-size:13px;color:#d4d4d4;text-align:left}
+.end-cover{border-top:1px solid #111;border-bottom:none;background:var(--accent)}
+.end-cover h1{color:#111}
+.end-cover .author{color:#111;font-weight:600}
+.end-cover .subtitle{color:#222}
+.end-cover .thanks{max-width:900px;font-size:14px;line-height:1.8;color:#111;margin-bottom:20px}
+.end-cover .contact-lines{font-size:12px;line-height:1.9;color:#111}
+.end-cover .contact-lines a{color:#111;text-decoration:underline}
+.end-cover .final-note{margin-top:12px;font-size:11px;line-height:1.7;color:#111;max-width:920px}
+
+/* Responsive */
+@media(max-width:700px){
+  .nav{right:10px;gap:8px}
+  .nav-dot{width:8px;height:8px}
+  .nav-dot::after{display:none}
+  .rq-grid{grid-template-columns:1fr}
+  .hero{padding:0 18px}
+  .hero h1{font-size:clamp(24px,8vw,38px)}
+  .alcance-lead{font-size:14px;line-height:1.7}
+  .micro-hours{grid-template-columns:1fr}
+  .micro-compare{min-width:760px}
+  .agenda-grid{grid-template-columns:1fr}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .split-grid{grid-template-columns:1fr}
+  .validation-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr}
+  .measure-grid{grid-template-columns:1fr}
+  .trend-grid{grid-template-columns:1fr}
+  .closing-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-dot active" href="#hero" data-label="Inicio"></a>
+  <a class="nav-dot" href="#presentacion" data-label="Presentación"></a>
+  <a class="nav-dot" href="#agenda" data-label="Preguntas"></a>
+  <a class="nav-dot" href="#decision" data-label="Hipótesis"></a>
+  <a class="nav-dot" href="#metodologia" data-label="Método"></a>
+  <a class="nav-dot" href="#datos" data-label="Datos"></a>
+  <a class="nav-dot" href="#macro" data-label="Macro"></a>
+  <a class="nav-dot" href="#meso" data-label="Meso"></a>
+  <a class="nav-dot" href="#validacion" data-label="Validación"></a>
+  <a class="nav-dot" href="#visor" data-label="Visor"></a>
+  <a class="nav-dot" href="#micro" data-label="Micro"></a>
+  <a class="nav-dot" href="#sintesis" data-label="Síntesis"></a>
+  <a class="nav-dot" href="#kpi" data-label="KPIs"></a>
+  <a class="nav-dot" href="#decision-costo-impacto-plazo" data-label="Medidas"></a>
+  <a class="nav-dot" href="#cierre" data-label="Cierre"></a>
+  <a class="nav-dot" href="#agradecimientos" data-label="Gracias"></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero visible" id="hero">
+  <h1>Desigualdades térmicas en la Ciudad de México:<br/>Percepción remota, morfología urbana y simulación microclimática para analizar la exposición al calor urbano</h1>
+  <div class="author">Daniela Reséndiz García &nbsp;|&nbsp; Supervisor: Dr. Kimon Krenz &nbsp;|&nbsp; UCL 2025</div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- PRESENTACION -->
+<section class="deck-section presentacion" id="presentacion">
+  <div class="section-title with-symbol"><span class="sym">◌</span>Quién soy</div>
+  <div class="section-sub">Perfil técnico-profesional para este estudio</div>
+
+  <p class="bio-lead">
+    Soy <strong>Daniela Reséndiz García</strong>, especialista en análisis espacial y clima urbano.
+    Trabajo en la intersección entre investigación aplicada, datos geoespaciales y evaluación multiescalar de desigualdades territoriales.
+  </p>
+
+  <div class="cred-grid">
+    <article class="cred-item">
+      <h4>Puente entre teoría urbana y análisis técnico</h4>
+      <p>Traduzco evidencia geoespacial en marcos analíticos, indicadores y criterios de intervención.</p>
+    </article>
+    <article class="cred-item">
+      <h4>Experiencia aplicada en riesgo territorial</h4>
+      <p>He participado en proyectos de prevención y reconstrucción con enfoque de coordinación interinstitucional.</p>
+    </article>
+    <article class="cred-item">
+      <h4>Formación internacional en planeación espacial</h4>
+      <p>MSc en Space Syntax en The Bartlett, UCL, con enfoque en accesibilidad, exposición y desigualdad urbana.</p>
+    </article>
+    <article class="cred-item">
+      <h4>Trabajo aplicado en clima urbano y movilidad</h4>
+      <p>Proyectos en CDMX y Chennai combinando percepción remota, morfología urbana, red vial y simulación microclimática.</p>
+    </article>
+  </div>
+
+  <div class="profile-links">
+    <a class="profile-link" href="https://danielaresendizg.github.io/es/cv.html" target="_blank" rel="noopener">CV</a>
+    <a class="profile-link" href="https://danielaresendizg.github.io/en/publication.html" target="_blank" rel="noopener">Publicaciones</a>
+    <a class="profile-link" href="https://github.com/danielaresendizg" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</section>
+
+<!-- RESEARCH QUESTIONS -->
+<section class="deck-section" id="agenda">
+  <div class="section-title">Alcances del estudio</div>
+  <p class="alcance-lead">El reporte 2025 de Lancet Countdown informa que la mortalidad asociada al calor aumentó 23% desde la década de 1990 y que la exposición al calor provocó la pérdida potencial de 640 mil millones de horas laborales en 2024 (Romanello et al., 2025). Este estudio examina cómo el calor extremo agrava desigualdades sociales preexistentes en la Ciudad de México y desarrolla una ruta operativa para dirigir enfriamiento donde genere el mayor beneficio social.</p>
+  <div class="agenda-grid">
+    <article class="agenda-item"><div class="time">Macro</div><div class="topic">¿Dónde coinciden las temperaturas del aire diurnas de verano con poblaciones socialmente vulnerables?</div></article>
+    <article class="agenda-item"><div class="time">Meso</div><div class="topic">¿Qué combinaciones de forma/densidad urbana y configuración de red caracterizan los hotspots térmico-sociales?</div></article>
+    <article class="agenda-item"><div class="time">Micro</div><div class="topic">¿Cómo se puede evaluar el estrés térmico a microescala para definir objetivos de diseño pasivo para la reducción del calor?</div></article>
+  </div>
+</section>
+
+<!-- DECISION BRIEF -->
+<section class="deck-section" id="decision">
+  <div class="section-title">Hipótesis y aporte metodológico</div>
+  <div class="section-sub">Qué se evalúa, con qué método y qué inferencias son válidas para este estudio</div>
+  <div class="split-grid">
+    <article class="split-card">
+      <h3>Hipótesis operativa</h3>
+      <p>
+        La exposición peatonal al calor no se distribuye de manera homogénea: se concentra en corredores con alta
+        integración espacial y co-ocurrencia de vulnerabilidad social. Este patrón justifica una clasificación espacial
+        escalonada (crítica, intermedia y de consolidación).
+      </p>
+    </article>
+    <article class="split-card">
+      <h3>Aporte metodológico</h3>
+      <p>
+        Se propone un sistema de priorización multiescalar con criterios reproducibles, métricas térmicas
+        (Tmrt, UTCI, PET) y esquema de seguimiento comparativo por tramo para evaluación ex ante y ex post.
+      </p>
+    </article>
+  </div>
+  <p class="deck-note">
+    Alcance analítico: usar este visor como marco de referencia para integrar resultados macro, meso y micro
+    con indicadores comparables de desempeño térmico peatonal.
+  </p>
+</section>
+
+<!-- METHODOLOGY DIAGRAM -->
+<section class="section" id="metodologia">
+  <div class="section-title">Pipeline metodológico</div>
+  <div class="section-sub">Tres escalas anidadas: detección macro, caracterización meso y simulación micro</div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" width="1000" font-family="'Segoe UI',system-ui,sans-serif">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-auto">
+          <path d="M0,0 L10,3.5 L0,7 z" fill="#888"/>
+        </marker>
+        <marker id="arrow-dash" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-auto">
+          <path d="M0,0 L10,3.5 L0,7 z" fill="#555"/>
+        </marker>
+      </defs>
+
+      <!-- Phase labels -->
+      <rect x="20" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+      <text x="160" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 1 (MACRO)</text>
+      <text x="160" y="46" fill="#999" font-size="9" text-anchor="middle">Percepción remota + calibración + vulnerabilidad</text>
+
+      <rect x="360" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+      <text x="500" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 2 (MESO)</text>
+      <text x="500" y="46" fill="#999" font-size="9" text-anchor="middle">Morfología urbana + red vial</text>
+
+      <rect x="700" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+      <text x="840" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 3 (MICRO)</text>
+      <text x="840" y="46" fill="#999" font-size="9" text-anchor="middle">Simulación biometeorológica (peatones)</text>
+
+      <!-- PHASE 1 steps -->
+      <!-- 1.1 -->
+      <rect x="60" y="80" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="160" y="96" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">1.1 Procesamiento Landsat</text>
+      <text x="160" y="110" fill="#888" font-size="8.5" text-anchor="middle">(Google Earth Engine)</text>
+      <rect x="75" y="125" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="160" y="143" fill="#aaa" font-size="8.5" text-anchor="middle">NDVI, NDBI, Albedo, LST</text>
+
+      <!-- 1.2 -->
+      <rect x="60" y="175" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="160" y="191" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">1.2 Calibración LST → Ta</text>
+      <text x="160" y="205" fill="#888" font-size="8.5" text-anchor="middle">(estaciones meteorológicas)</text>
+      <rect x="75" y="220" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="160" y="238" fill="#aaa" font-size="8.5" text-anchor="middle">Superficie Ta (30 m)</text>
+
+      <!-- 1.3 -->
+      <rect x="60" y="270" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="160" y="286" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">1.3 Colocalización hotspot</text>
+      <text x="160" y="300" fill="#888" font-size="8.5" text-anchor="middle">y vulnerabilidad (GWR/MGWR)</text>
+      <rect x="75" y="315" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="160" y="333" fill="#aaa" font-size="8.5" text-anchor="middle">Hotspots térmico-sociales</text>
+
+      <!-- HOTSPOTS box -->
+      <rect x="55" y="368" width="210" height="40" rx="4" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+      <text x="160" y="385" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">HOTSPOTS</text>
+      <text x="160" y="399" fill="#999" font-size="8" text-anchor="middle">(umbral Ta + alta vulnerabilidad)</text>
+
+      <!-- Phase 1 arrows -->
+      <line x1="160" y1="153" x2="160" y2="175" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="160" y1="248" x2="160" y2="270" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="160" y1="343" x2="160" y2="368" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- PHASE 2 steps -->
+      <!-- 2.1 -->
+      <rect x="370" y="80" width="120" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="430" y="96" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.1 Space Matrix</text>
+      <text x="430" y="110" fill="#888" font-size="8.5" text-anchor="middle">(FSI, GSI, OSR)</text>
+      <rect x="380" y="125" width="100" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="430" y="138" fill="#aaa" font-size="8" text-anchor="middle">Indicadores</text>
+      <text x="430" y="148" fill="#aaa" font-size="8" text-anchor="middle">morfológicos</text>
+
+      <!-- 2.2 -->
+      <rect x="510" y="80" width="120" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="570" y="96" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.2 Space Syntax</text>
+      <text x="570" y="110" fill="#888" font-size="8.5" text-anchor="middle">(NAIN/NACH)</text>
+      <rect x="520" y="125" width="100" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="570" y="138" fill="#aaa" font-size="8" text-anchor="middle">Integración/elección</text>
+      <text x="570" y="148" fill="#aaa" font-size="8" text-anchor="middle">(multi-radio)</text>
+
+      <!-- 2.3 -->
+      <rect x="400" y="195" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="500" y="211" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.3 Acoplamiento forma-red</text>
+      <text x="500" y="225" fill="#888" font-size="8.5" text-anchor="middle">(manzanas/segmentos)</text>
+      <rect x="415" y="240" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="500" y="253" fill="#aaa" font-size="8" text-anchor="middle">Asociaciones entre Ta,</text>
+      <text x="500" y="263" fill="#aaa" font-size="8" text-anchor="middle">morfología y red</text>
+
+      <!-- 2.4 -->
+      <rect x="400" y="295" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="500" y="311" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.4 Selección de corredores</text>
+      <text x="500" y="325" fill="#888" font-size="8.5" text-anchor="middle">para estudios a microescala</text>
+      <rect x="415" y="340" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="500" y="353" fill="#aaa" font-size="8" text-anchor="middle">Corredores prioritarios</text>
+      <text x="500" y="363" fill="#aaa" font-size="8" text-anchor="middle">(calientes + integrados)</text>
+
+      <!-- Phase 2 arrows -->
+      <line x1="430" y1="153" x2="470" y2="195" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="570" y1="153" x2="530" y2="195" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="500" y1="268" x2="500" y2="295" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- Cross-phase: Hotspots → 2.3 -->
+      <path d="M265,388 L350,388 L350,215 L400,215" stroke="#888" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Cross-phase: Ta → 2.3 (dashed) -->
+      <path d="M245,234 L310,234 L310,205 L400,205" stroke="#555" stroke-width="0.8" fill="none" stroke-dasharray="4,3" marker-end="url(#arrow-dash)"/>
+
+      <!-- PHASE 3 steps -->
+      <!-- 3.1 -->
+      <rect x="740" y="80" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="840" y="96" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">3.1 Insumos microclima</text>
+      <text x="840" y="110" fill="#888" font-size="8.5" text-anchor="middle">(DEM/DSM, dosel)</text>
+      <rect x="755" y="125" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="840" y="143" fill="#aaa" font-size="8.5" text-anchor="middle">Insumos UMEP/SOLWEIG</text>
+
+      <!-- 3.2 -->
+      <rect x="740" y="195" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="840" y="211" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">3.2 Simulación SOLWEIG</text>
+      <text x="840" y="225" fill="#888" font-size="8.5" text-anchor="middle">a lo largo de corredores</text>
+      <rect x="755" y="240" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="840" y="253" fill="#aaa" font-size="8" text-anchor="middle">Perfiles Tmrt, UTCI, PET</text>
+
+      <!-- 3.3 -->
+      <rect x="740" y="295" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="840" y="311" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">3.3 Interpretación</text>
+      <text x="840" y="325" fill="#888" font-size="8.5" text-anchor="middle">e implicaciones de diseño</text>
+      <rect x="755" y="340" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="840" y="353" fill="#aaa" font-size="8" text-anchor="middle">Benchmarks de estrés</text>
+      <text x="840" y="363" fill="#aaa" font-size="8" text-anchor="middle">térmico para diseño vial</text>
+
+      <!-- Phase 3 arrows -->
+      <line x1="840" y1="153" x2="840" y2="195" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="840" y1="268" x2="840" y2="295" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- Cross-phase: 2.4 corridors → 3.2 -->
+      <path d="M585,358 L660,358 L660,215 L740,215" stroke="#888" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Visual dictionary -->
+      <rect x="40" y="435" width="920" height="1" fill="#222"/>
+
+      <rect x="60" y="460" width="80" height="28" rx="3" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+      <text x="100" y="478" fill="#fff" font-size="8" font-weight="600" text-anchor="middle">Fase</text>
+      <text x="155" y="478" fill="#666" font-size="8">Agrupa pasos analíticos</text>
+
+      <rect x="300" y="460" width="80" height="28" rx="3" fill="#111" stroke="#555" stroke-width="1"/>
+      <text x="340" y="478" fill="#fff" font-size="8" font-weight="600" text-anchor="middle">Método</text>
+      <text x="395" y="478" fill="#666" font-size="8">Proceso o método analítico</text>
+
+      <rect x="540" y="460" width="80" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
+      <text x="580" y="478" fill="#aaa" font-size="8" text-anchor="middle">Salida</text>
+      <text x="635" y="478" fill="#666" font-size="8">Salida de datos del paso</text>
+
+      <line x1="790" y1="474" x2="840" y2="474" stroke="#888" stroke-width="1" marker-end="url(#arrow)"/>
+      <text x="855" y="478" fill="#666" font-size="8">Flujo de datos</text>
+
+      <line x1="790" y1="498" x2="840" y2="498" stroke="#555" stroke-width="0.8" stroke-dasharray="4,3" marker-end="url(#arrow-dash)"/>
+      <text x="855" y="502" fill="#666" font-size="8">Reutilización entre fases</text>
+    </svg>
+  </div>
+</section>
+
+<!-- DATA SOURCES TABLE -->
+<section class="section" id="datos">
+  <div class="section-title">Fuentes de datos</div>
+  <div class="section-sub">Todos los insumos son de acceso abierto</div>
+
+  <p class="abbrev" style="font-size:10px;color:#555;font-style:italic;margin-bottom:16px;text-align:left">
+    L8/9 = Landsat 8/9 &nbsp;|&nbsp; GEE = Google Earth Engine &nbsp;|&nbsp; LST = Land Surface Temperature &nbsp;|&nbsp; Ta = temperatura del aire &nbsp;|&nbsp; DEM/DSM = Modelo Digital de Elevación/Superficie &nbsp;|&nbsp; GOB = Google Open Buildings &nbsp;|&nbsp; OSM = OpenStreetMap &nbsp;|&nbsp; INEGI = Instituto Nacional de Estadística y Geografía
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr><th style="width:60px">Paso</th><th>Fuentes de datos</th></tr>
+    </thead>
+    <tbody>
+      <tr class="phase-row"><td colspan="2">Fase 1 (Macro): Mapeo térmico + colocalización de vulnerabilidad</td></tr>
+      <tr><td class="step-col">1.1</td><td>Productos Landsat 8/9 (L8/9) Collection 2 Level-2 (reflectancia de superficie + LST; escenas de verano, climatología multianual) procesados en GEE</td></tr>
+      <tr><td class="step-col">1.2</td><td>Estaciones meteorológicas locales (RedMet, SEDEMA) para calibración; índices satelitales del Paso 1.1</td></tr>
+      <tr><td class="step-col">1.3</td><td>Microdatos censales a nivel manzana (INEGI 2020) y límites administrativos; predicciones de Ta del Paso 1.2 agregadas a manzanas</td></tr>
+      <tr class="phase-row"><td colspan="2">Fase 2 (Meso): Morfología urbana + configuración de red vial</td></tr>
+      <tr><td class="step-col">2.1</td><td>Huellas de edificios y alturas (Google Open Buildings + catastro CDMX como fuente auxiliar de alturas)</td></tr>
+      <tr><td class="step-col">2.2</td><td>Red vial (OSM / red oficial de la CDMX) procesada con DepthmapX</td></tr>
+      <tr><td class="step-col">2.3</td><td>Capas térmicas de la Fase 1 + salidas de los Pasos 2.1–2.2 para análisis de acoplamiento forma-red y selección de corredores</td></tr>
+      <tr class="phase-row"><td colspan="2">Fase 3 (Micro): Simulación biometeorológica para exposición peatonal</td></tr>
+      <tr><td class="step-col">3.1</td><td>DEM/DSM de alta resolución; huellas y alturas de edificios (Paso 2.1); capas de vegetación/dosel (derivadas de NDVI); forzamiento meteorológico (datos de estaciones)</td></tr>
+      <tr><td class="step-col">3.2</td><td>Motor de simulación y parámetros (UMEP/SOLWEIG en QGIS); puntos de observación a lo largo de corredores seleccionados (del Paso 2.3)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- MACRO RESULTS -->
+<section class="deck-section" id="macro">
+  <div class="section-title with-symbol"><span class="sym">◉</span>Diagnóstico macro de riesgo térmico-social</div>
+  <div class="section-sub">Magnitud del problema y localización de primera prioridad (2014–2024)</div>
+  <div class="metric-grid">
+    <article class="metric-card"><div class="value">32%</div><div class="label">de manzanas supera 26°C en verano (Ta media)</div></article>
+    <article class="metric-card"><div class="value">11%</div><div class="label">de manzanas supera 28°C (condición extrema)</div></article>
+    <article class="metric-card"><div class="value">26.8°C</div><div class="label">Ta media en corredor centro-oriente</div></article>
+    <article class="metric-card"><div class="value">+1.5σ</div><div class="label">anomalías UHI_air en oriente/noreste</div></article>
+  </div>
+  <div class="ta-threshold-note">
+    <strong>Anotación metodológica:</strong> en este estudio los umbrales de <strong>Ta = 26°C</strong> y <strong>Ta = 28°C</strong> se usan para clasificar exposición térmica a escala manzana/segmento (<em>hazardous</em> y <em>extreme</em>) en coherencia con la literatura local y el marco de comunicación de riesgo térmico.
+  </div>
+  <div class="ta-threshold-refs">
+    <p><strong>Citas:</strong> Magaña y Vargas (2020); WMO (2025).</p>
+    <p><strong>Referencias:</strong> Magaña, V. and Vargas, N. (2020). <em>Warm Spells and Climate Risk to Human Health in the Mexico City Metropolitan Area</em>. <em>Weather, Climate, and Society</em>, 12(3), 351-365. DOI: <a href="https://doi.org/10.1175/WCAS-D-19-0096.1" target="_blank" rel="noopener">10.1175/WCAS-D-19-0096.1</a>. World Meteorological Organization (2025). <em>State of the Global Climate 2024</em>. URL: <a href="https://wmo.int/sites/default/files/2025-03/WMO-1368-2024_en.pdf" target="_blank" rel="noopener">WMO-1368-2024</a>.</p>
+  </div>
+  <p class="deck-note">
+    Lectura del resultado: el riesgo se concentra en territorios densos, menos vegetados y con mayor dependencia peatonal/transporte público.
+    Esto respalda una focalización espacial, en lugar de intervenciones dispersas.
+  </p>
+</section>
+
+<!-- MESO RESULTS -->
+<section class="deck-section" id="meso">
+  <div class="section-title with-symbol"><span class="sym">◈</span>Diagnóstico meso: motores espaciales del riesgo</div>
+  <div class="section-sub">Evidencia estadística-espacial para explicar patrones de exposición</div>
+  <div class="split-grid">
+    <article class="split-card">
+      <h3>Mecanismo 1: carga térmica estructural</h3>
+      <p>
+        GSI es el predictor morfológico más sensible: correlación negativa con NDVI (r = -0.299) y positiva con Ta_mean (r = 0.228).
+        Tipologías compactas y selladas concentran mayor Heat Index y menor capacidad de disipación térmica.
+      </p>
+    </article>
+    <article class="split-card">
+      <h3>Mecanismo 2: exposición por corredor</h3>
+      <p>
+        Las zonas hazard 2 combinan alta temperatura y alta integración de red.
+        En términos de servicio urbano, los corredores de mayor demanda peatonal son también los de mayor exposición térmica.
+      </p>
+    </article>
+  </div>
+  <p class="deck-note">
+    Implicación analítica: los corredores integrados dentro de tejidos compactos concentran simultáneamente mayor flujo peatonal
+    y mayor vulnerabilidad acumulada, por lo que su intervención tiene mayor efecto sobre la exposición total.
+  </p>
+</section>
+
+<!-- VALIDATION -->
+<section class="deck-section" id="validacion">
+  <div class="section-title">Calidad analítica y robustez del modelo</div>
+  <div class="section-sub">Trazabilidad de método, robustez estadística y límites de uso</div>
+  <div class="validation-grid">
+    <article class="validation-card">
+      <h3>Calibración térmica</h3>
+      <p>LST se convierte a Ta con modelo local: <code>Ta = 0.5540 × LST + 5.7606</code>, usando 17 estaciones RedMet (10:00–14:00).</p>
+    </article>
+    <article class="validation-card">
+      <h3>Comparación de modelos</h3>
+      <p>GWR mejora ajuste en 16/16 alcaldías y mejora Moran p en 11/16 frente a OLS; esto valida heterogeneidad espacial para focalización territorial.</p>
+    </article>
+    <article class="validation-card">
+      <h3>Lectura prudente</h3>
+      <p>Persiste autocorrelación residual en GWR (p&lt;0.05): uso recomendado para análisis comparativo y diseño urbano, no para inferencia causal directa.</p>
+    </article>
+  </div>
+  <ul class="limits-list">
+    <li>La calibración está centrada en horario diurno; no describe completamente dinámica nocturna.</li>
+    <li>SOLWEIG simplifica ciertos procesos (por ejemplo, calor antropogénico directo).</li>
+    <li>Los indicadores sociales son proxies de sensibilidad/capacidad adaptativa, no mediciones clínicas de impacto.</li>
+  </ul>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <a href="#visor" class="cta-btn">Explorar el Atlas Interactivo</a>
+  <div class="cta-hint">Visor con más de 45 capas temáticas a nivel manzana y red vial</div>
+</section>
+
+<!-- THERMAL TRENDS -->
+<section class="deck-section" id="tendencias-termicas">
+  <div class="section-title">Tendencias anuales (2014-2024)</div>
+  <div class="section-sub">Relación entre temperatura y estructura biofísica.</div>
+  <p style="margin-top:-22px;margin-bottom:6px;font-size:10px;color:#8f8f8f;line-height:1.4;">Nota metodológica: se adopta 2014-2024 (n=11) por continuidad instrumental y comparabilidad interanual (Landsat 8/9 Collection 2 + calibración homogénea con RedMet), y porque la literatura reciente de LST urbano usa ventanas decenales para detectar señal térmica reciente [4,5]. Este periodo se usa para tendencia urbana, no como normal climatológica; para normales, WMO/IPCC emplean marcos de 30 años [1,2].</p>
+  <p style="margin-top:0;margin-bottom:14px;font-size:9px;color:#7d7d7d;line-height:1.35;">[1] WMO climatological normals. [2] IPCC AR6 Glossary (climate normal). [3] USGS Landsat 8-9 C2 L2 Science Product Guide. [4] Shafizadeh-Moghadam et al., 2025, <em>J. Environ. Manage.</em>, doi:10.1016/j.jenvman.2025.127789. [5] RoohaniQadikolaei et al., 2025, <em>Ecol. Indicators</em>, doi:10.1016/j.ecolind.2025.113386.</p>
+  <div class="trend-grid">
+    <article class="trend-card">
+      <h3>Temperatura</h3>
+      <p>Series en °C para LST y Ta. Se muestran todos los años (2014-2024).</p>
+      <div class="trend-wrap">
+        <canvas id="thermalTrendCanvas" aria-label="Tendencias térmicas por año"></canvas>
+      </div>
+      <div class="trend-legend" id="thermalTrendLegend"></div>
+    </article>
+    <article class="trend-card">
+      <h3>Indicadores de superficie</h3>
+      <p>Series adimensionales de Albedo, NDBI y NDVI, comparables con la tendencia de Ta. En albedo: 0 = absorbe más radiación y 1 = refleja más radiación.</p>
+      <div class="trend-wrap">
+        <canvas id="bioTrendCanvas" aria-label="Tendencias biofísicas por año"></canvas>
+      </div>
+      <div class="trend-legend" id="bioTrendLegend"></div>
+      <p class="deck-note" id="bioTrendNote"></p>
+    </article>
+  </div>
+</section>
+
+<!-- VIEWER (iframe) -->
+<section class="viewer-section" id="visor">
+  <iframe src="atlas_cdmx.html" title="Atlas Interactivo de Calor Urbano CDMX" allow="fullscreen"></iframe>
+</section>
+
+<!-- MICRO SCALE -->
+<section class="micro-section" id="micro">
+  <div class="section-title with-symbol"><span class="sym">◎</span>Evaluación micro: desempeño térmico en corredores prioritarios</div>
+  <div class="section-sub">Métrica biometeorológica para especificación de proyecto urbano</div>
+
+  <p class="micro-eval">
+    Esta fase cuantifica exposición peatonal en corredores de alta integración (NAIN r500/r1500) usando UMEP/SOLWEIG con forzamiento local por zona.
+    El objetivo es definir especificaciones técnicas de diseño a partir de <strong>Tmrt</strong>, <strong>UTCI</strong> y <strong>PET</strong> en tres ventanas operativas de calor:
+    <strong>10:00</strong>, <strong>12:00</strong> y <strong>14:00</strong>.
+  </p>
+
+  <div class="micro-thresholds">
+    Rangos de referencia del estudio: <span>UTCI ≥ 32°C</span> (estrés fuerte), <span>UTCI ≥ 38°C</span> (estrés muy fuerte), <span>PET &gt; 41°C</span> (estrés extremo).
+  </div>
+
+  <div class="micro-threshold-note">
+    <strong>Anotación metodológica:</strong> estos umbrales provienen de las clasificaciones biometeorológicas usadas en el estudio (véase Appendix F) para identificar condiciones de estrés térmico en calle a escala peatonal.
+  </div>
+  <div class="micro-threshold-refs">
+    <p><strong>Citas:</strong> Bröde et al. (2012); Matzarakis et al. (1999).</p>
+    <p><strong>Referencias:</strong> Bröde, P. et al. (2012). <em>Derivation and validation of the Universal Thermal Climate Index (UTCI)</em>. <em>International Journal of Biometeorology</em>, 56, 481-494. DOI: <a href="https://doi.org/10.1007/s00484-011-0454-1" target="_blank" rel="noopener">10.1007/s00484-011-0454-1</a>. Matzarakis, A., Mayer, H. and Iziomon, M.G. (1999). <em>Applications of a universal thermal index: PET</em>. <em>International Journal of Biometeorology</em>, 43, 76-84. DOI: <a href="https://doi.org/10.1007/s004840050118" target="_blank" rel="noopener">10.1007/s004840050118</a>.</p>
+  </div>
+
+  <div class="micro-glossary">
+    <h3>Glosario microclimático</h3>
+    <ul>
+      <li><strong>UTCI (Universal Thermal Climate Index, °C):</strong> índice de estrés térmico equivalente percibido por el cuerpo humano; integra temperatura del aire, humedad, viento y radiación.</li>
+      <li><strong>Tmrt (Mean radiant temperature, °C):</strong> temperatura radiante media del entorno; resume la carga radiativa de superficies y sol sobre el peatón.</li>
+      <li><strong>PET (Physiological Equivalent Temperature, °C):</strong> temperatura equivalente fisiológica en ambiente interior de referencia; expresa el nivel de carga térmica del cuerpo en condiciones exteriores.</li>
+    </ul>
+  </div>
+
+  <div class="micro-zones">
+    <img src="data/micro/microscale_zones.png" alt="Mapa de zonas de estudio para la microescala" loading="lazy">
+  </div>
+
+  <ul class="micro-why">
+    <li><strong>Zona 1 (Hospital General):</strong> caso de riesgo moderado persistente con alta sensibilidad social y alta demanda peatonal.</li>
+    <li><strong>Zona 2 (Entorno AICM):</strong> caso de transición térmica donde la morfología comienza a migrar hacia régimen extremo.</li>
+    <li><strong>Zona 3 (Basílica de Guadalupe):</strong> caso de régimen extremo consolidado con concentración de población de mayor vulnerabilidad.</li>
+  </ul>
+
+  <div class="micro-compare-wrap">
+    <table class="micro-compare">
+      <thead>
+        <tr>
+          <th>Caso</th>
+          <th>Régimen térmico</th>
+          <th>Grupo social dominante</th>
+          <th>Morfología dominante</th>
+          <th>Rango UTCI/PET (estudio)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Zona 1 — Hospital General</td>
+          <td>26–28°C (moderado), sin señal estructural en ≥28°C</td>
+          <td>Adultos mayores (65+) y baja escolaridad (primaria)</td>
+          <td>Perímetro bajo (37.5%), Barras (31.2%), Perímetro medio (25.0%)</td>
+          <td>UTCI 29.6→32.9 (media diaria); PET media hasta 37.2 a las 14:00 y excedencias PET&gt;41 en puntos críticos</td>
+        </tr>
+        <tr>
+          <td>Zona 2 — Entorno AICM</td>
+          <td>Predominio del umbral de 26°C (hot26) con transición parcial al umbral de 28°C (hot28)</td>
+          <td>Baja escolaridad como factor consistente</td>
+          <td>Sin predio/sin catastro (54.2%), Perímetro bajo (29.2%), Hilera/adosada (8.3%)</td>
+          <td>UTCI estable ~34–35; PET 38.7–40.8 con picos &gt;41 a las 10:00 y 14:00</td>
+        </tr>
+        <tr>
+          <td>Zona 3 — Basílica de Guadalupe</td>
+          <td>Vulnerabilidad activada principalmente en ≥28°C</td>
+          <td>Adultos mayores (65+) en régimen extremo</td>
+          <td>Compacta continua (44.4%), Perímetro bajo (33.3%), Hilera/adosada (22.2%)</td>
+          <td>UTCI ~35–36; PET 39.5–41.6 (máximo reportado 43.4 a las 14:00)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="micro-caption-guide">
+    <strong>Cómo leer cada pie de imagen:</strong> <strong>mediana</strong> = valor típico del corredor, <strong>p90</strong> = valor alto (el 10% más caliente), y <strong>% PET&gt;41°C</strong> = porcentaje de puntos en estrés térmico extremo.
+  </div>
+
+  <div class="micro-hours">
+    <article class="hour-card">
+      <div class="hour-title">10:00</div>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_01_10.png" alt="Zona 1 a las 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 1: UTCI mediana 27.4°C (p90 35.1°C); Tmrt mediana 34.4°C (p90 63.7°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_02_10.png" alt="Zona 2 a las 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 2: UTCI mediana 35.0°C (p90 35.6°C); Tmrt mediana 62.8°C (p90 65.0°C); 40% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_03_10.png" alt="Zona 3 a las 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 3: UTCI mediana 33.2°C (p90 34.5°C); Tmrt mediana 54.8°C (p90 58.7°C); 33% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+    </article>
+
+    <article class="hour-card">
+      <div class="hour-title">12:00</div>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_01_12.png" alt="Zona 1 a las 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 1: UTCI mediana 33.1°C (p90 34.0°C); Tmrt mediana 55.9°C (p90 59.5°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_02_12.png" alt="Zona 2 a las 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 2: UTCI mediana 33.9°C (p90 34.5°C); Tmrt mediana 58.4°C (p90 60.7°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_03_12.png" alt="Zona 3 a las 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 3: UTCI mediana 33.0°C (p90 37.5°C); Tmrt mediana 54.0°C (p90 67.3°C); 33% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+    </article>
+
+    <article class="hour-card">
+      <div class="hour-title">14:00</div>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_01_14.png" alt="Zona 1 a las 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 1: UTCI mediana 34.5°C (p90 35.5°C); Tmrt mediana 61.4°C (p90 65.3°C); 14% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_02_14.png" alt="Zona 2 a las 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 2: UTCI mediana 33.5°C (p90 33.8°C); Tmrt mediana 57.1°C (p90 59.0°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+      <figure class="hour-fig">
+        <img src="data/micro/zone_03_14.png" alt="Zona 3 a las 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zona 3: UTCI mediana 34.5°C (p90 37.1°C); Tmrt mediana 60.7°C (p90 64.4°C); 17% de puntos supera PET&gt;41°C.</figcaption>
+      </figure>
+    </article>
+  </div>
+
+  <div class="micro-actions">
+    <h3>Paquete técnico de intervención en calle</h3>
+    <ul>
+      <li>Consolidar sombra continua en corredores de alta integración peatonal, priorizando tramos con Tmrt p90 &gt; 60°C.</li>
+      <li>Implementar refugios térmicos de proximidad (sombra + descanso + hidratación) en nodos de mayor flujo y exposición.</li>
+      <li>Diferenciar acciones por régimen: en 26–28°C reforzar mitigación de confort cotidiano; en ≥28°C activar medidas de protección intensiva.</li>
+      <li>Priorizar población adulta mayor y grupos con baja escolaridad en la localización de intervenciones de enfriamiento urbano.</li>
+      <li>Reducir carga radiante en suelo peatonal (arbolado, materiales fríos y control de superficies abiertas altamente insoladas).</li>
+      <li>Usar UTCI/PET por horario como métrica de seguimiento para validar efectividad de proyectos de calle y espacio público.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CROSS-SCALE SYNTHESIS -->
+<section class="deck-section" id="sintesis">
+  <div class="section-title">Matriz comparativa exposición-intervención</div>
+  <div class="section-sub">Comparativo técnico entre casos de estudio</div>
+  <div class="summary-table-wrap">
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Caso</th>
+          <th>Régimen dominante</th>
+          <th>Población más expuesta</th>
+          <th>Mecanismo espacial</th>
+          <th>Hora crítica</th>
+          <th>Síntesis de intervención</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Zona 1 — Hospital General</td>
+          <td>Calor moderado (26–28°C)</td>
+          <td>Adultos mayores + baja escolaridad</td>
+          <td>Corredores integrados en tejido perimetral</td>
+          <td>14:00</td>
+          <td>Intervención inmediata en corredores estructurantes</td>
+        </tr>
+        <tr>
+          <td>Zona 2 — Entorno AICM</td>
+          <td>Transición hot26→hot28</td>
+          <td>Baja escolaridad</td>
+          <td>Alta integración + morfologías en transición</td>
+          <td>10:00 y 14:00</td>
+          <td>Mitigación preventiva y ajustes de transición</td>
+        </tr>
+        <tr>
+          <td>Zona 3 — Basílica de Guadalupe</td>
+          <td>Calor extremo (≥28°C)</td>
+          <td>Adultos mayores</td>
+          <td>Compacidad alta + corredores de alta centralidad</td>
+          <td>10:00 y 14:00</td>
+          <td>Actuación prioritaria por régimen térmico extremo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- KPI IMPLEMENTATION -->
+<section class="deck-section" id="kpi">
+  <div class="section-title with-symbol"><span class="sym">◍</span>Indicadores de seguimiento de desempeño</div>
+  <div class="section-sub">Métricas para línea base, intervención y evaluación ex post</div>
+  <div class="kpi-grid">
+    <article class="kpi-card">
+      <div class="kpi-target">-10 a -15°C</div>
+      <div class="kpi-title">reducción de Tmrt al mediodía en corredores prioritarios</div>
+      <div class="kpi-detail">Métrica de resultado principal; validación con línea base y medición post-intervención.</div>
+    </article>
+    <article class="kpi-card">
+      <div class="kpi-target">≥70%</div>
+      <div class="kpi-title">sombra continua entre 10:00 y 14:00 en tramos peatonales críticos</div>
+      <div class="kpi-detail">Métrica de servicio urbano; auditoría de continuidad por segmento y temporada.</div>
+    </article>
+    <article class="kpi-card">
+      <div class="kpi-target">300–500 m</div>
+      <div class="kpi-title">distancia máxima entre refugios térmicos</div>
+      <div class="kpi-detail">Métrica de accesibilidad; cobertura efectiva sobre red peatonal y nodos de alta demanda.</div>
+    </article>
+    <article class="kpi-card">
+      <div class="kpi-target">↓ Ta ≥28°C (p90)</div>
+      <div class="kpi-title">reducción de longitud de segmentos en condición extrema</div>
+      <div class="kpi-detail">Métrica de impacto territorial; comparación anual de segmentos hazard 2 en el atlas.</div>
+    </article>
+  </div>
+</section>
+
+<!-- DECISION-COST-IMPACT-TIMELINE -->
+<section class="deck-section" id="decision-costo-impacto-plazo">
+  <div class="section-title">Síntesis de medidas térmicas: costo, impacto y horizonte temporal</div>
+  <div class="section-sub">Escenarios de intervención para factibilidad y ejecución técnica</div>
+  <div class="measure-grid">
+    <article class="measure-card">
+      <div class="measure-priority">Medida 1</div>
+      <h3>Sombra continua en corredores de alta integración</h3>
+      <p>Intervenir tramos con mayor exposición peatonal para reducir carga radiante entre 10:00 y 14:00.</p>
+      <ul class="measure-meta">
+        <li><strong>Costo:</strong> 6-10 M MXN por km de corredor (estimación preliminar sujeta a validación de proyecto ejecutivo).</li>
+        <li><strong>Impacto esperado:</strong> -10 a -15°C en Tmrt de hora crítica y caída de 20-40 p.p. en PET&gt;41°C.</li>
+        <li><strong>Plazo:</strong> 6-12 meses por paquete de 3-5 km.</li>
+      </ul>
+    </article>
+    <article class="measure-card">
+      <div class="measure-priority">Medida 2</div>
+      <h3>Refugios térmicos de proximidad</h3>
+      <p>Instalar nodos de sombra, descanso e hidratación cada 300-500 m en ejes con demanda peatonal alta.</p>
+      <ul class="measure-meta">
+        <li><strong>Costo:</strong> 1.2-2.0 M MXN por nodo operativo (estimación preliminar sujeta a validación).</li>
+        <li><strong>Impacto esperado:</strong> cobertura de protección en población sensible y reducción de exposición acumulada en trayecto.</li>
+        <li><strong>Plazo:</strong> 3-6 meses para despliegue en red piloto.</li>
+      </ul>
+    </article>
+    <article class="measure-card">
+      <div class="measure-priority">Medida 3</div>
+      <h3>Rediseño de superficie peatonal y materiales</h3>
+      <p>Aplicar soluciones de enfriamiento pasivo (arbolado, pavimento frío y control de insolación en suelo expuesto).</p>
+      <ul class="measure-meta">
+        <li><strong>Costo:</strong> 3-6 M MXN por km equivalente intervenido (estimación preliminar sujeta a validación).</li>
+        <li><strong>Impacto esperado:</strong> -3 a -7°C en Tmrt local y reducción del p90 de Ta en segmentos críticos.</li>
+        <li><strong>Plazo:</strong> 6-12 meses según complejidad de obra.</li>
+      </ul>
+    </article>
+  </div>
+  <p class="deck-note">
+    Secuencia analítica sugerida: iniciar con Medida 1 en corredores críticos, complementar con Medida 2 para protección inmediata
+    y usar Medida 3 como consolidación del desempeño térmico en el mediano plazo.
+  </p>
+</section>
+
+<!-- CLOSING -->
+<section class="closing" id="cierre">
+  <div class="section-title with-symbol"><span class="sym">✓</span>Conclusiones e implicaciones</div>
+  <div class="section-sub">Síntesis de hallazgos, aportes y límites del enfoque</div>
+  <div class="closing-grid">
+    <article class="closing-card">
+      <h3>Qué muestran los resultados</h3>
+      <p>El riesgo térmico peatonal es medible, espacialmente concentrado y socialmente desigual; no es homogéneo en la ciudad.</p>
+    </article>
+    <article class="closing-card">
+      <h3>Qué aporta el enfoque multiescalar</h3>
+      <p>Un marco trazable macro→meso→micro que vincula diagnóstico térmico-social con criterios de diseño urbano y priorización espacial.</p>
+    </article>
+    <article class="closing-card">
+      <h3>Qué requiere validación adicional</h3>
+      <p>Monitoreo de campo y evaluación longitudinal para estimar persistencia de efectos y transferibilidad entre tipologías urbanas.</p>
+    </article>
+  </div>
+  <div class="closing-question">Implicación principal: priorizar corredores de alta integración y alta vulnerabilidad permite reducir exposición térmica peatonal con mayor eficiencia territorial.</div>
+</section>
+
+<!-- END COVER -->
+<section class="hero end-cover" id="agradecimientos">
+  <div class="subtitle">Agradecimientos</div>
+  <h1>Gracias por su atención</h1>
+  <p class="thanks">Agradezco al Dr. Kimon Krenz, a UCL y a las instituciones y equipos técnicos de la Ciudad de México por el diálogo y la retroalimentación que fortalecieron esta investigación. Agradezco especialmente a la Secretaría de Ciencia, Humanidades, Tecnología e Innovación (SECIHTI), cuya beca hizo posibles mis estudios de posgrado.</p>
+  <div class="author">Daniela Reséndiz García &nbsp;|&nbsp; MSc Space Syntax, The Bartlett, UCL</div>
+  <div class="contact-lines">
+    <div>GitHub: <a href="https://github.com/danielaresendizg" target="_blank" rel="noopener">github.com/danielaresendizg</a></div>
+    <div>CV: <a href="https://danielaresendizg.github.io/es/cv.html" target="_blank" rel="noopener">danielaresendizg.github.io/es/cv.html</a></div>
+    <div>Publicaciones: <a href="https://danielaresendizg.github.io/en/publication.html" target="_blank" rel="noopener">danielaresendizg.github.io/en/publication.html</a></div>
+  </div>
+  <div class="final-note">Este estudio será presentado en el <strong>15th International Space Syntax Symposium</strong> (Malaysia, <strong>8 - 12 June 2026</strong>) y obtuvo <strong>mención honorífica en UCL</strong>.</div>
+</section>
+
+<script>
+  (function () {
+    const sections = document.querySelectorAll("section");
+    const dots = document.querySelectorAll(".nav-dot");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("visible");
+          const id = entry.target.id;
+          dots.forEach((dot) => {
+            dot.classList.toggle("active", dot.getAttribute("href") === "#" + id);
+          });
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    const thermalSeries = [
+      { year: 2014, albedo: 0.07757042105075337, lst: 31.168509485972535, ndbi: -0.16396650281951447, ndvi: 0.4952950911613265, ta: 23.02911865858941 },
+      { year: 2015, albedo: 0.08507874816080153, lst: 31.545798937036917, ndbi: -0.1490676981392485, ndvi: 0.45870386235823835, ta: 23.238151351478127 },
+      { year: 2016, albedo: 0.08244378860343642, lst: 29.119234684607676, ndbi: -0.16213760497659108, ndvi: 0.47629224237862744, ta: 21.89374254619102 },
+      { year: 2017, albedo: 0.09360797125784516, lst: 31.49083931587701, ndbi: -0.12155033317161526, ndvi: 0.420913370314335, ta: 23.207701632889762 },
+      { year: 2018, albedo: 0.08582301547145123, lst: 32.77326088852434, ndbi: -0.1228517282011161, ndvi: 0.4476941361115598, ta: 23.91821191615604 },
+      { year: 2019, albedo: 0.08611799064535622, lst: 32.268562527295835, ndbi: -0.12554303169883177, ndvi: 0.4395993334227499, ta: 23.63858984549798 },
+      { year: 2020, albedo: 0.08546198123078814, lst: 31.826162296809937, ndbi: -0.10246556387951931, ndvi: 0.4273495979664272, ta: 23.393483306599354 },
+      { year: 2021, albedo: 0.0982975393802446, lst: 31.892814449075335, ndbi: -0.1421260916414227, ndvi: 0.43548157232284035, ta: 23.430411131736676 },
+      { year: 2022, albedo: 0.09497938202949116, lst: 32.126806965812335, ndbi: -0.08696193809866795, ndvi: 0.3906027527668231, ta: 23.560051877725087 },
+      { year: 2023, albedo: 0.09151032245850572, lst: 36.66639138133117, ndbi: -0.0609777886491145, ndvi: 0.3885313910083435, ta: 26.075154148129513 },
+      { year: 2024, albedo: 0.09923194085882767, lst: 34.81321074364245, ndbi: -0.027325105932327686, ndvi: 0.3343305024320613, ta: 25.04842165398593 }
+    ];
+
+    const years = thermalSeries.map((d) => d.year);
+    const selectedThermalSeries = [
+      { name: "LST", color: "#6EC1FF", values: thermalSeries.map((d) => d.lst) },
+      { name: "Ta", color: "#FF8DB3", values: thermalSeries.map((d) => d.ta) }
+    ];
+    const selectedBioSeries = [
+      { name: "Albedo", color: "#F7C948", values: thermalSeries.map((d) => d.albedo) },
+      { name: "NDBI", color: "#FF8A65", values: thermalSeries.map((d) => d.ndbi) },
+      { name: "NDVI", color: "#5CE1A8", values: thermalSeries.map((d) => d.ndvi) }
+    ];
+
+    function pearson(x, y) {
+      const n = Math.min(x.length, y.length);
+      if (n < 2) return NaN;
+      let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+      for (let i = 0; i < n; i++) {
+        const a = x[i];
+        const b = y[i];
+        sx += a; sy += b;
+        sxx += a * a; syy += b * b; sxy += a * b;
+      }
+      const num = n * sxy - sx * sy;
+      const den = Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy));
+      return den === 0 ? NaN : num / den;
+    }
+
+    function renderThermalTrends() {
+      const canvas = document.getElementById("thermalTrendCanvas");
+      const legend = document.getElementById("thermalTrendLegend");
+      if (!canvas || !legend) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const bounds = canvas.getBoundingClientRect();
+      const width = Math.max(640, Math.floor(bounds.width));
+      const height = 380;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const colors = selectedThermalSeries.map((s) => s.color);
+      const series = selectedThermalSeries.map((s) => s.values);
+      const values = series.flat().filter(Number.isFinite);
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      const yMin = Math.floor((minValue - 1) / 2) * 2;
+      const yMax = Math.ceil((maxValue + 1) / 2) * 2;
+      const yRange = yMax - yMin || 1;
+
+      const margin = { top: 20, right: 18, bottom: 54, left: 54 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+
+      function xPos(index) {
+        if (years.length === 1) return margin.left + plotW / 2;
+        return margin.left + (index / (years.length - 1)) * plotW;
+      }
+
+      function yPos(value) {
+        return margin.top + ((yMax - value) / yRange) * plotH;
+      }
+
+      ctx.strokeStyle = "#2b2b2b";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const yVal = yMin + (i / 5) * yRange;
+        const y = yPos(yVal);
+        ctx.beginPath();
+        ctx.moveTo(margin.left, y);
+        ctx.lineTo(width - margin.right, y);
+        ctx.stroke();
+
+        ctx.fillStyle = "#9d9d9d";
+        ctx.font = "11px Segoe UI, sans-serif";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${yVal.toFixed(1)}°C`, margin.left - 8, y);
+      }
+
+      ctx.strokeStyle = "#4a4a4a";
+      ctx.beginPath();
+      ctx.moveTo(margin.left, margin.top);
+      ctx.lineTo(margin.left, height - margin.bottom);
+      ctx.lineTo(width - margin.right, height - margin.bottom);
+      ctx.stroke();
+
+      years.forEach((year, i) => {
+        const x = xPos(i);
+        ctx.fillStyle = "#9d9d9d";
+        ctx.font = "10px Segoe UI, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(String(year), x, height - margin.bottom + 8);
+      });
+
+      series.forEach((line, lineIndex) => {
+        ctx.strokeStyle = colors[lineIndex % colors.length];
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        line.forEach((value, i) => {
+          const x = xPos(i);
+          const y = yPos(value);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        ctx.fillStyle = colors[lineIndex % colors.length];
+        line.forEach((value, i) => {
+          const x = xPos(i);
+          const y = yPos(value);
+          ctx.beginPath();
+          ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      });
+
+      const thermalMeaning = {
+        LST: "Temperatura superficial satelital (°C).",
+        Ta: "Temperatura del aire calibrada (°C)."
+      };
+      legend.innerHTML = colors
+        .map((color, i) => {
+          const name = selectedThermalSeries[i].name;
+          return `<span class="trend-item"><i style="background:${color}"></i><span><strong>${name}</strong><em>${thermalMeaning[name]}</em></span></span>`;
+        })
+        .join("");
+    }
+
+    function renderBioTrends() {
+      const canvas = document.getElementById("bioTrendCanvas");
+      const legend = document.getElementById("bioTrendLegend");
+      const note = document.getElementById("bioTrendNote");
+      if (!canvas || !legend) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const bounds = canvas.getBoundingClientRect();
+      const width = Math.max(640, Math.floor(bounds.width));
+      const height = 360;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const colors = selectedBioSeries.map((s) => s.color);
+      const series = selectedBioSeries.map((s) => s.values);
+      const values = series.flat().filter(Number.isFinite);
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      const yMin = Math.floor((minValue - 0.03) * 10) / 10;
+      const yMax = Math.ceil((maxValue + 0.03) * 10) / 10;
+      const yRange = yMax - yMin || 1;
+
+      const margin = { top: 20, right: 18, bottom: 54, left: 58 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+
+      function xPos(index) {
+        if (years.length === 1) return margin.left + plotW / 2;
+        return margin.left + (index / (years.length - 1)) * plotW;
+      }
+
+      function yPos(value) {
+        return margin.top + ((yMax - value) / yRange) * plotH;
+      }
+
+      ctx.strokeStyle = "#2b2b2b";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const yVal = yMin + (i / 5) * yRange;
+        const y = yPos(yVal);
+        ctx.beginPath();
+        ctx.moveTo(margin.left, y);
+        ctx.lineTo(width - margin.right, y);
+        ctx.stroke();
+
+        ctx.fillStyle = "#9d9d9d";
+        ctx.font = "11px Segoe UI, sans-serif";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(yVal.toFixed(2), margin.left - 8, y);
+      }
+
+      ctx.strokeStyle = "#4a4a4a";
+      ctx.beginPath();
+      ctx.moveTo(margin.left, margin.top);
+      ctx.lineTo(margin.left, height - margin.bottom);
+      ctx.lineTo(width - margin.right, height - margin.bottom);
+      ctx.stroke();
+
+      years.forEach((year, i) => {
+        const x = xPos(i);
+        ctx.fillStyle = "#9d9d9d";
+        ctx.font = "10px Segoe UI, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(String(year), x, height - margin.bottom + 8);
+      });
+
+      series.forEach((line, lineIndex) => {
+        ctx.strokeStyle = colors[lineIndex % colors.length];
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        line.forEach((value, i) => {
+          const x = xPos(i);
+          const y = yPos(value);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        ctx.fillStyle = colors[lineIndex % colors.length];
+        line.forEach((value, i) => {
+          const x = xPos(i);
+          const y = yPos(value);
+          ctx.beginPath();
+          ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      });
+
+      const bioMeaning = {
+        Albedo: "Fracción de radiación solar reflejada por las superficies (0 a 1): claro refleja más, oscuro absorbe más.",
+        NDBI: "Índice de superficie construida; mayor valor = más urbanización.",
+        NDVI: "Índice de vegetación; mayor valor = más cobertura vegetal."
+      };
+      legend.innerHTML = colors
+        .map((color, i) => {
+          const name = selectedBioSeries[i].name;
+          return `<span class="trend-item"><i style="background:${color}"></i><span><strong>${name}</strong><em>${bioMeaning[name]}</em></span></span>`;
+        })
+        .join("");
+
+      if (note) {
+        const ta = thermalSeries.map((d) => d.ta);
+        const rNDBI = pearson(ta, thermalSeries.map((d) => d.ndbi));
+        const rNDVI = pearson(ta, thermalSeries.map((d) => d.ndvi));
+        const rAlb = pearson(ta, thermalSeries.map((d) => d.albedo));
+        note.textContent = `Correlación con Ta (2014-2024): NDBI r=${rNDBI.toFixed(2)}, NDVI r=${rNDVI.toFixed(2)}, Albedo r=${rAlb.toFixed(2)}.`;
+      }
+    }
+
+    renderThermalTrends();
+    renderBioTrends();
+    let trendResizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(trendResizeTimer);
+      trendResizeTimer = setTimeout(() => {
+        renderThermalTrends();
+        renderBioTrends();
+      }, 160);
+    });
+  })();
+</script>
+
+</body>
+</html>

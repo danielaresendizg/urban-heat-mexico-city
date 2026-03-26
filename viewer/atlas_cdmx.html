@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Atlas de Calor Urbano — Ciudad de México</title>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#000;color:#ddd}
+#map{position:absolute;top:0;left:340px;right:0;bottom:0}
+#sidebar{position:absolute;top:0;left:0;width:340px;height:100%;overflow-y:auto;background:#0a0a0a;border-right:1px solid #222;z-index:10;padding:0 0 20px 0}
+#sidebar::-webkit-scrollbar{width:6px}
+#sidebar::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+.header{padding:14px 16px;background:#111;position:sticky;top:0;z-index:2}
+.header h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px}
+.header p{font-size:11px;color:#aaa;margin-top:3px}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:2px solid #222;position:sticky;top:58px;z-index:2;background:#0a0a0a}
+.tab{flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab:hover{color:#ddd}
+.tab.active{color:#fff;border-bottom-color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Layer groups */
+.group{border-bottom:1px solid #222}
+.group-title{padding:9px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#ccc;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#111}
+.group-title:hover{background:#1a1a1a}
+.group-title .arrow{transition:transform .2s;font-size:10px}
+.group-title.collapsed .arrow{transform:rotate(-90deg)}
+.group-body{padding:3px 10px 6px 10px}
+.group-body.hidden{display:none}
+.layer-btn{display:block;width:100%;text-align:left;padding:5px 8px;margin:1px 0;border:none;border-radius:4px;background:transparent;color:#bbb;font-size:11px;cursor:pointer;transition:all .15s}
+.layer-btn:hover{background:#222;color:#fff}
+.layer-btn.active{background:#444;color:#fff;font-weight:600}
+.layer-btn .tag{font-size:9px;color:#777;display:block;margin-top:1px}
+.layer-btn.active .tag{color:#ccc}
+
+/* Pipeline */
+.pipeline{padding:12px 16px}
+.pipeline h2{font-size:13px;color:#fff;margin-bottom:12px}
+.step{margin-bottom:2px}
+.step-header{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#111;border-radius:4px;cursor:pointer;transition:.15s;border-left:3px solid #333}
+.step-header:hover{background:#1a1a1a}
+.step-header .num{background:#555;color:#fff;font-size:9px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-header .title{font-size:11px;font-weight:600;color:#ddd}
+.step-header .arrow-s{color:#666;font-size:9px;margin-left:auto;transition:transform .2s}
+.step-header.open .arrow-s{transform:rotate(90deg)}
+.step-header.open{border-left-color:#fff}
+.step-detail{display:none;padding:8px 10px 10px 38px;font-size:10px;line-height:1.6;color:#999;background:#0d0d0d;border-radius:0 0 4px 4px;margin-top:-2px;margin-bottom:4px}
+.step-detail.open{display:block}
+.step-detail code{color:#fff;font-size:9.5px;background:#222;padding:1px 4px;border-radius:2px}
+.step-detail .inputs,.step-detail .outputs{margin-top:4px}
+.step-detail .lbl{color:#666;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+.step-detail ul{margin:2px 0 0 14px;padding:0}
+.step-detail li{margin:1px 0}
+.connector{width:2px;height:8px;background:#333;margin:0 0 0 19px}
+
+/* Legend */
+#legend{position:absolute;bottom:30px;right:12px;background:rgba(10,10,10,.92);border-radius:8px;padding:12px 16px;min-width:160px;max-width:240px;font-size:11px;border:1px solid #333;z-index:5}
+#legend h3{font-size:12px;margin-bottom:8px;color:#fff}
+#legend .bar{height:12px;border-radius:3px;margin:4px 0}
+#legend .labels{display:flex;justify-content:space-between;font-size:10px;color:#aaa}
+#legend .cat-item{display:flex;align-items:center;gap:6px;margin:3px 0;font-size:11px;color:#ddd}
+#legend .cat-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* Loading */
+#loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.95);padding:24px 36px;border-radius:12px;z-index:100;text-align:center;font-size:13px;border:1px solid #333;display:none;color:#ddd}
+#loading .spinner{width:32px;height:32px;border:3px solid #333;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+#loading .progress{font-size:10px;color:#888;margin-top:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Popup */
+.maplibregl-popup-content{background:#111 !important;color:#ddd !important;border:1px solid #333 !important;border-radius:8px !important;padding:12px !important;font-size:11px !important;max-width:280px !important}
+.maplibregl-popup-tip{border-top-color:#111 !important}
+.popup-title{font-weight:700;color:#fff;margin-bottom:6px;font-size:12px}
+.popup-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #22222233}
+.popup-row .k{color:#999}.popup-row .v{font-weight:600;color:#fff}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="header">
+    <h1>ATLAS DE CALOR URBANO</h1>
+    <p>Ciudad de México — Daniela Reséndiz García, UCL 2025</p>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="capas">Capas</div>
+    <div class="tab" data-tab="metodo">Metodología</div>
+  </div>
+  <div id="tab-capas" class="tab-content active">
+    <div id="groups"></div>
+  </div>
+  <div id="tab-metodo" class="tab-content">
+    <div class="pipeline" id="pipeline"></div>
+  </div>
+</div>
+
+<div id="map"></div>
+<div id="legend"></div>
+
+
+<div id="loading">
+  <div class="spinner"></div>
+  <span id="loading-text">Cargando datos...</span>
+  <div class="progress" id="loading-progress"></div>
+</div>
+
+<script>
+// ── BASEMAPS ────────────────────────────────────────────────────────────────
+const BASEMAPS = {
+  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  streets: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'
+};
+
+// ── PIPELINE STEPS ──────────────────────────────────────────────────────────
+const PIPELINE = [
+  {num:'0', title:'Calibración Ta (RedMet + GEE)',
+   desc:'Regresión lineal OLS: Ta = a·LST + b usando 17 estaciones REDMET.',
+   script:'gee_calibrate_ta_coefficients.js',
+   inputs:['Landsat 8/9 C02 L2 (2014-2024, Jun-Ago)', '17 estaciones REDMET SEDEMA'],
+   outputs:['Coeficientes: a=0.554, b=5.761']},
+  {num:'1', title:'Climatología térmica (GEE)',
+   desc:'Composites estivales por año + climatología multianual. Índices: NDVI, NDBI, Albedo, LST, Ta predicha, UHI (z-score), UTFVI.',
+   script:'gee_landsat_thermal_climatology.js',
+   inputs:['Landsat 8/9 C02 L2, veranos 2014-2024','Coeficientes PASO 0'],
+   outputs:['7 rasters climáticos (.tif)','44 rasters anuales (.tif)']},
+  {num:'1b', title:'Vulnerabilidad Social (IVS)',
+   desc:'22 variables sociodemográficas del Censo INEGI 2020 a nivel manzana.',
+   script:'generate_ivs.py',
+   inputs:['Censo Población y Vivienda 2020 INEGI','Polígonos manzana CDMX'],
+   outputs:['manzanas_IVS_Ta.gpkg (22 vars sociales)']},
+  {num:'2', title:'Estadística zonal (raster → manzana)',
+   desc:'Extracción de valores medios de cada raster climatológico por polígono de manzana.',
+   script:'extract_raster_stats.py',
+   inputs:['Rasters climatológicos PASO 1','manzanas_IVS_Ta.gpkg'],
+   outputs:['manzanas_ivs_thermal.gpkg']},
+  {num:'2b', title:'MGWR por alcaldía (Cluster UCL Myriad)',
+   desc:'Regresión geográficamente ponderada multiscalar (MGWR). Variable dependiente: Ta_mean. Ejecutado en HPC.',
+   script:'run_mgwr_final.py',
+   inputs:['manzanas_IVS por alcaldía'],
+   outputs:['16 archivos MGWR_coeficientes_*.csv/gpkg']},
+  {num:'2c', title:'Merge GWR ciudad completa',
+   desc:'Unión LEFT JOIN por CVEGEO de los 16 archivos de coeficientes GWR.',
+   script:'merge_gwr_coefficients.py',
+   inputs:['manzanas master + 16 CSVs GWR'],
+   outputs:['manzanas_master_con_GWR.gpkg']},
+  {num:'3', title:'Space Matrix (FSI / GSI / OSR / L)',
+   desc:'Cálculo de indicadores morfológicos por manzana usando catastro CDMX y huellas Google Open Buildings.',
+   script:'batch_space_matrix.py + calculate_space_matrix.py',
+   inputs:['catastro CDMX (cdmx_citywide.gpkg)','Google Open Buildings v3','manzanas_master_con_GWR.gpkg'],
+   outputs:['+ FSI, GSI, L_equiv, OSR, A_m2, B_m2']},
+  {num:'4', title:'Hotspots térmico-sociales',
+   desc:'Clasificación de manzanas con Ta≥26°C (peligro, 95% conf.) y Ta≥28°C (extremo, 99% conf.) cruzando coef. GWR significativos.',
+   script:'create_hotspots_gwr.py',
+   inputs:['manzanas con GWR + Space Matrix'],
+   outputs:['is_hot_26/28, peligro_cat, hot_count_social']},
+  {num:'5', title:'Merge Space Matrix + Hotspots',
+   desc:'Integración final por CVEGEO de todas las variables en un archivo maestro.',
+   script:'merge_thermal_gwr_sm.py',
+   inputs:['Space Matrix gpkg + hotspots csv'],
+   outputs:['manzanas_thermal_GWR_spacematrix_hotspots_final.gpkg']},
+  {num:'6', title:'Tipologías Space Matrix v2',
+   desc:'Clasificación en 12 tipologías morfológicas basadas en umbrales FSI/GSI/L de Berghauser Pont & Haupt (2020).',
+   script:'classify_spacematrix_typology.py',
+   inputs:['manzanas_final.gpkg'],
+   outputs:['layer manzanas_typology_SM_v2']},
+  {num:'7', title:'Space Syntax (agregación a manzanas)',
+   desc:'NAIN/NACH ponderados por longitud a radios 500/1000/1500/5000m desde segmentos DepthmapX.',
+   script:'aggregate_syntax_to_hotspots.py',
+   inputs:['segmentos_con_termico.gpkg','manzanas_typology_SM_v2'],
+   outputs:['layer manzanas_with_syntax_focus_HS']},
+  {num:'8', title:'Priorización final (30 zonas)',
+   desc:'Score de accesibilidad sintáctica → ranking → 418 manzanas top → 30 zonas de intervención.',
+   script:'prioritize_study_zones.py',
+   inputs:['analisis_final_tipologias.gpkg'],
+   outputs:['418 manzanas priorizadas','30 zonas de intervención','144 columnas integradas']}
+];
+
+// ── LAYER GROUPS ────────────────────────────────────────────────────────────
+const LAYER_GROUPS = [
+  {
+    name: 'Temperatura y Ambiente',
+    source: 'manzanas', type: 'fill',
+    layers: [
+      {id:'Ta_mean', label:'Temperatura del aire (Ta)', tag:'Media verano 2014-2024', unit:'°C', colors:['#313695','#4575b4','#abd9e9','#fee090','#f46d43','#a50026'], domain:[23.6,25.3,26.2,26.8,27.4,28.0]},
+      {id:'LST_mean', label:'Temperatura superficial (LST)', tag:'Land Surface Temperature', unit:'°C', colors:['#313695','#74add1','#e0f3f8','#fee090','#f46d43','#a50026'], domain:[32.2,35.2,36.9,38.0,39.0,40.2]},
+      {id:'UHI_mean', label:'Isla de calor (UHI)', tag:'Diferencia vs. periferia', unit:'°C', colors:['#2166ac','#67a9cf','#d1e5f0','#fddbc7','#ef8a62','#b2182b'], domain:[0.03,0.48,0.73,0.89,1.04,1.22]},
+      {id:'NDVI_mean', label:'Vegetación (NDVI)', tag:'Índice de vegetación', unit:'', colors:['#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'], domain:[0.1,0.12,0.16,0.2,0.28,0.43]},
+      {id:'Albedo_mean', label:'Albedo', tag:'Reflectividad superficial', unit:'', colors:['#1a1a2e','#2d2d5e','#4a4a8e','#8888bb','#bbbbdd','#eeeeff'], domain:[0.08,0.1,0.11,0.12,0.13,0.15]},
+      {id:'NDBI_mean', label:'Construcción (NDBI)', tag:'Índice de construcción', unit:'', colors:['#1a1a2e','#4a3728','#7a5a3a','#b07a4a','#d4975a','#f0c070'], domain:[-0.14,-0.06,-0.01,0.01,0.03,0.05]}
+    ]
+  },
+  {
+    name: 'Vulnerabilidad Social',
+    source: 'manzanas', type: 'fill',
+    layers: [
+      {id:'pct_65plus', label:'Adultos mayores (65+)', tag:'% población ≥65', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,4,8,12,17,25]},
+      {id:'pct_6a14', label:'Niños (6-14)', tag:'% población 6-14', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,5,10,15,21,30]},
+      {id:'pct_0a5', label:'Primera infancia (0-5)', tag:'% población 0-5', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,2,4,6,8,12]},
+      {id:'pct_with_disc', label:'Discapacidad', tag:'% con discapacidad', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,2,4,6,9,15]},
+      {id:'pct_pop_sin_auto', label:'Sin automóvil', tag:'% hogares sin auto', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,15,30,45,60,80]},
+      {id:'pct_no_serv_med', label:'Sin servicios médicos', tag:'% sin acceso a salud', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,8,16,24,35,50]},
+      {id:'pct_inac', label:'Inactividad económica', tag:'% económicamente inactivos', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,15,25,33,42,55]},
+      {id:'pct_desocup', label:'Desocupación', tag:'% desocupados', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,1,2,4,6,10]},
+      {id:'pct_no_school', label:'Sin escolaridad', tag:'% sin educación', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,1,3,5,8,15]},
+      {id:'pct_elementary_edu', label:'Educación primaria', tag:'% máximo primaria', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,3,6,10,15,25]},
+      {id:'pct_ethnic_ind', label:'Población indígena', tag:'% indígena', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,1,3,5,10,25]},
+      {id:'pct_ethnic_afro', label:'Población afrodescendiente', tag:'% afrodescendiente', unit:'%', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,1,3,5,8,15]},
+      {id:'rel_dependencia_0_14', label:'Ratio de dependencia', tag:'Dependencia infantil 0-14', unit:'', colors:['#2b1a4e','#6a3d9a','#b15928','#e6550d','#fd8d3c','#fecc5c'], domain:[0,10,20,30,40,55]}
+    ]
+  },
+  {
+    name: 'Hotspots Térmico-Sociales',
+    source: 'manzanas', type: 'fill',
+    layers: [
+      {id:'peligro_cat', label:'Peligro térmico (GWR)', tag:'Ta≥26/28°C + coef. GWR significativo (t>1.96)', unit:'', categorical:true, cats:{0:['Sin peligro','#2166ac'],1:['Moderado (≥26°C + GWR sig.)','#f4a582'],2:['Alto (≥28°C + GWR sig.)','#b2182b']}},
+      {id:'is_hot_26', label:'Hotspot ≥26°C (umbral simple)', tag:'Solo umbral de temperatura (sin filtro GWR)', unit:'', categorical:true, cats:{0:['No','#2166ac'],1:['Sí (39,999 manzanas)','#e94560']}},
+      {id:'is_hot_28', label:'Hotspot ≥28°C (umbral simple)', tag:'Solo umbral de temperatura (sin filtro GWR)', unit:'', categorical:true, cats:{0:['No','#2166ac'],1:['Sí','#b2182b']}},
+      {id:'hot26_count_social', label:'Vulnerabilidades coincidentes (26°C)', tag:'Nº de grupos vulnerables en hotspot', unit:'grupos', colors:['#f7f7f7','#fddbc7','#f4a582','#d6604d','#b2182b','#67001f'], domain:[0,1,2,3,5,7]},
+      {id:'hot28_count_social', label:'Vulnerabilidades coincidentes (28°C)', tag:'Nº grupos en hotspot 28°C', unit:'grupos', colors:['#f7f7f7','#fddbc7','#f4a582','#d6604d','#b2182b','#67001f'], domain:[0,1,2,3,5,7]},
+      {id:'hot26_pct_65plus', label:'Hotspot 26°C × Adultos mayores', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_with_disc', label:'Hotspot 26°C × Discapacidad', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_pop_sin_auto', label:'Hotspot 26°C × Sin auto', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_no_serv_med', label:'Hotspot 26°C × Sin salud', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_inac', label:'Hotspot 26°C × Inactividad', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_6a14', label:'Hotspot 26°C × Niños', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}},
+      {id:'hot26_pct_elementary_edu', label:'Hotspot 26°C × Educación baja', tag:'', unit:'', categorical:true, cats:{0:['No','#d1e5f0'],1:['Sí','#e94560']}}
+    ]
+  },
+  {
+    name: 'Morfología Urbana (Space Matrix)',
+    source: 'manzanas', type: 'fill',
+    layers: [
+      {id:'typology_sm_final', label:'Tipología Space Matrix', tag:'12 tipos morfológicos', unit:'', categorical:true, cats:{
+        'Perímetro bajo':['Perímetro bajo','#fb9a99'],
+        '0 propiedad (sin catastro)':['Sin catastro','#cccccc'],
+        'Mixto / indeterminado':['Mixto / indeterminado','#999999'],
+        'Fila / Adosada baja':['Fila / Adosada baja','#b2df8a'],
+        'Continuo compacto bajo':['Continuo compacto bajo','#33a02c'],
+        'Barras':['Barras','#1f78b4'],
+        'Perímetro medio':['Perímetro medio','#e31a1c'],
+        'Pabellón abierto':['Pabellón abierto','#fdbf6f'],
+        'Supercompacta alta':['Supercompacta alta','#6a3d9a'],
+        'Perímetro denso':['Perímetro denso','#ff7f00'],
+        'Sin datos':['Sin datos','#666666'],
+        'Torre en parque':['Torre en parque','#a6cee3']
+      }},
+      {id:'FSI', label:'FSI (Floor Space Index)', tag:'Intensidad de construcción', unit:'', colors:['#ffffcc','#c7e9b4','#7fcdbb','#41b6c4','#2c7fb8','#253494'], domain:[0,0.2,0.57,0.93,1.31,2.96]},
+      {id:'GSI', label:'GSI (Ground Space Index)', tag:'Cobertura de suelo', unit:'', colors:['#ffffcc','#c7e9b4','#7fcdbb','#41b6c4','#2c7fb8','#253494'], domain:[0.18,0.42,0.53,0.6,0.69,0.82]},
+      {id:'OSR', label:'OSR (Open Space Ratio)', tag:'Espacio abierto', unit:'', colors:['#253494','#2c7fb8','#41b6c4','#7fcdbb','#c7e9b4','#ffffcc'], domain:[0.1,0.24,0.36,0.51,0.84,3.13]},
+      {id:'L_equiv', label:'Densidad lineal (L)', tag:'Perímetro edificado', unit:'', colors:['#ffffcc','#c7e9b4','#7fcdbb','#41b6c4','#2c7fb8','#253494'], domain:[0,0.3,1.09,1.65,2.28,5.85]}
+    ]
+  },
+  {
+    name: 'Red Vial — Space Syntax',
+    source: 'network', type: 'line',
+    layers: [
+      {id:'NAINr500m', label:'Integración NAIN 500m', tag:'Accesibilidad peatonal local', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[1.03,1.21,1.38,1.55,2.03]},
+      {id:'NAINr1500m', label:'Integración NAIN 1500m', tag:'Accesibilidad peatonal media', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[1.05,1.13,1.25,1.41,2.01]},
+      {id:'NAINr5000m', label:'Integración NAIN 5km', tag:'Accesibilidad vehicular', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[0.78,1.01,1.17,1.32,1.84]},
+      {id:'NACHr500m', label:'Elección NACH 500m', tag:'Flujo peatonal local', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[0.51,0.92,1.07,1.17,1.34]},
+      {id:'NACHr1500m', label:'Elección NACH 1500m', tag:'Flujo peatonal medio', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[0.64,0.97,1.1,1.2,1.36]},
+      {id:'NACHr5000m', label:'Elección NACH 5km', tag:'Flujo vehicular', unit:'', colors:['#0000FF','#00CCFF','#00FF00','#FFFF00','#FF0000'], domain:[0.58,0.92,1.04,1.14,1.37]}
+    ]
+  },
+  {
+    name: 'Red Vial — Térmica',
+    source: 'network', type: 'line',
+    layers: [
+      {id:'n_Ta_mean', label:'Temperatura del aire en vía', tag:'Ta media por segmento', unit:'°C', colors:['#313695','#4575b4','#abd9e9','#fee090','#f46d43','#a50026'], domain:[21.0,25.7,26.5,27.1,27.7,28.3], field:'Ta_mean'},
+      {id:'n_UHI_mean', label:'Isla de calor en vía', tag:'UHI por segmento', unit:'°C', colors:['#2166ac','#67a9cf','#d1e5f0','#fddbc7','#ef8a62','#b2182b'], domain:[0.0,0.59,0.82,0.97,1.13,1.3], field:'UHI_mean'},
+      {id:'n_NDVI_mean', label:'Vegetación en vía', tag:'NDVI por segmento', unit:'', colors:['#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'], domain:[0.06,0.1,0.14,0.18,0.26,0.41], field:'NDVI_mean'},
+      {id:'n_peligro_cat', label:'Peligro térmico en vía', tag:'Categoría de peligro', unit:'', categorical:true, cats:{0:['Sin peligro','#2166ac'],1:['Moderado','#f4a582'],2:['Alto','#b2182b']}, field:'peligro_cat'}
+    ]
+  },
+  {
+    name: 'Sitios Prioritarios',
+    source: 'priority', type: 'fill',
+    layers: [
+      {id:'p_ltype', label:'Tipo de sitio', tag:'Focus / Top / Zona', unit:'', categorical:true, cats:{'focus':['Manzana focus (5,050)','#fdae6b'],'top':['Manzana top (418)','#e6550d'],'zone':['Zona prioritaria (30)','#a63603']}, field:'ltype'},
+      {id:'p_peligro', label:'Peligro en sitios prioritarios', tag:'Categoría de peligro térmico', unit:'', categorical:true, cats:{0:['Sin peligro','#2166ac'],1:['Moderado','#f4a582'],2:['Alto','#b2182b']}, field:'peligro_cat'}
+    ]
+  }
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let map, activeLayer = null;
+const LAYER_ID = 'active-layer';
+const sourceCache = {};      // name -> GeoJSON data
+const sourceLoading = {};    // name -> Promise
+
+// ── MAP ─────────────────────────────────────────────────────────────────────
+map = new maplibregl.Map({
+  container:'map', style:BASEMAPS.dark,
+  center:[-99.14,19.38], zoom:10.5, maxZoom:17, minZoom:8
+});
+map.addControl(new maplibregl.NavigationControl(),'bottom-right');
+map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
+
+// ── TABS ────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+// ── BUILD PIPELINE ──────────────────────────────────────────────────────────
+const pipeEl = document.getElementById('pipeline');
+pipeEl.innerHTML = '<h2>Pipeline Metodológico (9 pasos)</h2>';
+PIPELINE.forEach((s,i) => {
+  if (i > 0) pipeEl.insertAdjacentHTML('beforeend','<div class="connector"></div>');
+  const div = document.createElement('div');
+  div.className = 'step';
+  div.innerHTML = `
+    <div class="step-header" data-idx="${i}">
+      <span class="num">${s.num}</span>
+      <span class="title">${s.title}</span>
+      <span class="arrow-s">▶</span>
+    </div>
+    <div class="step-detail" data-idx="${i}">
+      <div>${s.desc}</div>
+      <div class="inputs"><span class="lbl">Script:</span> <code>${s.script}</code></div>
+      <div class="inputs"><span class="lbl">Entradas:</span>
+        <ul>${s.inputs.map(x=>'<li>'+x+'</li>').join('')}</ul>
+      </div>
+      <div class="outputs"><span class="lbl">Salidas:</span>
+        <ul>${s.outputs.map(x=>'<li>'+x+'</li>').join('')}</ul>
+      </div>
+    </div>`;
+  pipeEl.appendChild(div);
+});
+document.querySelectorAll('.step-header').forEach(h=>{
+  h.addEventListener('click',()=>{
+    const idx = h.dataset.idx;
+    h.classList.toggle('open');
+    document.querySelector(`.step-detail[data-idx="${idx}"]`).classList.toggle('open');
+  });
+});
+
+// ── BUILD SIDEBAR LAYERS ────────────────────────────────────────────────────
+const groupsEl = document.getElementById('groups');
+LAYER_GROUPS.forEach((group,gi)=>{
+  const div = document.createElement('div');
+  div.className = 'group';
+  div.innerHTML = `
+    <div class="group-title" data-gi="${gi}">
+      ${group.name} <span class="arrow">▼</span>
+    </div>
+    <div class="group-body" id="gb-${gi}">
+      ${group.layers.map((l,li)=>`
+        <button class="layer-btn" data-gi="${gi}" data-li="${li}">
+          ${l.label}<span class="tag">${l.tag}</span>
+        </button>`).join('')}
+    </div>`;
+  groupsEl.appendChild(div);
+});
+
+document.querySelectorAll('.group-title').forEach(el=>{
+  el.addEventListener('click',()=>{
+    el.classList.toggle('collapsed');
+    document.getElementById('gb-'+el.dataset.gi).classList.toggle('hidden');
+  });
+});
+
+document.querySelectorAll('.layer-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const gi=+btn.dataset.gi, li=+btn.dataset.li;
+    if(activeLayer && activeLayer.gi===gi && activeLayer.li===li){
+      deactivate(); return;
+    }
+    document.querySelectorAll('.layer-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activate(gi,li);
+  });
+});
+
+function highlightBtn(gi,li){
+  document.querySelectorAll('.layer-btn').forEach(b=>b.classList.remove('active'));
+  const b=document.querySelector(`.layer-btn[data-gi="${gi}"][data-li="${li}"]`);
+  if(b) b.classList.add('active');
+}
+
+// ── LOAD SOURCE (lazy, with progress) ───────────────────────────────────────
+async function loadSource(name){
+  // Already loaded?
+  if(sourceCache[name]){
+    if(!map.getSource(name)) map.addSource(name,{type:'geojson',data:sourceCache[name]});
+    return;
+  }
+  // Already loading? wait for it
+  if(sourceLoading[name]) { await sourceLoading[name]; return loadSource(name); }
+
+  const loading = document.getElementById('loading');
+  const prog = document.getElementById('loading-progress');
+  loading.style.display = 'block';
+  document.getElementById('loading-text').textContent = `Cargando ${name}...`;
+
+  sourceLoading[name] = (async()=>{
+    const resp = await fetch('data/'+name+'.geojson');
+    const total = +resp.headers.get('content-length') || 0;
+    const reader = resp.body.getReader();
+    let received = 0;
+    const chunks = [];
+    while(true){
+      const {done,value} = await reader.read();
+      if(done) break;
+      chunks.push(value);
+      received += value.length;
+      if(total) prog.textContent = Math.round(received/total*100)+'%';
+    }
+    const blob = new Blob(chunks);
+    const text = await blob.text();
+    const data = JSON.parse(text);
+    sourceCache[name] = data;
+    if(!map.getSource(name)) map.addSource(name,{type:'geojson',data});
+    delete sourceLoading[name];
+  })();
+  await sourceLoading[name];
+  loading.style.display = 'none';
+  prog.textContent = '';
+}
+
+// ── ACTIVATE / DEACTIVATE ───────────────────────────────────────────────────
+async function activate(gi,li){
+  deactivate();
+  const group = LAYER_GROUPS[gi];
+  const layer = group.layers[li];
+  const source = group.source;
+  const field = layer.field || layer.id;
+  const type = group.type;
+
+  await loadSource(source);
+
+  if(layer.categorical){
+    const cats = layer.cats;
+    const keys = Object.keys(cats);
+    const expr = ['match',['to-string',['get',field]]];
+    keys.forEach(k=>{ expr.push(String(k), cats[k][1]); });
+    expr.push('rgba(0,0,0,0)');
+    if(type==='fill'){
+      map.addLayer({id:LAYER_ID,type:'fill',source,paint:{'fill-color':expr,'fill-opacity':0.78,'fill-outline-color':'rgba(0,0,0,0.2)'}});
+    } else {
+      map.addLayer({id:LAYER_ID,type:'line',source,paint:{'line-color':expr,'line-width':2,'line-opacity':0.85}});
+    }
+    legendCat(layer.label,cats);
+  } else {
+    const stops = layer.domain.map((v,i)=>[v,layer.colors[i]]);
+    const colorExpr = ['interpolate',['linear'],['to-number',['coalesce',['get',field],layer.domain[0]]],...stops.flat()];
+    if(type==='fill'){
+      map.addLayer({id:LAYER_ID,type:'fill',source,paint:{'fill-color':colorExpr,'fill-opacity':0.78,'fill-outline-color':'rgba(0,0,0,0.15)'}});
+    } else {
+      map.addLayer({id:LAYER_ID,type:'line',source,paint:{'line-color':colorExpr,'line-width':['interpolate',['linear'],['zoom'],10,1,15,3],'line-opacity':0.85}});
+    }
+    legendCont(layer.label,layer.colors,layer.domain,layer.unit);
+  }
+
+  activeLayer = {gi,li,source,field,type,config:layer};
+  map.on('click',LAYER_ID,onPopup);
+  map.on('mouseenter',LAYER_ID,()=>{map.getCanvas().style.cursor='pointer';});
+  map.on('mouseleave',LAYER_ID,()=>{map.getCanvas().style.cursor='';});
+}
+
+function deactivate(){
+  if(!activeLayer) return;
+  if(map.getLayer(LAYER_ID)){
+    map.off('click',LAYER_ID,onPopup);
+    map.removeLayer(LAYER_ID);
+  }
+  activeLayer=null;
+  document.getElementById('legend').innerHTML='';
+  document.querySelectorAll('.layer-btn').forEach(b=>b.classList.remove('active'));
+}
+
+// ── POPUP ───────────────────────────────────────────────────────────────────
+function onPopup(e){
+  if(!e.features||!e.features.length) return;
+  const f=e.features[0].properties;
+  const {config,field}=activeLayer;
+  let title=f.NOM_MUN||f.NOMVIAL||'Segmento';
+  if(f.CVEGEO) title+=` <span style="color:#888;font-size:10px">${f.CVEGEO}</span>`;
+  let rows='';
+  const val=f[field];
+  rows+=pr(config.label, val!=null?(config.unit?val+' '+config.unit:val):'N/A');
+  if(f.Ta_mean!=null) rows+=pr('Ta media',f.Ta_mean+' °C');
+  if(f.typology_sm_final) rows+=pr('Tipología',f.typology_sm_final);
+  if(f.peligro_cat!=null) rows+=pr('Peligro',['Sin peligro','Moderado','Alto'][f.peligro_cat]||f.peligro_cat);
+  if(f.ltype) rows+=pr('Tipo',f.ltype);
+  new maplibregl.Popup({maxWidth:'280px'}).setLngLat(e.lngLat)
+    .setHTML(`<div class="popup-title">${title}</div>${rows}`).addTo(map);
+}
+function pr(k,v){return `<div class="popup-row"><span class="k">${k}</span><span class="v">${v}</span></div>`;}
+
+// ── LEGEND ──────────────────────────────────────────────────────────────────
+function legendCont(title,colors,domain,unit){
+  document.getElementById('legend').innerHTML=`
+    <h3>${title}</h3>
+    <div class="bar" style="background:linear-gradient(to right,${colors.join(',')})"></div>
+    <div class="labels"><span>${domain[0]}${unit}</span><span>${domain[domain.length-1]}${unit}</span></div>`;
+}
+function legendCat(title,cats){
+  const items=Object.entries(cats).map(([k,[label,color]])=>
+    `<div class="cat-item"><div class="cat-swatch" style="background:${color}"></div>${label}</div>`).join('');
+  document.getElementById('legend').innerHTML=`<h3>${title}</h3>${items}`;
+}
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+map.on('load',()=>{
+  activate(0,0);
+  highlightBtn(0,0);
+});
+</script>
+</body>
+</html>

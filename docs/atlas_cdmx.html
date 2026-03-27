@@ -9,8 +9,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#000;color:#ddd}
-#map{position:absolute;top:0;left:340px;right:0;bottom:0}
-#sidebar{position:absolute;top:0;left:0;width:340px;height:100%;overflow-y:auto;background:#0a0a0a;border-right:1px solid #222;z-index:10;padding:0 0 20px 0}
+#map{position:absolute;top:0;left:280px;right:0;bottom:0}
+#sidebar{position:absolute;top:0;left:0;width:280px;height:100%;overflow-y:auto;background:#0a0a0a;border-right:1px solid #222;z-index:10;padding:0 0 20px 0}
+#sidebar-toggle{display:none;position:absolute;top:10px;left:10px;z-index:20;background:#0a0a0a;border:1px solid #333;border-radius:6px;color:#fff;font-size:18px;width:36px;height:36px;cursor:pointer}
 #sidebar::-webkit-scrollbar{width:6px}
 #sidebar::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
 .header{padding:14px 16px;background:#111;position:sticky;top:0;z-index:2}
@@ -79,10 +80,27 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#000;c
 .popup-title{font-weight:700;color:#fff;margin-bottom:6px;font-size:12px}
 .popup-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #22222233}
 .popup-row .k{color:#999}.popup-row .v{font-weight:600;color:#fff}
+
+/* Móvil: sidebar colapsable */
+@media(max-width:700px){
+  #sidebar{width:260px;left:-260px;transition:left .3s ease}
+  body.sidebar-open #sidebar{left:0}
+  #map{left:0;transition:left .3s ease}
+  body.sidebar-open #map{left:260px}
+  #sidebar-toggle{display:block;transition:left .3s ease}
+  body.sidebar-open #sidebar-toggle{left:270px}
+  .header h1{font-size:13px}
+  .header p{font-size:10px}
+  .group-title{font-size:10px;padding:8px 12px}
+  .layer-btn{font-size:10.5px;padding:5px 8px}
+  .layer-btn .tag{font-size:8px}
+  .maplibregl-popup-content{max-width:220px !important;font-size:10px !important}
+}
 </style>
 </head>
 <body>
 
+<button id="sidebar-toggle" onclick="document.body.classList.toggle('sidebar-open')">&#9776;</button>
 <div id="sidebar">
   <div class="header">
     <h1>ATLAS DE CALOR URBANO</h1>
@@ -379,6 +397,7 @@ document.querySelectorAll('.layer-btn').forEach(btn=>{
     document.querySelectorAll('.layer-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     activate(gi,li);
+    if(window.innerWidth<=700) document.body.classList.remove('sidebar-open');
   });
 });
 

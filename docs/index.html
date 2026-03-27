@@ -354,25 +354,127 @@ section.visible{opacity:1;transform:translateY(0)}
 .end-cover .contact-lines a{color:#111;text-decoration:underline}
 .end-cover .final-note{margin-top:12px;font-size:11px;line-height:1.7;color:#111;max-width:920px}
 
-/* Responsive */
+/* Responsive — móvil vertical (iPhone, etc.) */
 @media(max-width:700px){
-  .nav{right:10px;gap:8px}
-  .nav-dot{width:8px;height:8px}
+  /* Nav dots: más pequeños, pegados al borde */
+  .nav{right:6px;gap:6px}
+  .nav-dot{width:7px;height:7px}
   .nav-dot::after{display:none}
-  .rq-grid{grid-template-columns:1fr}
-  .hero{padding:0 18px}
-  .hero h1{font-size:clamp(24px,8vw,38px)}
-  .alcance-lead{font-size:14px;line-height:1.7}
-  .micro-hours{grid-template-columns:1fr}
-  .micro-compare{min-width:760px}
-  .agenda-grid{grid-template-columns:1fr}
+
+  /* Secciones: menos padding lateral */
+  section{padding:var(--section-pad) 16px}
+
+  /* Hero */
+  .hero{padding:0 16px}
+  .hero h1{font-size:clamp(20px,7vw,32px);line-height:1.15;margin-bottom:10px}
+  .hero .subtitle{font-size:10px}
+  .hero .author{font-size:11px;margin-bottom:18px}
+  .hero .lancet,.presentacion .lancet{font-size:11px;padding-left:10px;margin-bottom:20px}
+  .hero .abstract,.presentacion .abstract{font-size:12px;margin-bottom:22px}
+  .hero-scroll{font-size:.6rem;bottom:16px}
+
+  /* Grids: todo a 1 columna */
+  .rq-grid,
+  .agenda-grid,
+  .split-grid,
+  .validation-grid,
+  .kpi-grid,
+  .measure-grid,
+  .trend-grid,
+  .closing-grid,
+  .cred-grid{grid-template-columns:1fr}
   .metric-grid{grid-template-columns:1fr 1fr}
-  .split-grid{grid-template-columns:1fr}
-  .validation-grid{grid-template-columns:1fr}
-  .kpi-grid{grid-template-columns:1fr}
-  .measure-grid{grid-template-columns:1fr}
-  .trend-grid{grid-template-columns:1fr}
-  .closing-grid{grid-template-columns:1fr}
+  .micro-hours{grid-template-columns:1fr}
+
+  /* Textos: ajustar tamaños para lectura móvil */
+  .section-title{font-size:clamp(1.4rem,6vw,2rem)}
+  .section-sub{font-size:11px;margin-bottom:20px}
+  .alcance-lead{font-size:13px;line-height:1.7}
+  .bio-lead{font-size:12px}
+  .deck-note{font-size:11px;padding:12px}
+
+  /* Cards: padding reducido */
+  .rq{padding:14px 12px}
+  .rq .scale{font-size:9px}
+  .rq .question{font-size:11px}
+  .agenda-item{padding:12px}
+  .agenda-item .topic{font-size:11px}
+  .split-card{padding:12px}
+  .split-card h3{font-size:12px}
+  .split-card p{font-size:11px}
+  .metric-card{padding:10px}
+  .metric-card .value{font-size:18px}
+  .metric-card .label{font-size:10px}
+  .cred-item{padding:12px}
+  .cred-item h4{font-size:12px}
+  .cred-item p{font-size:11px}
+  .validation-card{padding:12px}
+  .validation-card h3{font-size:11px}
+  .validation-card p{font-size:11px}
+  .measure-card{padding:12px}
+  .measure-card h3{font-size:12px}
+  .measure-card p{font-size:11px}
+  .kpi-card{padding:12px}
+  .kpi-target{font-size:18px}
+  .kpi-title{font-size:11px}
+  .kpi-detail{font-size:10px}
+  .closing-card{padding:12px}
+  .closing-card h3{font-size:12px}
+  .closing-card p{font-size:11px}
+
+  /* Tablas: scroll horizontal */
+  .data-table{font-size:11px}
+  .data-table th,.data-table td{padding:7px 8px}
+  .micro-compare{min-width:640px}
+  .summary-table{min-width:640px}
+  .corridor-table{min-width:640px}
+
+  /* Diagrama SVG: permitir scroll horizontal */
+  .diagram-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* Viewer (iframe del atlas): altura adaptada */
+  .viewer-section{height:80vh}
+
+  /* Micro sección */
+  .micro-eval{font-size:12px}
+  .micro-thresholds{font-size:11px;padding:10px}
+  .micro-threshold-note{font-size:10px}
+  .micro-actions{padding:12px}
+  .micro-actions h3{font-size:12px}
+  .micro-actions ul{font-size:11px}
+  .micro-glossary ul{font-size:11px}
+  .micro-caption-guide{font-size:10px}
+  .hour-title{font-size:12px;padding:8px 10px}
+  .hour-caption{font-size:9px;padding:6px 8px}
+
+  /* Trend charts: menor altura */
+  #thermalTrendCanvas,#bioTrendCanvas{height:220px}
+  .trend-legend{font-size:10px}
+  .trend-item{max-width:200px}
+
+  /* Profile links */
+  .profile-links{gap:8px}
+  .profile-link{padding:6px 10px;font-size:11px}
+
+  /* CTA */
+  .cta-btn{padding:12px 24px;font-size:13px}
+
+  /* End cover */
+  .end-cover h1{font-size:clamp(20px,7vw,32px)}
+  .end-cover .thanks{font-size:12px}
+  .end-cover .contact-lines{font-size:11px}
+  .end-cover .final-note{font-size:10px}
+
+  /* Formula box */
+  .formula-box{padding:10px}
+  .formula-box p{font-size:11px}
+
+  /* Limits */
+  .limits-list{font-size:11px}
+
+  /* Ta threshold notes */
+  .ta-threshold-note{font-size:10px;padding:8px 10px}
+  .ta-threshold-refs p{font-size:9px}
 }
 </style>
 </head>

@@ -485,20 +485,35 @@ section.visible{opacity:1;transform:translateY(0)}
   .ta-threshold-refs p{font-size:9px}
 }
 
-    /* Portrait mobile: rotate prompt */
+    /* Orientation lock — portrait mobile/tablet */
     #rotate-prompt {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
       display: none;
-      position: fixed; inset: 0; z-index: 99999;
-      background: #000;
-      flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.96);
+      color: #fff;
+      text-align: center;
       touch-action: none;
     }
+    #rotate-prompt .rp-card {
+      max-width: 380px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
     #rotate-prompt .rp-icon {
-      width: 56px; height: 56px;
+      width: 52px; height: 52px;
       animation: rp-spin 2s ease-in-out infinite;
-      opacity: .7;
+      opacity: .75;
     }
     @keyframes rp-spin {
       0%   { transform: rotate(0deg); }
@@ -507,30 +522,31 @@ section.visible{opacity:1;transform:translateY(0)}
       100% { transform: rotate(0deg); }
     }
     #rotate-prompt .rp-title {
-      font-family: "Inconsolata", monospace;
-      font-size: .85rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .12em;
-      color: #fff; text-align: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
     }
     #rotate-prompt .rp-sub {
-      font-family: "Inconsolata", monospace;
-      font-size: .62rem; letter-spacing: .06em;
-      color: rgba(255,255,255,.4); text-align: center;
-      text-transform: uppercase;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
     }
-    @media (max-width: 900px) and (orientation: portrait) {
+    @media (max-width: 1024px) and (orientation: portrait) {
       #rotate-prompt { display: flex; }
     }
   </style>
 </head>
 <body>
-  <div id="rotate-prompt">
-    <svg class="rp-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2"/>
-      <path d="M12 18h.01"/>
-    </svg>
-    <div class="rp-title">Rotate your device</div>
-    <div class="rp-sub">This atlas is designed for landscape</div>
+  <div id="rotate-prompt" aria-live="polite">
+    <div class="rp-card">
+      <svg class="rp-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2"/>
+        <path d="M12 18h.01"/>
+      </svg>
+      <div class="rp-title">Rotate your device</div>
+      <div class="rp-sub">This atlas is designed to be viewed in landscape mode for the best experience.</div>
+    </div>
   </div>
 
 

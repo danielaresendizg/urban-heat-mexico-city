@@ -527,6 +527,57 @@ section.visible{opacity:1;transform:translateY(0)}
     @media (max-width: 1024px) and (orientation: portrait) {
       #rotate-prompt { display: flex; }
     }
+  
+    /* In-app browser warning */
+    #inapp-prompt {
+      position: fixed; inset: 0; z-index: 999999;
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.97);
+      color: #fff; text-align: center;
+      touch-action: none;
+    }
+    #inapp-prompt .ip-card {
+      max-width: 340px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.04);
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+    }
+    #inapp-prompt .ip-icon {
+      font-size: 2.2rem; line-height: 1;
+    }
+    #inapp-prompt .ip-title {
+      font-size: 1rem; font-weight: 700;
+      color: #fff; line-height: 1.3;
+    }
+    #inapp-prompt .ip-sub {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.55;
+    }
+    #inapp-prompt .ip-btn {
+      display: inline-block;
+      background: #fff; color: #000;
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      padding: 10px 22px; border-radius: 6px;
+      text-decoration: none; cursor: pointer;
+      border: none;
+      transition: opacity .15s;
+    }
+    #inapp-prompt .ip-btn:hover { opacity: .85; }
+    #inapp-prompt .ip-skip {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.35);
+      cursor: pointer;
+      text-decoration: underline;
+      background: none; border: none; color: rgba(255,255,255,0.35);
+    }
+
   </style>
 </head>
 <body>
@@ -538,6 +589,15 @@ section.visible{opacity:1;transform:translateY(0)}
       </svg>
       <div class="rp-title">Rotate your device</div>
       <div class="rp-sub">This atlas is designed to be viewed in landscape mode for the best experience.</div>
+    </div>
+  </div>
+  <div id="inapp-prompt" aria-live="polite">
+    <div class="ip-card">
+      <div class="ip-icon">🌐</div>
+      <div class="ip-title">Open in your browser</div>
+      <div class="ip-sub">This atlas requires rotation and full browser features. Instagram's browser doesn't support this — open it in Safari or Chrome for the best experience.</div>
+      <button class="ip-btn" onclick="openInBrowser()">Open in browser →</button>
+      <button class="ip-skip" onclick="document.getElementById('inapp-prompt').style.display='none'">Continue anyway</button>
     </div>
   </div>
 
@@ -1420,6 +1480,27 @@ section.visible{opacity:1;transform:translateY(0)}
     });
   })();
 </script>
+
+
+  <script>
+    (function() {
+      var ua = navigator.userAgent || '';
+      var isInApp = /Instagram|FBAN|FBAV|FB_IAB|Twitter|TikTok|Line|Pinterest|Snapchat|WhatsApp/.test(ua);
+      if (isInApp) {
+        var el = document.getElementById('inapp-prompt');
+        if (el) el.style.display = 'flex';
+      }
+    })();
+
+    function openInBrowser() {
+      var url = window.location.href;
+      // iOS: try to open in Safari via intent
+      window.location.href = url.replace(/^https?:\/\//, 'googlechrome://') ;
+      setTimeout(function() {
+        window.location.href = url;
+      }, 500);
+    }
+  </script>
 
 </body>
 </html>

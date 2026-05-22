@@ -488,32 +488,49 @@ section.visible{opacity:1;transform:translateY(0)}
     /* Portrait mobile: rotate prompt */
     #rotate-prompt {
       display: none;
-      position: fixed; inset: 0; z-index: 9999;
+      position: fixed; inset: 0; z-index: 99999;
       background: #000;
       flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 16px;
+      gap: 24px;
+      touch-action: none;
     }
-    #rotate-prompt svg { width: 48px; height: 48px; }
-    #rotate-prompt p {
+    #rotate-prompt .rp-icon {
+      width: 56px; height: 56px;
+      animation: rp-spin 2s ease-in-out infinite;
+      opacity: .7;
+    }
+    @keyframes rp-spin {
+      0%   { transform: rotate(0deg); }
+      40%  { transform: rotate(90deg); }
+      60%  { transform: rotate(90deg); }
+      100% { transform: rotate(0deg); }
+    }
+    #rotate-prompt .rp-title {
       font-family: "Inconsolata", monospace;
-      font-size: .7rem; text-transform: uppercase;
-      letter-spacing: .1em; color: rgba(255,255,255,.55);
-      text-align: center; max-width: 200px; line-height: 1.5;
+      font-size: .85rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #fff; text-align: center;
     }
-    @media (max-width: 768px) and (orientation: portrait) {
+    #rotate-prompt .rp-sub {
+      font-family: "Inconsolata", monospace;
+      font-size: .62rem; letter-spacing: .06em;
+      color: rgba(255,255,255,.4); text-align: center;
+      text-transform: uppercase;
+    }
+    @media (max-width: 900px) and (orientation: portrait) {
       #rotate-prompt { display: flex; }
     }
   </style>
 </head>
 <body>
   <div id="rotate-prompt">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4" y="2" width="10" height="16" rx="2"/>
-      <path d="M17 8l3 3-3 3"/>
-      <path d="M20 11H14"/>
+    <svg class="rp-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <path d="M12 18h.01"/>
     </svg>
-    <p>Rotate device for best experience</p>
+    <div class="rp-title">Rotate your device</div>
+    <div class="rp-sub">This atlas is designed for landscape</div>
   </div>
 
 

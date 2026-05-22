@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#000;
+  --bg:#E95920;
   --fg:#ccc;
   --muted:#999;
   --accent:#F5A623;
@@ -106,8 +106,8 @@ section.visible{opacity:1;transform:translateY(0)}
   height:100%;
   background:#111;
 }
-.hero h1{font-size:clamp(26px,4.9vw,52px);font-weight:900;color:#111;max-width:980px;line-height:1.1;margin-bottom:14px}
-.hero .subtitle{font-size:12px;color:#222;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.hero h1{font-size:clamp(26px,4.9vw,52px);font-weight:900;color:#111;max-width:980px;line-height:1.1;margin-bottom:14px;text-transform:uppercase;text-align:center}
+.hero .subtitle{font-size:12px;color:#222;margin-bottom:10px;letter-spacing:.04em;text-transform:none;font-weight:400;text-align:center}
 .hero .author{font-size:12px;color:#111;margin-bottom:28px;letter-spacing:.04em;font-weight:600}
 .hero .lancet,.presentacion .lancet{max-width:740px;font-size:12px;color:#bbb;font-style:italic;border-left:3px solid var(--accent);padding-left:14px;text-align:left;margin-bottom:30px;line-height:1.7}
 .hero .lancet cite,.presentacion .lancet cite{color:var(--accent-2);font-style:normal;font-size:11px}
@@ -482,9 +482,7 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <nav class="nav" id="nav">
   <a class="nav-dot active" href="#hero" data-label="Inicio"></a>
-  <a class="nav-dot" href="#presentacion" data-label="Presentación"></a>
   <a class="nav-dot" href="#agenda" data-label="Preguntas"></a>
-  <a class="nav-dot" href="#decision" data-label="Hipótesis"></a>
   <a class="nav-dot" href="#metodologia" data-label="Método"></a>
   <a class="nav-dot" href="#datos" data-label="Datos"></a>
   <a class="nav-dot" href="#macro" data-label="Macro"></a>
@@ -494,7 +492,6 @@ section.visible{opacity:1;transform:translateY(0)}
   <a class="nav-dot" href="#micro" data-label="Micro"></a>
   <a class="nav-dot" href="#sintesis" data-label="Síntesis"></a>
   <a class="nav-dot" href="#kpi" data-label="KPIs"></a>
-  <a class="nav-dot" href="#decision-costo-impacto-plazo" data-label="Medidas"></a>
   <a class="nav-dot" href="#cierre" data-label="Cierre"></a>
   <a class="nav-dot" href="#agradecimientos" data-label="Gracias"></a>
 </nav>
@@ -502,43 +499,9 @@ section.visible{opacity:1;transform:translateY(0)}
 <!-- HERO -->
 <section class="hero visible" id="hero">
   <h1>Desigualdades térmicas en la Ciudad de México:<br/>Percepción remota, morfología urbana y simulación microclimática para analizar la exposición al calor urbano</h1>
-  <div class="author">Daniela Reséndiz García &nbsp;|&nbsp; Supervisor: Dr. Kimon Krenz &nbsp;|&nbsp; UCL 2025</div>
   <div class="hero-scroll">Scroll</div>
 </section>
 
-<!-- PRESENTACION -->
-<section class="deck-section presentacion" id="presentacion">
-  <div class="section-title with-symbol"><span class="sym">◌</span>Quién soy</div>
-  <div class="section-sub">Perfil técnico-profesional para este estudio</div>
-
-  <p class="bio-lead">
-    Soy <strong>Daniela Reséndiz García</strong>, especialista en análisis espacial y clima urbano.
-    Trabajo en la intersección entre investigación aplicada, datos geoespaciales y evaluación multiescalar de desigualdades territoriales.
-  </p>
-
-  <div class="cred-grid">
-    <article class="cred-item">
-      <h4>Puente entre teoría urbana y análisis técnico</h4>
-      <p>Traduzco evidencia geoespacial en marcos analíticos, indicadores y criterios de intervención.</p>
-    </article>
-    <article class="cred-item">
-      <h4>Experiencia aplicada en riesgo territorial</h4>
-      <p>He participado en proyectos de prevención y reconstrucción con enfoque de coordinación interinstitucional.</p>
-    </article>
-    <article class="cred-item">
-      <h4>Formación internacional en planeación espacial</h4>
-      <p>MSc en Space Syntax en The Bartlett, UCL, con enfoque en accesibilidad, exposición y desigualdad urbana.</p>
-    </article>
-    <article class="cred-item">
-      <h4>Trabajo aplicado en clima urbano y movilidad</h4>
-      <p>Proyectos en CDMX y Chennai combinando percepción remota, morfología urbana, red vial y simulación microclimática.</p>
-    </article>
-  </div>
-
-  <div class="profile-links">
-    <a class="profile-link" href="https://danielaresendizg.github.io/es" target="_blank" rel="noopener">Website</a>
-  </div>
-</section>
 
 <!-- RESEARCH QUESTIONS -->
 <section class="deck-section" id="agenda">
@@ -552,31 +515,6 @@ section.visible{opacity:1;transform:translateY(0)}
 </section>
 
 <!-- DECISION BRIEF -->
-<section class="deck-section" id="decision">
-  <div class="section-title">Hipótesis y aporte metodológico</div>
-  <div class="section-sub">Qué se evalúa, con qué método y qué inferencias son válidas para este estudio</div>
-  <div class="split-grid">
-    <article class="split-card">
-      <h3>Hipótesis operativa</h3>
-      <p>
-        La exposición peatonal al calor no se distribuye de manera homogénea: se concentra en corredores con alta
-        integración espacial y co-ocurrencia de vulnerabilidad social. Este patrón justifica una clasificación espacial
-        escalonada (crítica, intermedia y de consolidación).
-      </p>
-    </article>
-    <article class="split-card">
-      <h3>Aporte metodológico</h3>
-      <p>
-        Se propone un sistema de priorización multiescalar con criterios reproducibles, métricas térmicas
-        (Tmrt, UTCI, PET) y esquema de seguimiento comparativo por tramo para evaluación ex ante y ex post.
-      </p>
-    </article>
-  </div>
-  <p class="deck-note">
-    Alcance analítico: usar este visor como marco de referencia para integrar resultados macro, meso y micro
-    con indicadores comparables de desempeño térmico peatonal.
-  </p>
-</section>
 
 <!-- METHODOLOGY DIAGRAM -->
 <section class="section" id="metodologia">
@@ -841,10 +779,6 @@ section.visible{opacity:1;transform:translateY(0)}
 </section>
 
 <!-- CTA -->
-<section class="cta-section" id="cta">
-  <a href="#visor" class="cta-btn">Explorar el Atlas Interactivo</a>
-  <div class="cta-hint">Visor con más de 45 capas temáticas a nivel manzana y red vial</div>
-</section>
 
 <!-- THERMAL TRENDS -->
 <section class="deck-section" id="tendencias-termicas">
@@ -1099,46 +1033,6 @@ section.visible{opacity:1;transform:translateY(0)}
 </section>
 
 <!-- DECISION-COST-IMPACT-TIMELINE -->
-<section class="deck-section" id="decision-costo-impacto-plazo">
-  <div class="section-title">Síntesis de medidas térmicas: costo, impacto y horizonte temporal</div>
-  <div class="section-sub">Escenarios de intervención para factibilidad y ejecución técnica</div>
-  <div class="measure-grid">
-    <article class="measure-card">
-      <div class="measure-priority">Medida 1</div>
-      <h3>Sombra continua en corredores de alta integración</h3>
-      <p>Intervenir tramos con mayor exposición peatonal para reducir carga radiante entre 10:00 y 14:00.</p>
-      <ul class="measure-meta">
-        <li><strong>Costo:</strong> 6-10 M MXN por km de corredor (estimación preliminar sujeta a validación de proyecto ejecutivo).</li>
-        <li><strong>Impacto esperado:</strong> -10 a -15°C en Tmrt de hora crítica y caída de 20-40 p.p. en PET&gt;41°C.</li>
-        <li><strong>Plazo:</strong> 6-12 meses por paquete de 3-5 km.</li>
-      </ul>
-    </article>
-    <article class="measure-card">
-      <div class="measure-priority">Medida 2</div>
-      <h3>Refugios térmicos de proximidad</h3>
-      <p>Instalar nodos de sombra, descanso e hidratación cada 300-500 m en ejes con demanda peatonal alta.</p>
-      <ul class="measure-meta">
-        <li><strong>Costo:</strong> 1.2-2.0 M MXN por nodo operativo (estimación preliminar sujeta a validación).</li>
-        <li><strong>Impacto esperado:</strong> cobertura de protección en población sensible y reducción de exposición acumulada en trayecto.</li>
-        <li><strong>Plazo:</strong> 3-6 meses para despliegue en red piloto.</li>
-      </ul>
-    </article>
-    <article class="measure-card">
-      <div class="measure-priority">Medida 3</div>
-      <h3>Rediseño de superficie peatonal y materiales</h3>
-      <p>Aplicar soluciones de enfriamiento pasivo (arbolado, pavimento frío y control de insolación en suelo expuesto).</p>
-      <ul class="measure-meta">
-        <li><strong>Costo:</strong> 3-6 M MXN por km equivalente intervenido (estimación preliminar sujeta a validación).</li>
-        <li><strong>Impacto esperado:</strong> -3 a -7°C en Tmrt local y reducción del p90 de Ta en segmentos críticos.</li>
-        <li><strong>Plazo:</strong> 6-12 meses según complejidad de obra.</li>
-      </ul>
-    </article>
-  </div>
-  <p class="deck-note">
-    Secuencia analítica sugerida: iniciar con Medida 1 en corredores críticos, complementar con Medida 2 para protección inmediata
-    y usar Medida 3 como consolidación del desempeño térmico en el mediano plazo.
-  </p>
-</section>
 
 <!-- CLOSING -->
 <section class="closing" id="cierre">

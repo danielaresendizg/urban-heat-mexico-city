@@ -362,9 +362,9 @@ section.visible{opacity:1;transform:translateY(0)}
 .end-cover .contact-lines a{color:#111;text-decoration:underline}
 .end-cover .final-note{margin-top:12px;font-size:11px;line-height:1.7;color:#111;max-width:920px}
 
-/* Responsive — móvil vertical (iPhone, etc.) */
+/* Responsive — mobile portrait (iPhone, etc.) */
 @media(max-width:700px){
-  /* Nav dots: más pequeños, pegados al borde */
+  /* Nav dots: smalleresmall, flush to edge */
   .nav{right:6px;gap:6px}
   .nav-dot{width:7px;height:7px}
   .nav-dot::after{display:none}
@@ -394,7 +394,7 @@ section.visible{opacity:1;transform:translateY(0)}
   .metric-grid{grid-template-columns:1fr 1fr}
   .micro-hours{grid-template-columns:1fr}
 
-  /* Textos: ajustar tamaños para lectura móvil */
+  /* Textos: ajustar tamyears para lectura móvil */
   .section-title{font-size:clamp(1.4rem,6vw,2rem)}
   .section-sub{font-size:11px;margin-bottom:20px}
   .alcance-lead{font-size:13px;line-height:1.7}
@@ -516,9 +516,9 @@ section.visible{opacity:1;transform:translateY(0)}
   <div class="section-title">Research scope</div>
   <p class="alcance-lead">The Lancet Countdown 2024 reports record highs in heat-attributable mortality and productivity losses due to thermal exposure. This study examines how extreme heat compounds existing social inequalities in Mexico City and develops an operational pathway for delivering cooling where it yields the greatest social benefit.</p>
   <div class="agenda-grid">
-    <article class="agenda-item"><div class="time">Macro</div><div class="topic">¿Dónde coinciden las temperaturas del aire diurnas de verano con poblaciones socialmente vulnerables?</div></article>
-    <article class="agenda-item"><div class="time">Meso</div><div class="topic">¿Qué combinaciones de forma/densidad urbana y configuración de red caracterizan los hotspots térmico-sociales?</div></article>
-    <article class="agenda-item"><div class="time">Micro</div><div class="topic">¿Cómo se puede evaluar el estrés térmico a microescala para definir objetivos de diseño pasivo para la reducción del calor?</div></article>
+    <article class="agenda-item"><div class="time">Macro</div><div class="topic">Where do daytime summer air temperatures co-locate with socially vulnerable populations?</div></article>
+    <article class="agenda-item"><div class="time">Meso</div><div class="topic">Which combinations of urban form and network configuration characterise thermal-social hotspots?</div></article>
+    <article class="agenda-item"><div class="time">Micro</div><div class="topic">How can micro-scale thermal stress be assessed to define passive design targets for heat reduction?</div></article>
   </div>
 </section>
 
@@ -526,8 +526,8 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- METHODOLOGY DIAGRAM -->
 <section class="section" id="metodologia">
-  <div class="section-title">Pipeline metodológico</div>
-  <div class="section-sub">Tres escalas anidadas: detección macro, caracterización meso y simulación micro</div>
+  <div class="section-title">Methodological pipeline</div>
+  <div class="section-sub">Three nested scales: macro detection, meso characterisation and micro simulation</div>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" width="1000" font-family="'Segoe UI',system-ui,sans-serif">
@@ -543,15 +543,15 @@ section.visible{opacity:1;transform:translateY(0)}
       <!-- Phase labels -->
       <rect x="20" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
       <text x="160" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 1 (MACRO)</text>
-      <text x="160" y="46" fill="#999" font-size="9" text-anchor="middle">Percepción remota + calibración + vulnerabilidad</text>
+      <text x="160" y="46" fill="#999" font-size="9" text-anchor="middle">Remote sensing + calibration + vulnerability</text>
 
       <rect x="360" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
       <text x="500" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 2 (MESO)</text>
-      <text x="500" y="46" fill="#999" font-size="9" text-anchor="middle">Morfología urbana + red vial</text>
+      <text x="500" y="46" fill="#999" font-size="9" text-anchor="middle">Urban morphology + street network</text>
 
       <rect x="700" y="10" width="280" height="50" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
       <text x="840" y="30" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">FASE 3 (MICRO)</text>
-      <text x="840" y="46" fill="#999" font-size="9" text-anchor="middle">Simulación biometeorológica (peatones)</text>
+      <text x="840" y="46" fill="#999" font-size="9" text-anchor="middle">Biometeorological simulation (pedestrians)</text>
 
       <!-- PHASE 1 steps -->
       <!-- 1.1 -->
@@ -563,7 +563,7 @@ section.visible{opacity:1;transform:translateY(0)}
 
       <!-- 1.2 -->
       <rect x="60" y="175" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
-      <text x="160" y="191" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">1.2 Calibración LST → Ta</text>
+      <text x="160" y="191" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">1.2 LST → Ta calibration</text>
       <text x="160" y="205" fill="#888" font-size="8.5" text-anchor="middle">(estaciones meteorológicas)</text>
       <rect x="75" y="220" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
       <text x="160" y="238" fill="#aaa" font-size="8.5" text-anchor="middle">Superficie Ta (30 m)</text>
@@ -599,7 +599,7 @@ section.visible{opacity:1;transform:translateY(0)}
       <text x="570" y="96" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.2 Space Syntax</text>
       <text x="570" y="110" fill="#888" font-size="8.5" text-anchor="middle">(NAIN/NACH)</text>
       <rect x="520" y="125" width="100" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
-      <text x="570" y="138" fill="#aaa" font-size="8" text-anchor="middle">Integración/elección</text>
+      <text x="570" y="138" fill="#aaa" font-size="8" text-anchor="middle">Integration/choice</text>
       <text x="570" y="148" fill="#aaa" font-size="8" text-anchor="middle">(multi-radio)</text>
 
       <!-- 2.3 -->
@@ -608,11 +608,11 @@ section.visible{opacity:1;transform:translateY(0)}
       <text x="500" y="225" fill="#888" font-size="8.5" text-anchor="middle">(manzanas/segmentos)</text>
       <rect x="415" y="240" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
       <text x="500" y="253" fill="#aaa" font-size="8" text-anchor="middle">Asociaciones entre Ta,</text>
-      <text x="500" y="263" fill="#aaa" font-size="8" text-anchor="middle">morfología y red</text>
+      <text x="500" y="263" fill="#aaa" font-size="8" text-anchor="middle">morphology and network</text>
 
       <!-- 2.4 -->
       <rect x="400" y="295" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
-      <text x="500" y="311" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.4 Selección de corredores</text>
+      <text x="500" y="311" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">2.4 Corridor selection</text>
       <text x="500" y="325" fill="#888" font-size="8.5" text-anchor="middle">para estudios a microescala</text>
       <rect x="415" y="340" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
       <text x="500" y="353" fill="#aaa" font-size="8" text-anchor="middle">Corredores prioritarios</text>
@@ -639,7 +639,7 @@ section.visible{opacity:1;transform:translateY(0)}
 
       <!-- 3.2 -->
       <rect x="740" y="195" width="200" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1"/>
-      <text x="840" y="211" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">3.2 Simulación SOLWEIG</text>
+      <text x="840" y="211" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">3.2 SOLWEIG simulation</text>
       <text x="840" y="225" fill="#888" font-size="8.5" text-anchor="middle">a lo largo de corredores</text>
       <rect x="755" y="240" width="170" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
       <text x="840" y="253" fill="#aaa" font-size="8" text-anchor="middle">Perfiles Tmrt, UTCI, PET</text>
@@ -668,7 +668,7 @@ section.visible{opacity:1;transform:translateY(0)}
 
       <rect x="300" y="460" width="80" height="28" rx="3" fill="#111" stroke="#555" stroke-width="1"/>
       <text x="340" y="478" fill="#fff" font-size="8" font-weight="600" text-anchor="middle">Método</text>
-      <text x="395" y="478" fill="#666" font-size="8">Proceso o método analítico</text>
+      <text x="395" y="478" fill="#666" font-size="8">Proceso o analytical method</text>
 
       <rect x="540" y="460" width="80" height="28" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="0.5"/>
       <text x="580" y="478" fill="#aaa" font-size="8" text-anchor="middle">Salida</text>
@@ -686,10 +686,10 @@ section.visible{opacity:1;transform:translateY(0)}
 <!-- DATA SOURCES TABLE -->
 <section class="section" id="datos">
   <div class="section-title">Data Sources</div>
-  <div class="section-sub">Todos los insumos son de acceso abierto</div>
+  <div class="section-sub">All inputs are open-access</div>
 
   <p class="abbrev" style="font-size:10px;color:#555;font-style:italic;margin-bottom:16px;text-align:left">
-    L8/9 = Landsat 8/9 &nbsp;|&nbsp; GEE = Google Earth Engine &nbsp;|&nbsp; LST = Land Surface Temperature &nbsp;|&nbsp; Ta = temperatura del aire &nbsp;|&nbsp; DEM/DSM = Modelo Digital de Elevación/Superficie &nbsp;|&nbsp; GOB = Google Open Buildings &nbsp;|&nbsp; OSM = OpenStreetMap &nbsp;|&nbsp; INEGI = Instituto Nacional de Estadística y Geografía
+    L8/9 = Landsat 8/9 &nbsp;|&nbsp; GEE = Google Earth Engine &nbsp;|&nbsp; LST = Land Surface Temperature &nbsp;|&nbsp; Ta = air temperature &nbsp;|&nbsp; DEM/DSM = Modelo Digital de Elevación/Superficie &nbsp;|&nbsp; GOB = Google Open Buildings &nbsp;|&nbsp; OSM = OpenStreetMap &nbsp;|&nbsp; INEGI = Instituto Nacional de Estadística y Geografía
   </p>
 
   <table class="data-table">
@@ -697,13 +697,13 @@ section.visible{opacity:1;transform:translateY(0)}
       <tr><th style="width:60px">Paso</th><th>Data Sources</th></tr>
     </thead>
     <tbody>
-      <tr class="phase-row"><td colspan="2">Fase 1 (Macro): Mapeo térmico + colocalización de vulnerabilidad</td></tr>
-      <tr><td class="step-col">1.1</td><td>Productos Landsat 8/9 (L8/9) Collection 2 Level-2 (reflectancia de superficie + LST; escenas de verano, climatología multianual) procesados en GEE</td></tr>
+      <tr class="phase-row"><td colspan="2">Fase 1 (Macro): Mapeo thermal + vulnerability co-location</td></tr>
+      <tr><td class="step-col">1.1</td><td>Productos Landsat 8/9 (L8/9) Collection 2 Level-2 (reflectancia de superficie + LST; escenas de verano, multiyear climatology) processed in GEE</td></tr>
       <tr><td class="step-col">1.2</td><td>Estaciones meteorológicas locales (RedMet, SEDEMA) para calibración; índices satelitales del Paso 1.1</td></tr>
       <tr><td class="step-col">1.3</td><td>Microdatos censales a nivel manzana (INEGI 2020) y límites administrativos; predicciones de Ta del Paso 1.2 agregadas a manzanas</td></tr>
-      <tr class="phase-row"><td colspan="2">Fase 2 (Meso): Morfología urbana + configuración de red vial</td></tr>
+      <tr class="phase-row"><td colspan="2">Fase 2 (Meso): Urban morphology + configuración de street network</td></tr>
       <tr><td class="step-col">2.1</td><td>Huellas de edificios y alturas (Google Open Buildings + catastro CDMX como fuente auxiliar de alturas)</td></tr>
-      <tr><td class="step-col">2.2</td><td>Red vial (OSM / red oficial de la CDMX) procesada con DepthmapX</td></tr>
+      <tr><td class="step-col">2.2</td><td>Street network (OSM / red oficial de la CDMX) procesada con DepthmapX</td></tr>
       <tr><td class="step-col">2.3</td><td>Capas térmicas de la Fase 1 + salidas de los Pasos 2.1–2.2 para análisis de acoplamiento forma-red y selección de corredores</td></tr>
       <tr class="phase-row"><td colspan="2">Fase 3 (Micro): Simulación biometeorológica para exposición peatonal</td></tr>
       <tr><td class="step-col">3.1</td><td>DEM/DSM de alta resolución; huellas y alturas de edificios (Paso 2.1); capas de vegetación/dosel (derivadas de NDVI); forzamiento meteorológico (datos de estaciones)</td></tr>
@@ -714,8 +714,8 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- MACRO RESULTS -->
 <section class="deck-section" id="macro">
-  <div class="section-title with-symbol"><span class="sym">◉</span>Diagnóstico macro de riesgo térmico-social</div>
-  <div class="section-sub">Magnitud del problema y localización de primera prioridad (2014–2024)</div>
+  <div class="section-title with-symbol"><span class="sym">◉</span>Macro diagnosis of thermal-social risk</div>
+  <div class="section-sub">Scale of the problem and first-priority locations (2014–2024)</div>
   <div class="metric-grid">
     <article class="metric-card"><div class="value">32%</div><div class="label">de manzanas supera 26°C en verano (Ta media)</div></article>
     <article class="metric-card"><div class="value">11%</div><div class="label">de manzanas supera 28°C (condición extrema)</div></article>
@@ -723,7 +723,7 @@ section.visible{opacity:1;transform:translateY(0)}
     <article class="metric-card"><div class="value">+1.5σ</div><div class="label">anomalías UHI_air en oriente/noreste</div></article>
   </div>
   <div class="ta-threshold-note">
-    <strong>Anotación metodológica:</strong> en este estudio los umbrales de <strong>Ta = 26°C</strong> y <strong>Ta = 28°C</strong> se usan para clasificar exposición térmica a escala manzana/segmento (<em>hazardous</em> y <em>extreme</em>) en coherencia con la literatura local y el marco de comunicación de riesgo térmico.
+    <strong>Anotación metodológica:</strong> en este estudio los umbrales de <strong>Ta = 26°C</strong> y <strong>Ta = 28°C</strong> se usan para clasificar thermal exposure a escala manzana/segmento (<em>hazardous</em> y <em>extreme</em>) en coherencia con la literatura local y el marco de comunicacithermal risk assessment.
   </div>
   <div class="ta-threshold-refs">
     <p><strong>Citas:</strong> Magaña y Vargas (2020); WMO (2025).</p>
@@ -737,21 +737,21 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- MESO RESULTS -->
 <section class="deck-section" id="meso">
-  <div class="section-title with-symbol"><span class="sym">◈</span>Diagnóstico meso: motores espaciales del riesgo</div>
-  <div class="section-sub">Evidencia estadística-espacial para explicar patrones de exposición</div>
+  <div class="section-title with-symbol"><span class="sym">◈</span>Meso diagnosis: spatial drivers of risk</div>
+  <div class="section-sub">Spatial-statistical evidence to explain exposure patterns</div>
   <div class="split-grid">
     <article class="split-card">
       <h3>Mecanismo 1: carga térmica estructural</h3>
       <p>
-        GSI es el predictor morfológico más sensible: correlación negativa con NDVI (r = -0.299) y positiva con Ta_mean (r = 0.228).
-        Tipologías compactas y selladas concentran mayor Heat Index y menor capacidad de disipación térmica.
+        GSI es el predictor morfolmost sensitive logical: correlación negativa con NDVI (r = -0.299) y positiva con Ta_mean (r = 0.228).
+        Typelogías compactas y selladas concentran mayor Heat Index y menor capacidad de disipación térmica.
       </p>
     </article>
     <article class="split-card">
       <h3>Mecanismo 2: exposición por corredor</h3>
       <p>
         Las zonas hazard 2 combinan alta temperatura y alta integración de red.
-        En términos de servicio urbano, los corredores de mayor demanda peatonal son también los de mayor exposición térmica.
+        En términos de servicio urbano, los corredores de mayor demanda peatonal son también los de mayor thermal exposure.
       </p>
     </article>
   </div>
@@ -763,8 +763,8 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- VALIDATION -->
 <section class="deck-section" id="validacion">
-  <div class="section-title">Calidad analítica y robustez del modelo</div>
-  <div class="section-sub">Trazabilidad de método, robustez estadística y límites de uso</div>
+  <div class="section-title">Analytical quality and model robustness</div>
+  <div class="section-sub">Method traceability, statistical robustness and limits of use</div>
   <div class="validation-grid">
     <article class="validation-card">
       <h3>Calibración térmica</h3>
@@ -780,7 +780,7 @@ section.visible{opacity:1;transform:translateY(0)}
     </article>
   </div>
   <ul class="limits-list">
-    <li>La calibración está centrada en horario diurno; no describe completamente dinámica nocturna.</li>
+    <li>La calibracion focuses on daytime hours; does not fully capture nocturnal dynamics.</li>
     <li>SOLWEIG simplifica ciertos procesos (por ejemplo, calor antropogénico directo).</li>
     <li>Los indicadores sociales son proxies de sensibilidad/capacidad adaptativa, no mediciones clínicas de impacto.</li>
   </ul>
@@ -790,14 +790,14 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- THERMAL TRENDS -->
 <section class="deck-section" id="tendencias-termicas">
-  <div class="section-title">Tendencias anuales (2014-2024)</div>
-  <div class="section-sub">Relación entre temperatura y estructura biofísica.</div>
-  <p style="margin-top:-22px;margin-bottom:6px;font-size:10px;color:#8f8f8f;line-height:1.4;">Nota metodológica: se adopta 2014-2024 (n=11) por continuidad instrumental y comparabilidad interanual (Landsat 8/9 Collection 2 + calibración homogénea con RedMet), y porque la literatura reciente de LST urbano usa ventanas decenales para detectar señal térmica reciente [4,5]. Este periodo se usa para tendencia urbana, no como normal climatológica; para normales, WMO/IPCC emplean marcos de 30 años [1,2].</p>
+  <div class="section-title">Annual trends (2014–2024)</div>
+  <div class="section-sub">Relationship between temperature and biophysical structure.</div>
+  <p style="margin-top:-22px;margin-bottom:6px;font-size:10px;color:#8f8f8f;line-height:1.4;">Nota metodológica: se adopta 2014-2024 (n=11) por continuidad instrumental y comparabilidad interanual (Landsat 8/9 Collection 2 + calibración homogénea con RedMet), y porque la literatura reciente de LST urbano usa ventanas decenales para detectar señal térmica reciente [4,5]. Este periodo se usa para tendencia urbana, no como normal climatológica; para normales, WMO/IPCC emplean marcos de 30 years [1,2].</p>
   <p style="margin-top:0;margin-bottom:14px;font-size:9px;color:#7d7d7d;line-height:1.35;">[1] WMO climatological normals. [2] IPCC AR6 Glossary (climate normal). [3] USGS Landsat 8-9 C2 L2 Science Product Guide. [4] Shafizadeh-Moghadam et al., 2025, <em>J. Environ. Manage.</em>, doi:10.1016/j.jenvman.2025.127789. [5] RoohaniQadikolaei et al., 2025, <em>Ecol. Indicators</em>, doi:10.1016/j.ecolind.2025.113386.</p>
   <div class="trend-grid">
     <article class="trend-card">
       <h3>Temperatura</h3>
-      <p>Series en °C para LST y Ta. Se muestran todos los años (2014-2024).</p>
+      <p>Series en °C para LST y Ta. Se muestran todos los years (2014-2024).</p>
       <div class="trend-wrap">
         <canvas id="thermalTrendCanvas" aria-label="Tendencias térmicas por año"></canvas>
       </div>
@@ -805,9 +805,9 @@ section.visible{opacity:1;transform:translateY(0)}
     </article>
     <article class="trend-card">
       <h3>Indicadores de superficie</h3>
-      <p>Series adimensionales de Albedo, NDBI y NDVI, comparables con la tendencia de Ta. En albedo: 0 = absorbe más radiación y 1 = refleja más radiación.</p>
+      <p>Series adimensionales de Albedo, NDBI y NDVI, comparables con la tendencia de Ta. En albedo: 0 = absorbe mabsorbs more radiation and 1 = reflects more radiation.</p>
       <div class="trend-wrap">
-        <canvas id="bioTrendCanvas" aria-label="Tendencias biofísicas por año"></canvas>
+        <canvas id="bioTrendCanvas" aria-label="Tendencias biofphysical values per year"></canvas>
       </div>
       <div class="trend-legend" id="bioTrendLegend"></div>
       <p class="deck-note" id="bioTrendNote"></p>
@@ -822,11 +822,11 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- MICRO SCALE -->
 <section class="micro-section" id="micro">
-  <div class="section-title with-symbol"><span class="sym">◎</span>Evaluación micro: desempeño térmico en corredores prioritarios</div>
-  <div class="section-sub">Métrica biometeorológica para especificación de proyecto urbano</div>
+  <div class="section-title with-symbol"><span class="sym">◎</span>Micro assessment: thermal performance in priority corridors</div>
+  <div class="section-sub">Biometeorological metrics for urban design specification</div>
 
   <p class="micro-eval">
-    Esta fase cuantifica exposición peatonal en corredores de alta integración (NAIN r500/r1500) usando UMEP/SOLWEIG con forzamiento local por zona.
+    This phase quantifies pedestrian exposure in high-integration corridors (NAIN r500/r1500) using UMEP/SOLWEIG with local forcing by zone.
     El objetivo es definir especificaciones técnicas de diseño a partir de <strong>Tmrt</strong>, <strong>UTCI</strong> y <strong>PET</strong> en tres ventanas operativas de calor:
     <strong>10:00</strong>, <strong>12:00</strong> y <strong>14:00</strong>.
   </p>
@@ -836,7 +836,7 @@ section.visible{opacity:1;transform:translateY(0)}
   </div>
 
   <div class="micro-threshold-note">
-    <strong>Anotación metodológica:</strong> estos umbrales provienen de las clasificaciones biometeorológicas usadas en el estudio (véase Appendix F) para identificar condiciones de estrés térmico en calle a escala peatonal.
+    <strong>Anotación metodológica:</strong> estos umbrales provienen de las clasificaciones biometeorológicas usadas en el estudio (véase Appendix F) para identificar condiciones de thermal stress en calle a escala peatonal.
   </div>
   <div class="micro-threshold-refs">
     <p><strong>Citas:</strong> Bröde et al. (2012); Matzarakis et al. (1999).</p>
@@ -846,9 +846,9 @@ section.visible{opacity:1;transform:translateY(0)}
   <div class="micro-glossary">
     <h3>Glosario microclimático</h3>
     <ul>
-      <li><strong>UTCI (Universal Thermal Climate Index, °C):</strong> índice de estrés térmico equivalente percibido por el cuerpo humano; integra temperatura del aire, humedad, viento y radiación.</li>
+      <li><strong>UTCI (Universal Thermal Climate Index, °C):</strong> índice de thermal stress equivalente percibido por el cuerpo humano; integra air temperature, humedad, viento y radiación.</li>
       <li><strong>Tmrt (Mean radiant temperature, °C):</strong> temperatura radiante media del entorno; resume la carga radiativa de superficies y sol sobre el peatón.</li>
-      <li><strong>PET (Physiological Equivalent Temperature, °C):</strong> temperatura equivalente fisiológica en ambiente interior de referencia; expresa el nivel de carga térmica del cuerpo en condiciones exteriores.</li>
+      <li><strong>PET (Physiological Equivalent Temperature, °C):</strong> temperatura equivalente fisiolological in reference interior environment; expresa el nivel de carga térmica del cuerpo en condiciones exteriores.</li>
     </ul>
   </div>
 
@@ -857,9 +857,9 @@ section.visible{opacity:1;transform:translateY(0)}
   </div>
 
   <ul class="micro-why">
-    <li><strong>Zona 1 (Hospital General):</strong> caso de riesgo moderado persistente con alta sensibilidad social y alta demanda peatonal.</li>
-    <li><strong>Zona 2 (Entorno AICM):</strong> caso de transición térmica donde la morfología comienza a migrar hacia régimen extremo.</li>
-    <li><strong>Zona 3 (Basílica de Guadalupe):</strong> caso de régimen extremo consolidado con concentración de población de mayor vulnerabilidad.</li>
+    <li><strong>Zona 1 (General Hospital):</strong> caso de riesgo moderado persistente con alta sensibilidad social y alta demanda peatonal.</li>
+    <li><strong>Zona 2 (Entorno AICM):</strong> thermal transition case where morphology begins to migrate towards the extreme regime.</li>
+    <li><strong>Zona 3 (Basilica of Guadalupe):</strong> consolidated extreme-regime case with concentration of highly vulnerable population.</li>
   </ul>
 
   <div class="micro-compare-wrap">
@@ -875,24 +875,24 @@ section.visible{opacity:1;transform:translateY(0)}
       </thead>
       <tbody>
         <tr>
-          <td>Zona 1 — Hospital General</td>
+          <td>Zona 1 — General Hospital</td>
           <td>26–28°C (moderado), sin señal estructural en ≥28°C</td>
           <td>Adultos mayores (65+) y baja escolaridad (primaria)</td>
-          <td>Perímetro bajo (37.5%), Barras (31.2%), Perímetro medio (25.0%)</td>
+          <td>Low perimeter (37.5%), Slab (31.2%), Medium perimeter (25.0%)</td>
           <td>UTCI 29.6→32.9 (media diaria); PET media hasta 37.2 a las 14:00 y excedencias PET&gt;41 en puntos críticos</td>
         </tr>
         <tr>
           <td>Zona 2 — Entorno AICM</td>
           <td>Predominio del umbral de 26°C (hot26) con transición parcial al umbral de 28°C (hot28)</td>
           <td>Baja escolaridad como factor consistente</td>
-          <td>Sin predio/sin catastro (54.2%), Perímetro bajo (29.2%), Hilera/adosada (8.3%)</td>
+          <td>Sin predio/sin catastro (54.2%), Low perimeter (29.2%), Row/terraced (8.3%)</td>
           <td>UTCI estable ~34–35; PET 38.7–40.8 con picos &gt;41 a las 10:00 y 14:00</td>
         </tr>
         <tr>
-          <td>Zona 3 — Basílica de Guadalupe</td>
+          <td>Zona 3 — Basilica of Guadalupe</td>
           <td>Vulnerabilidad activada principalmente en ≥28°C</td>
-          <td>Adultos mayores (65+) en régimen extremo</td>
-          <td>Compacta continua (44.4%), Perímetro bajo (33.3%), Hilera/adosada (22.2%)</td>
+          <td>Older adults (65+) in extreme regime</td>
+          <td>Compacta continua (44.4%), Low perimeter (33.3%), Row/terraced (22.2%)</td>
           <td>UTCI ~35–36; PET 39.5–41.6 (máximo reportado 43.4 a las 14:00)</td>
         </tr>
       </tbody>
@@ -900,7 +900,7 @@ section.visible{opacity:1;transform:translateY(0)}
   </div>
 
   <div class="micro-caption-guide">
-    <strong>Cómo leer cada pie de imagen:</strong> <strong>mediana</strong> = valor típico del corredor, <strong>p90</strong> = valor alto (el 10% más caliente), y <strong>% PET&gt;41°C</strong> = porcentaje de puntos en estrés térmico extremo.
+    <strong>How to read each caption:</strong> <strong>median</strong> = typical corridor value, <strong>p90</strong> = high value (hottest 10%), and <strong>% PET&gt;41°C</strong> = share of points under extreme thermal stress.
   </div>
 
   <div class="micro-hours">
@@ -958,9 +958,9 @@ section.visible{opacity:1;transform:translateY(0)}
     <ul>
       <li>Consolidar sombra continua en corredores de alta integración peatonal, priorizando tramos con Tmrt p90 &gt; 60°C.</li>
       <li>Implementar refugios térmicos de proximidad (sombra + descanso + hidratación) en nodos de mayor flujo y exposición.</li>
-      <li>Diferenciar acciones por régimen: en 26–28°C reforzar mitigación de confort cotidiano; en ≥28°C activar medidas de protección intensiva.</li>
-      <li>Priorizar población adulta mayor y grupos con baja escolaridad en la localización de intervenciones de enfriamiento urbano.</li>
-      <li>Reducir carga radiante en suelo peatonal (arbolado, materiales fríos y control de superficies abiertas altamente insoladas).</li>
+      <li>Differentiate actions by regime: at 26–28°C reinforce everyday comfort mitigation; at ≥28°C activate intensive protection measures.</li>
+      <li>Prioritise older adults and low-education groups in the siting of urban cooling interventions.</li>
+      <li>Reducir carga radiante en suelo peatonal (arbolado, materiales frand control of highly sunlit open surfaces).</li>
       <li>Usar UTCI/PET por horario como métrica de seguimiento para validar efectividad de proyectos de calle y espacio público.</li>
     </ul>
   </div>
@@ -968,8 +968,8 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- CROSS-SCALE SYNTHESIS -->
 <section class="deck-section" id="sintesis">
-  <div class="section-title">Matriz comparativa exposición-intervención</div>
-  <div class="section-sub">Comparativo técnico entre casos de estudio</div>
+  <div class="section-title">Comparative exposure-intervention matrix</div>
+  <div class="section-sub">Technical comparison across case studies</div>
   <div class="summary-table-wrap">
     <table class="summary-table">
       <thead>
@@ -978,13 +978,13 @@ section.visible{opacity:1;transform:translateY(0)}
           <th>Régimen dominante</th>
           <th>Población más expuesta</th>
           <th>Mecanismo espacial</th>
-          <th>Hora crítica</th>
-          <th>Síntesis de intervención</th>
+          <th>Hour crítica</th>
+          <th>Sintervention synthesis</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Zona 1 — Hospital General</td>
+          <td>Zona 1 — General Hospital</td>
           <td>Calor moderado (26–28°C)</td>
           <td>Adultos mayores + baja escolaridad</td>
           <td>Corredores integrados en tejido perimetral</td>
@@ -1000,7 +1000,7 @@ section.visible{opacity:1;transform:translateY(0)}
           <td>Mitigación preventiva y ajustes de transición</td>
         </tr>
         <tr>
-          <td>Zona 3 — Basílica de Guadalupe</td>
+          <td>Zona 3 — Basilica of Guadalupe</td>
           <td>Calor extremo (≥28°C)</td>
           <td>Adultos mayores</td>
           <td>Compacidad alta + corredores de alta centralidad</td>
@@ -1014,8 +1014,8 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- KPI IMPLEMENTATION -->
 <section class="deck-section" id="kpi">
-  <div class="section-title with-symbol"><span class="sym">◍</span>Indicadores de seguimiento de desempeño</div>
-  <div class="section-sub">Métricas para línea base, intervención y evaluación ex post</div>
+  <div class="section-title with-symbol"><span class="sym">◍</span>Performance monitoring indicators</div>
+  <div class="section-sub">Metrics for baseline, intervention and ex-post evaluation</div>
   <div class="kpi-grid">
     <article class="kpi-card">
       <div class="kpi-target">-10 a -15°C</div>
@@ -1025,12 +1025,12 @@ section.visible{opacity:1;transform:translateY(0)}
     <article class="kpi-card">
       <div class="kpi-target">≥70%</div>
       <div class="kpi-title">sombra continua entre 10:00 y 14:00 en tramos peatonales críticos</div>
-      <div class="kpi-detail">Métrica de servicio urbano; auditoría de continuidad por segmento y temporada.</div>
+      <div class="kpi-detail">Murban service metric; auditoría de continuidad por segmento y temporada.</div>
     </article>
     <article class="kpi-card">
       <div class="kpi-target">300–500 m</div>
       <div class="kpi-title">distancia máxima entre refugios térmicos</div>
-      <div class="kpi-detail">Métrica de accesibilidad; cobertura efectiva sobre red peatonal y nodos de alta demanda.</div>
+      <div class="kpi-detail">Maccessibility metric; cobertura efectiva sobre red peatonal y nodos de alta demanda.</div>
     </article>
     <article class="kpi-card">
       <div class="kpi-target">↓ Ta ≥28°C (p90)</div>
@@ -1044,28 +1044,28 @@ section.visible{opacity:1;transform:translateY(0)}
 
 <!-- CLOSING -->
 <section class="closing" id="cierre">
-  <div class="section-title with-symbol"><span class="sym">✓</span>Conclusiones e implicaciones</div>
-  <div class="section-sub">Síntesis de hallazgos, aportes y límites del enfoque</div>
+  <div class="section-title with-symbol"><span class="sym">✓</span>Conclusions and implications</div>
+  <div class="section-sub">Synthesis of findings, contributions and limits of the approach</div>
   <div class="closing-grid">
     <article class="closing-card">
-      <h3>Qué muestran los resultados</h3>
+      <h3>Quwhat the results show</h3>
       <p>El riesgo térmico peatonal es medible, espacialmente concentrado y socialmente desigual; no es homogéneo en la ciudad.</p>
     </article>
     <article class="closing-card">
-      <h3>Qué aporta el enfoque multiescalar</h3>
+      <h3>What the multi-scalar approach contributes</h3>
       <p>Un marco trazable macro→meso→micro que vincula diagnóstico térmico-social con criterios de diseño urbano y priorización espacial.</p>
     </article>
     <article class="closing-card">
-      <h3>Qué requiere validación adicional</h3>
+      <h3>Quwhat requires additional validation</h3>
       <p>Monitoreo de campo y evaluación longitudinal para estimar persistencia de efectos y transferibilidad entre tipologías urbanas.</p>
     </article>
   </div>
-  <div class="closing-question">Implicación principal: priorizar corredores de alta integración y alta vulnerabilidad permite reducir exposición térmica peatonal con mayor eficiencia territorial.</div>
+  <div class="closing-question">Implicación principal: priorizar corredores de alta integración y alta vulnerabilidad permite reducir thermal exposure peatonal con mayor eficiencia territorial.</div>
 </section>
 
 <!-- END COVER -->
 <section class="hero end-cover" id="agradecimientos">
-  <p class="thanks">Agradezco al Dr. Kimon Krenz, a UCL y a las instituciones y equipos técnicos de la Ciudad de México por el diálogo y la retroalimentación que fortalecieron esta investigación. Agradezco especialmente a la Secretaría de Ciencia, Humanidades, Tecnología e Innovación (SECIHTI), cuya beca hizo posibles mis estudios de posgrado.</p>
+  <p class="thanks">I thank Dr. Kimon Krenz, UCL and the institutions and technical teams of Mexico City for the dialogue and feedback that strengthened this research. I especially thank the Secretariat of Science, Humanities, Technology and Innovation (SECIHTI), whose scholarship made my postgraduate studies possible.</p>
   <div class="author">Daniela Reséndiz García</div>
   <div class="contact-lines">
     <div>Website: <a href="https://danielaresendizg.github.io/es" target="_blank" rel="noopener">https://danielaresendizg.github.io/es</a></div>
@@ -1229,7 +1229,7 @@ section.visible{opacity:1;transform:translateY(0)}
 
       const thermalMeaning = {
         LST: "Temperatura superficial satelital (°C).",
-        Ta: "Temperatura del aire calibrada (°C)."
+        Ta: "Air temperature calibrada (°C)."
       };
       legend.innerHTML = colors
         .map((color, i) => {

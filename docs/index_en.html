@@ -689,7 +689,7 @@ section.visible{opacity:1;transform:translateY(0)}
   <div class="section-sub">All inputs are open-access</div>
 
   <p class="abbrev" style="font-size:10px;color:#555;font-style:italic;margin-bottom:16px;text-align:left">
-    L8/9 = Landsat 8/9 &nbsp;|&nbsp; GEE = Google Earth Engine &nbsp;|&nbsp; LST = Land Surface Temperature &nbsp;|&nbsp; Ta = air temperature &nbsp;|&nbsp; DEM/DSM = Modelo Digital de Elevación/Superficie &nbsp;|&nbsp; GOB = Google Open Buildings &nbsp;|&nbsp; OSM = OpenStreetMap &nbsp;|&nbsp; INEGI = Instituto Nacional de Estadística y Geografía
+    L8/9 = Landsat 8/9 &nbsp;|&nbsp; GEE = Google Earth Engine &nbsp;|&nbsp; LST = Land Surface Temperature &nbsp;|&nbsp; Ta = Air temperature &nbsp;|&nbsp; DEM/DSM = Digital Elevation/Surface Model &nbsp;|&nbsp; GOB = Google Open Buildings &nbsp;|&nbsp; OSM = OpenStreetMap &nbsp;|&nbsp; INEGI = National Institute of Statistics and Geography
   </p>
 
   <table class="data-table">
@@ -704,9 +704,9 @@ section.visible{opacity:1;transform:translateY(0)}
       <tr class="phase-row"><td colspan="2">Phase 2 (Meso): Urban morphology + street network configuration</td></tr>
       <tr><td class="step-col">2.1</td><td>Huellas de edificios y alturas (Google Open Buildings + catastro CDMX como fuente auxiliar de alturas)</td></tr>
       <tr><td class="step-col">2.2</td><td>Street network (OSM / red oficial de la CDMX) procesada con DepthmapX</td></tr>
-      <tr><td class="step-col">2.3</td><td>Thermal layers from Phase 1 + outputs from Steps 2.1–2.2 for form-network coupling analysis and selección de corredores</td></tr>
+      <tr><td class="step-col">2.3</td><td>Thermal layers from Phase 1 + outputs from Steps 2.1–2.2 for form-network coupling analysis and corridor selection</td></tr>
       <tr class="phase-row"><td colspan="2">Phase 3 (Micro): Biometeorological simulation for pedestrian exposure</td></tr>
-      <tr><td class="step-col">3.1</td><td>High-resolution DEM/DSM; building footprints and heights (Step 2.1); vegetation/canopy layers (fromrivadas de NDVI); forzamiento meteorológico (datos de estaciones)</td></tr>
+      <tr><td class="step-col">3.1</td><td>High-resolution DEM/DSM; building footprints and heights (Step 2.1); vegetation/canopy layers (from NDVI); meteorological forcing (station data)</td></tr>
       <tr><td class="step-col">3.2</td><td>Simulation engine and parameters (UMEP/SOLWEIG in QGIS); observation points along priority corrres seleccionados (del Paso 2.3)</td></tr>
     </tbody>
   </table>
@@ -726,12 +726,12 @@ section.visible{opacity:1;transform:translateY(0)}
     <strong>Methodological note:</strong> en este estudio los umbrales de <strong>Ta = 26°C</strong> y <strong>Ta = 28°C</strong> se usan para clasificar thermal exposure a escala manzana/segmento (<em>hazardous</em> y <em>extreme</em>) en coherencia con la literatura local y el marco de comunicacithermal risk assessment.
   </div>
   <div class="ta-threshold-refs">
-    <p><strong>Citas:</strong> Magaña y Vargas (2020); WMO (2025).</p>
+    <p><strong>References:</strong> Magaña y Vargas (2020); WMO (2025).</p>
     <p><strong>Referencias:</strong> Magaña, V. and Vargas, N. (2020). <em>Warm Spells and Climate Risk to Human Health in the Mexico City Metropolitan Area</em>. <em>Weather, Climate, and Society</em>, 12(3), 351-365. DOI: <a href="https://doi.org/10.1175/WCAS-D-19-0096.1" target="_blank" rel="noopener">10.1175/WCAS-D-19-0096.1</a>. World Meteorological Organization (2025). <em>State of the Global Climate 2024</em>. URL: <a href="https://wmo.int/sites/default/files/2025-03/WMO-1368-2024_en.pdf" target="_blank" rel="noopener">WMO-1368-2024</a>.</p>
   </div>
   <p class="deck-note">
-    Reading the result: risk concentrates in dense, less vegetated territories with greater dependencia peatonal/transporte público.
-    Esto respalda una focalización espacial, en lugar de intervenciones dispersas.
+    Reading the result: risk concentrates in dense, less vegetated territories with greater pedestrian/public transport dependency.
+    This supports spatial targeting rather than dispersed interventions.
   </p>
 </section>
 
@@ -743,21 +743,21 @@ section.visible{opacity:1;transform:translateY(0)}
     <article class="split-card">
       <h3>Mechanism 1: structural thermal load</h3>
       <p>
-        GSI is the most sensitive morphological predictor: negative correlation with NDVI (r = -0.299) and positiva con Ta_mean (r = 0.228).
-        Typelogías compactas y selladas concentran mayor Heat Index y menor capacidad de disipación térmica.
+        GSI is the most sensitive morphological predictor: negative correlation with NDVI (r = -0.299) and positive with Ta_mean (r = 0.228).
+        Compact, sealed typologies concentrate higher Heat Index and lower thermal dissipation capacity.
       </p>
     </article>
     <article class="split-card">
       <h3>Mechanism 2: corridor exposure</h3>
       <p>
         Hazard 2 zones combine high temperature and high network integration.
-        In terms of urban service, the highest-demand corridorsda peatonal son también los de mayor thermal exposure.
+        In terms of urban service, the highest-demand pedestrian corridors are also those with the greatest thermal exposure.
       </p>
     </article>
   </div>
   <p class="deck-note">
-    Analytical implication: integrated corridors within compact fabrics simultaneously concentratente mayor flujo peatonal
-    y mayor vulnerabilidad acumulada, por lo que su intervención tiene mayor efecto sobre la exposición total.
+    Analytical implication: integrated corridors within compact fabrics simultaneously concentrate higher pedestrian flow
+    and higher accumulated vulnerability, so their intervention has the greatest effect on total exposure.
   </p>
 </section>
 
@@ -771,12 +771,12 @@ section.visible{opacity:1;transform:translateY(0)}
       <p>LST se convierte a Ta con modelo local: <code>Ta = 0.5540 × LST + 5.7606</code>, usando 17 estaciones RedMet (10:00–14:00).</p>
     </article>
     <article class="validation-card">
-      <h3>Comparación de modelos</h3>
-      <p>GWR improves fit in 16/16 municipalities and improves Moran p in 11/16 vs OLS; this validates heterogeneidad espacial para focalización territorial.</p>
+      <h3>Model comparison</h3>
+      <p>GWR improves fit in 16/16 municipalities and improves Moran p in 11/16 vs OLS; this validates spatial heterogeneity for territorial targeting.</p>
     </article>
     <article class="validation-card">
-      <h3>Lectura prudente</h3>
-      <p>Residual autocorrelation persists in GWR (p&lt;0.05): recommended use for comparative and diseño urbano, no para inferencia causal directa.</p>
+      <h3>Cautious reading</h3>
+      <p>Residual autocorrelation persists in GWR (p&lt;0.05): recommended use for comparative analysis and urban design, not for direct causal inference.</p>
     </article>
   </div>
   <ul class="limits-list">
@@ -792,14 +792,14 @@ section.visible{opacity:1;transform:translateY(0)}
 <section class="deck-section" id="tendencias-termicas">
   <div class="section-title">Annual trends (2014–2024)</div>
   <div class="section-sub">Relationship between temperature and biophysical structure.</div>
-  <p style="margin-top:-22px;margin-bottom:6px;font-size:10px;color:#8f8f8f;line-height:1.4;">Methodological note: 2014–2024 (n=11) adopted for instrumental continuity and inter-annual comparabal (Landsat 8/9 Collection 2 + calibración homogénea con RedMet), y porque la literatura reciente de LST urbano usa ventanas decenales para detectar señal térmica reciente [4,5]. Este periodo se usa para tendencia urbana, no como normal climatológica; para normales, WMO/IPCC emplean marcos de 30 years [1,2].</p>
+  <p style="margin-top:-22px;margin-bottom:6px;font-size:10px;color:#8f8f8f;line-height:1.4;">Methodological note: 2014–2024 (n=11) adopted for instrumental continuity and inter-annual comparability (Landsat 8/9 Collection 2 + homogeneous calibration with RedMet), and because recent urban LST literature uses decadal windows to detect recent thermal signal [4,5]. This period is used for urban trend analysis, not as a climatological normal; for normals, WMO/IPCC use 30-year frameworks [1,2].</p>
   <p style="margin-top:0;margin-bottom:14px;font-size:9px;color:#7d7d7d;line-height:1.35;">[1] WMO climatological normals. [2] IPCC AR6 Glossary (climate normal). [3] USGS Landsat 8-9 C2 L2 Science Product Guide. [4] Shafizadeh-Moghadam et al., 2025, <em>J. Environ. Manage.</em>, doi:10.1016/j.jenvman.2025.127789. [5] RoohaniQadikolaei et al., 2025, <em>Ecol. Indicators</em>, doi:10.1016/j.ecolind.2025.113386.</p>
   <div class="trend-grid">
     <article class="trend-card">
       <h3>Temperatura</h3>
       <p>Series en °C para LST y Ta. Se muestran todos los years (2014-2024).</p>
       <div class="trend-wrap">
-        <canvas id="thermalTrendCanvas" aria-label="Tendencias térmicas por año"></canvas>
+        <canvas id="thermalTrendCanvas" aria-label="Annual thermal trends"></canvas>
       </div>
       <div class="trend-legend" id="thermalTrendLegend"></div>
     </article>
@@ -807,7 +807,7 @@ section.visible{opacity:1;transform:translateY(0)}
       <h3>Indicadores de superficie</h3>
       <p>Series adimensionales de Albedo, NDBI y NDVI, comparables con la tendencia de Ta. En albedo: 0 = absorbe mabsorbs more radiation and 1 = reflects more radiation.</p>
       <div class="trend-wrap">
-        <canvas id="bioTrendCanvas" aria-label="Tendencias biofphysical values per year"></canvas>
+        <canvas id="bioTrendCanvas" aria-label="Annual biophysical trends"></canvas>
       </div>
       <div class="trend-legend" id="bioTrendLegend"></div>
       <p class="deck-note" id="bioTrendNote"></p>
@@ -827,12 +827,12 @@ section.visible{opacity:1;transform:translateY(0)}
 
   <p class="micro-eval">
     This phase quantifies pedestrian exposure in high-integration corridors (NAIN r500/r1500) using UMEP/SOLWEIG with local forcing by zone.
-    El objetivo es definir especificaciones técnicas de diseño a partir de <strong>Tmrt</strong>, <strong>UTCI</strong> y <strong>PET</strong> en tres ventanas operativas de calor:
-    <strong>10:00</strong>, <strong>12:00</strong> y <strong>14:00</strong>.
+    The aim is to define technical design specifications from <strong>Tmrt</strong>, <strong>UTCI</strong> and <strong>PET</strong> across three operational heat windows:
+    <strong>10:00</strong>, <strong>12:00</strong> and <strong>14:00</strong>.
   </p>
 
   <div class="micro-thresholds">
-    Rangos de referencia del estudio: <span>UTCI ≥ 32°C</span> (estrstrong stress), <span>UTCI ≥ 38°C</span> (estrés muy fuerte), <span>PET &gt; 41°C</span> (estrextreme stress).
+    Study reference ranges: <span>UTCI ≥ 32°C</span> (strong stress), <span>UTCI ≥ 38°C</span> (very strong stress), <span>PET &gt; 41°C</span> (extreme stress).
   </div>
 
   <div class="micro-threshold-note">
@@ -846,18 +846,18 @@ section.visible{opacity:1;transform:translateY(0)}
   <div class="micro-glossary">
     <h3>Microclimate glossary</h3>
     <ul>
-      <li><strong>UTCI (Universal Thermal Climate Index, °C):</strong> índice de thermal stress equivalente percibido por el cuerpo humano; integra air temperature, humedad, viento y radiación.</li>
-      <li><strong>Tmrt (Mean radiant temperature, °C):</strong> temperatura radiante media del entorno; resume la carga radiativa de superficies y sol sobre el peatón.</li>
-      <li><strong>PET (Physiological Equivalent Temperature, °C):</strong> physiological equivalent temperature in reference interior environment; expresses the level of thermal load térmica del cuerpo en condiciones exteriores.</li>
+      <li><strong>UTCI (Universal Thermal Climate Index, °C):</strong> perceived equivalent thermal stress index for the human body; integrates air temperature, humidity, wind and radiation.</li>
+      <li><strong>Tmrt (Mean radiant temperature, °C):</strong> mean radiant temperature of the environment; summarises the radiative load from surfaces and sun on the pedestrian.</li>
+      <li><strong>PET (Physiological Equivalent Temperature, °C):</strong> physiological equivalent temperature in reference interior environment; expresses the level of thermal load on the body under outdoor conditions.</li>
     </ul>
   </div>
 
   <div class="micro-zones">
-    <img src="data/micro/microscale_zones.png" alt="Mapa de zonas de estudio para la microescala" loading="lazy">
+    <img src="data/micro/microscale_zones.png" alt="Micro-scale study zones map" loading="lazy">
   </div>
 
   <ul class="micro-why">
-    <li><strong>Zona 1 (General Hospital):</strong> caso de riesgo moderado persistente con alta sensibilidad social y alta demanda peatonal.</li>
+    <li><strong>Zone 1 (General Hospital):</strong> persistent moderate-risk case with high social sensitivity and high pedestrian demand.</li>
     <li><strong>Zone 2 (Airport vicinity):</strong> thermal transition case where morphology begins to migrate towards the extreme regime.</li>
     <li><strong>Zone 3 (Basilica of Guadalupe):</strong> consolidated extreme-regime case with concentration of highly vulnerable population.</li>
   </ul>
@@ -867,32 +867,32 @@ section.visible{opacity:1;transform:translateY(0)}
       <thead>
         <tr>
           <th>Caso</th>
-          <th>Régimen térmico</th>
-          <th>Grupo social dominante</th>
-          <th>Morfología dominante</th>
-          <th>Rango UTCI/PET (estudio)</th>
+          <th>Thermal regime</th>
+          <th>Dominant social group</th>
+          <th>Dominant morphology</th>
+          <th>UTCI/PET range (study)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Zona 1 — General Hospital</td>
           <td>26–28°C (moderate), no structural signal at ≥28°C</td>
-          <td>Adultos mayores (65+) y baja escolaridad (primaria)</td>
+          <td>Older adults (65+) and low education (primary)</td>
           <td>Low perimeter (37.5%), Slab (31.2%), Medium perimeter (25.0%)</td>
-          <td>UTCI 29.6→32.9 (daily mean); mean PET up to 37.2 at 14:00 and PET&gt;41 exceedances at critical pointsíticos</td>
+          <td>UTCI 29.6→32.9 (daily mean); mean PET up to 37.2 at 14:00 and PET&gt;41 exceedances at critical pointstical pointsíticos</td>
         </tr>
         <tr>
-          <td>Zona 2 — Entorno AICM</td>
+          <td>Zone 2 — Airport vicinity</td>
           <td>Predominance of 26°C threshold (hot26) with partial transition to 28°C threshold (hot28)</td>
-          <td>Baja escolaridad como factor consistente</td>
-          <td>Sin predio/sin catastro (54.2%), Low perimeter (29.2%), Row/terraced (8.3%)</td>
-          <td>UTCI estable ~34–35; PET 38.7–40.8 con picos &gt;41 a las 10:00 y 14:00</td>
+          <td>Low education as consistent factor</td>
+          <td>No cadastre (54.2%), Low perimeter (29.2%), Row/terraced (8.3%)</td>
+          <td>Stable UTCI ~34–35; PET 38.7–40.8 with peaks &gt;41 at 10:00 and 14:00</td>
         </tr>
         <tr>
           <td>Zona 3 — Basilica of Guadalupe</td>
-          <td>Vulnerabilidad activada principalmente en ≥28°C</td>
+          <td>Vulnerability mainly activated at ≥28°C</td>
           <td>Older adults (65+) in extreme regime</td>
-          <td>Compacta continua (44.4%), Low perimeter (33.3%), Row/terraced (22.2%)</td>
+          <td>Continuous compact (44.4%), Low perimeter (33.3%), Row/terraced (22.2%)</td>
           <td>UTCI ~35–36; PET 39.5–41.6 (maximum reported 43.4 at 14:00)</td>
         </tr>
       </tbody>
@@ -907,48 +907,48 @@ section.visible{opacity:1;transform:translateY(0)}
     <article class="hour-card">
       <div class="hour-title">10:00</div>
       <figure class="hour-fig">
-        <img src="data/micro/zone_01_10.png" alt="Zona 1 a las 10:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 1: UTCI mediana 27.4°C (p90 35.1°C); Tmrt mediana 34.4°C (p90 63.7°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_01_10.png" alt="Zone 1 at 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 1: UTCI median 27.4°C (p90 35.1°C); Tmrt median 34.4°C (p90 63.7°C); 0% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_02_10.png" alt="Zona 2 a las 10:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 2: UTCI mediana 35.0°C (p90 35.6°C); Tmrt mediana 62.8°C (p90 65.0°C); 40% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_02_10.png" alt="Zone 2 at 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 2: UTCI median 35.0°C (p90 35.6°C); Tmrt median 62.8°C (p90 65.0°C); 40% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_03_10.png" alt="Zona 3 a las 10:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 3: UTCI mediana 33.2°C (p90 34.5°C); Tmrt mediana 54.8°C (p90 58.7°C); 33% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_03_10.png" alt="Zone 3 at 10:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 3: UTCI median 33.2°C (p90 34.5°C); Tmrt median 54.8°C (p90 58.7°C); 33% of points exceed PET&gt;41°C.</figcaption>
       </figure>
     </article>
 
     <article class="hour-card">
       <div class="hour-title">12:00</div>
       <figure class="hour-fig">
-        <img src="data/micro/zone_01_12.png" alt="Zona 1 a las 12:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 1: UTCI mediana 33.1°C (p90 34.0°C); Tmrt mediana 55.9°C (p90 59.5°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_01_12.png" alt="Zone 1 at 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 1: UTCI median 33.1°C (p90 34.0°C); Tmrt median 55.9°C (p90 59.5°C); 0% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_02_12.png" alt="Zona 2 a las 12:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 2: UTCI mediana 33.9°C (p90 34.5°C); Tmrt mediana 58.4°C (p90 60.7°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_02_12.png" alt="Zone 2 at 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 2: UTCI median 33.9°C (p90 34.5°C); Tmrt median 58.4°C (p90 60.7°C); 0% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_03_12.png" alt="Zona 3 a las 12:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 3: UTCI mediana 33.0°C (p90 37.5°C); Tmrt mediana 54.0°C (p90 67.3°C); 33% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_03_12.png" alt="Zone 3 at 12:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 3: UTCI median 33.0°C (p90 37.5°C); Tmrt median 54.0°C (p90 67.3°C); 33% of points exceed PET&gt;41°C.</figcaption>
       </figure>
     </article>
 
     <article class="hour-card">
       <div class="hour-title">14:00</div>
       <figure class="hour-fig">
-        <img src="data/micro/zone_01_14.png" alt="Zona 1 a las 14:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 1: UTCI mediana 34.5°C (p90 35.5°C); Tmrt mediana 61.4°C (p90 65.3°C); 14% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_01_14.png" alt="Zone 1 at 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 1: UTCI median 34.5°C (p90 35.5°C); Tmrt median 61.4°C (p90 65.3°C); 14% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_02_14.png" alt="Zona 2 a las 14:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 2: UTCI mediana 33.5°C (p90 33.8°C); Tmrt mediana 57.1°C (p90 59.0°C); 0% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_02_14.png" alt="Zone 2 at 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 2: UTCI median 33.5°C (p90 33.8°C); Tmrt median 57.1°C (p90 59.0°C); 0% of points exceed PET&gt;41°C.</figcaption>
       </figure>
       <figure class="hour-fig">
-        <img src="data/micro/zone_03_14.png" alt="Zona 3 a las 14:00" loading="lazy">
-        <figcaption class="hour-caption">Zona 3: UTCI mediana 34.5°C (p90 37.1°C); Tmrt mediana 60.7°C (p90 64.4°C); 17% de puntos supera PET&gt;41°C.</figcaption>
+        <img src="data/micro/zone_03_14.png" alt="Zone 3 at 14:00" loading="lazy">
+        <figcaption class="hour-caption">Zone 3: UTCI median 34.5°C (p90 37.1°C); Tmrt median 60.7°C (p90 64.4°C); 17% of points exceed PET&gt;41°C.</figcaption>
       </figure>
     </article>
   </div>
@@ -957,11 +957,11 @@ section.visible{opacity:1;transform:translateY(0)}
     <h3>Technical street intervention package</h3>
     <ul>
       <li>Establish continuous shade in high pedestrian-integration corridors, prioritising segments with Tmrt p90 &gt; 60°C.</li>
-      <li>Deploy proximity thermal refuges (shade + rest + hydration) at highest-flow nodeso y exposición.</li>
+      <li>Deploy proximity thermal refuges (shade + rest + hydration) at highest-flow nodes by pedestrian flow and exposure.</li>
       <li>Differentiate actions by regime: at 26–28°C reinforce everyday comfort mitigation; at ≥28°C activate intensive protection measures.</li>
       <li>Prioritise older adults and low-education groups in the siting of urban cooling interventions.</li>
-      <li>Reducir carga radiante en suelo peatonal (arbolado, materiales frand control of highly sunlit open surfaces).</li>
-      <li>Use hourly UTCI/PET as monitoring metric to validate effectiveness of street-level projects y espacio público.</li>
+      <li>Reduce radiant load on pedestrian surfaces (trees, cool materials and control of highly sunlit open surfaces).</li>
+      <li>Use hourly UTCI/PET as monitoring metric to validate effectiveness of street-level projects and public space.</li>
     </ul>
   </div>
 </section>
@@ -975,36 +975,36 @@ section.visible{opacity:1;transform:translateY(0)}
       <thead>
         <tr>
           <th>Caso</th>
-          <th>Régimen dominante</th>
+          <th>Dominant regime</th>
           <th>Most exposed population</th>
-          <th>Mecanismo espacial</th>
-          <th>Hour crítica</th>
-          <th>Sintervention synthesis</th>
+          <th>Spatial mechanism</th>
+          <th>Critical hour</th>
+          <th>Intervention synthesis</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Zona 1 — General Hospital</td>
-          <td>Calor moderado (26–28°C)</td>
-          <td>Adultos mayores + baja escolaridad</td>
-          <td>Corredores integrados en tejido perimetral</td>
+          <td>Moderate heat (26–28°C)</td>
+          <td>Older adults + low education</td>
+          <td>Integrated corridors in perimeter fabric</td>
           <td>14:00</td>
           <td>Immediate intervention in structural corridors</td>
         </tr>
         <tr>
-          <td>Zona 2 — Entorno AICM</td>
-          <td>Transición hot26→hot28</td>
+          <td>Zone 2 — Airport vicinity</td>
+          <td>Transition hot26→hot28</td>
           <td>Baja escolaridad</td>
           <td>High integration + transitional morphologies</td>
-          <td>10:00 y 14:00</td>
-          <td>Mitigación preventiva y ajustes de transición</td>
+          <td>10:00 and 14:00</td>
+          <td>Preventive mitigation and transition adjustments</td>
         </tr>
         <tr>
           <td>Zona 3 — Basilica of Guadalupe</td>
-          <td>Calor extremo (≥28°C)</td>
-          <td>Adultos mayores</td>
-          <td>Compacidad alta + corredores de alta centralidad</td>
-          <td>10:00 y 14:00</td>
+          <td>Extreme heat (≥28°C)</td>
+          <td>Older adults</td>
+          <td>High compactness + high-centrality corridors</td>
+          <td>10:00 and 14:00</td>
           <td>Priority action for extreme thermal regime</td>
         </tr>
       </tbody>
@@ -1048,16 +1048,16 @@ section.visible{opacity:1;transform:translateY(0)}
   <div class="section-sub">Synthesis of findings, contributions and limits of the approach</div>
   <div class="closing-grid">
     <article class="closing-card">
-      <h3>Quwhat the results show</h3>
-      <p>Pedestrian thermal risk is measurable, spatially concentrated and socially unequal; it is not homogéneo en la ciudad.</p>
+      <h3>What the results show</h3>
+      <p>Pedestrian thermal risk is measurable, spatially concentrated and socially unequal; it is not homogeneous across the city.</p>
     </article>
     <article class="closing-card">
       <h3>What the multi-scalar approach contributes</h3>
-      <p>A traceable macro→meso→micro framework linking thermal-social diagnosis with urban design criteriabano y priorización espacial.</p>
+      <p>A traceable macro→meso→micro framework linking thermal-social diagnosis with urban design criteria and spatial prioritisation.</p>
     </article>
     <article class="closing-card">
-      <h3>Quwhat requires additional validation</h3>
-      <p>Field monitoring and longitudinal evaluation to estimate persistence of effects and transferability entre tipologías urbanas.</p>
+      <h3>What requires additional validation</h3>
+      <p>Field monitoring and longitudinal evaluation to estimate persistence of effects and transferability across urban typologies.</p>
     </article>
   </div>
   <div class="closing-question">Main implication: prioritising high-integration, high-vulnerability corridors allows reducr thermal exposure peatonal con mayor eficiencia territorial.</div>
@@ -1334,9 +1334,9 @@ section.visible{opacity:1;transform:translateY(0)}
       });
 
       const bioMeaning = {
-        Albedo: "Fracción de radiación solar reflejada por las superficies (0 a 1): claro refleja más, oscuro absorbe más.",
+        Albedo: "Fraction of solar radiation reflected by surfaces (0 to 1): lighter reflects more, darker absorbs more.",
         NDBI: "Índice de superficie construida; mayor valor = más urbanización.",
-        NDVI: "Vegetation index; mayor valor = más cobertura vegetal."
+        NDVI: "Vegetation index; higher value = more vegetation cover."
       };
       legend.innerHTML = colors
         .map((color, i) => {
@@ -1350,7 +1350,7 @@ section.visible{opacity:1;transform:translateY(0)}
         const rNDBI = pearson(ta, thermalSeries.map((d) => d.ndbi));
         const rNDVI = pearson(ta, thermalSeries.map((d) => d.ndvi));
         const rAlb = pearson(ta, thermalSeries.map((d) => d.albedo));
-        note.textContent = `Correlación con Ta (2014-2024): NDBI r=${rNDBI.toFixed(2)}, NDVI r=${rNDVI.toFixed(2)}, Albedo r=${rAlb.toFixed(2)}.`;
+        note.textContent = `Correlation with Ta (2014–2024): NDBI r=${rNDBI.toFixed(2)}, NDVI r=${rNDVI.toFixed(2)}, Albedo r=${rAlb.toFixed(2)}.`;
       }
     }
 
